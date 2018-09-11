@@ -25,6 +25,7 @@ def random_str(randomlength=8):
 
 
 def  register_send_email(email,type_code="register"):
+    email=email.lower()
     code = random_str(16)
     if type_code == "register":
         email_body= "<h3>请点击下面的链接激活你的账号:<p>" \

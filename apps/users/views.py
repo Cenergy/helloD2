@@ -73,6 +73,7 @@ class LoginView(View):
     def post(self, request):
         login_form = LoginForm(request.POST)
         username = request.POST.get("username", "")
+        username=username.lower()
         password = request.POST.get("password", "")
         if login_form.is_valid():
             # request.session["username"] = username
@@ -104,6 +105,7 @@ class RegisterView(View):
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
             username = request.POST.get("email", "")
+            username=username.lower()
             if UserProfile.objects.filter(email=username,is_active=True):
                 msg = "邮箱已被注册！！"
                 return render(request, "users/register.html", locals())
@@ -132,6 +134,7 @@ class ActiveUserView(View):
         if all_records:
             for record in all_records:
                 email = record.email
+                email=email.lower()
                 user = UserProfile.objects.get(email=email)
                 user.is_active = True
                 user.save()
@@ -149,6 +152,7 @@ class ForgetPwdView(View):
     def post(self, request):
         forget_form = ForgetForm(request.POST)
         username = request.POST.get("email", "")
+        username=username.lower()
         if forget_form.is_valid():
             if UserProfile.objects.filter(email=username):
                 email = request.POST.get("email", "")
@@ -172,6 +176,7 @@ class ResetPwdView(View):
         if all_records:
             for record in all_records:
                 email = record.email
+                email=email.lower()
                 return render(request, "users/password_reset.html", locals())
         else:
             return render(request, "users/active_fail.html", locals())
@@ -184,6 +189,7 @@ class ModifyPwdView(View):
             pwd1 = request.POST.get("password1", "")
             pwd2 = request.POST.get("password2", "")
             email = request.POST.get("email", "")
+            email=email.lower()
             if pwd1 != pwd2:
                 msg = "两次密码不一致"
                 return render(request, "users/password_reset.html", locals())
@@ -230,7 +236,7 @@ def BANAJAX(request):
         print(userid)
         voice_path = "./media/voice/" + userid + ".wav"
         system_type = plat.system()
-        if True:
+        try:
             if (system_type == 'Linux'):
                 from utils.voices import stt
                 voice_words = stt.XF_text(voice_path, 16000)
@@ -246,7 +252,7 @@ def BANAJAX(request):
                 "data": voice_words
 
             }
-        else:
+        except:
             abc = {
                 "code": 400,
                 "message": "successs!",
