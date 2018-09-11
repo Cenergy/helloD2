@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图</title>
+    <link rel="icon" href="img/favicon.png">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/ionicons/4.0.0-18/collection/icon/icon.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/leaflet/1.3.1/leaflet.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/leaflet/1.3.1/leaflet.js"></script>
+    <script src="https://cdn.bootcss.com/esri-leaflet/2.1.3/esri-leaflet.js"></script>
+    <script src="https://cdn.bootcss.com/esri-leaflet-geocoder/2.2.9/esri-leaflet-geocoder.js"></script>
+    <link href="https://cdn.bootcss.com/esri-leaflet-geocoder/2.2.9/esri-leaflet-geocoder.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link href="https://cdn.bootcss.com/leaflet.fullscreen/1.4.4/Control.FullScreen.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/leaflet.fullscreen/1.4.4/Control.FullScreen.js"></script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding-bottom: 0px;
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f4f4f4;
+            color: #757575;
+            font-family: "微软雅黑", 'Alegreya Sans', sans-serif;
+            letter-spacing: 2px;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 70px 75px;
+            margin: 50px auto;
+            border: 1px solid #a5d4fc;
+        }
+
+        img {
+            max-width: 100%
+        }
+
+        .propic {
+            border-radius: 10px;
+        }
+
+        hr {
+            margin: 40px 0;
+        }
+
+        h1 {
+            font-size: 2em;
+            font-weight: bolder;
+            text-transform: uppercase;
+            color: #000;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            background: #fcfcfc;
+            padding: 10px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            text-transform: uppercase;
+            color: #000;
+            margin-top: 0;
+        }
+
+        h4 {
+            margin: 15px 0 0;
+        }
+
+        p,
+        a {
+            line-height: 1.7em;
+            font-weight: lighter;
+            letter-spacing: 1px;
+            font-size: 16px;
+        }
+
+        li {
+            padding: 7px 0;
+        }
+
+        .dl-share .btn {
+            min-width: 120px;
+        }
+
+        .signature {
+            font-family: 'Kristi', cursive;
+            color: #3e3f40;
+            font-size: 2.2em;
+            margin-top: 20px;
+        }
+
+        .social {
+            margin-right: 7px;
+        }
+
+        .btn .fa {
+            margin-right: 10px;
+        }
+
+        .secicon.fa {
+            font-size: 28px;
+            color: #000;
+            margin-right: 10px;
+        }
+
+        .sub {
+            margin-bottom: 15px;
+        }
+
+        .award {
+            padding-top: 20px;
+        }
+
+        blockquote {
+            font-size: 1em;
+            padding: 0 15px;
+            margin: 30px 0;
+        }
+
+        .copyrights {
+            text-indent: -9999px;
+            height: 0;
+            line-height: 0;
+            font-size: 0;
+            overflow: hidden;
+        }
+
+        .mainleft {
+            padding-right: 30px;
+        }
+
+        .testimonials img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            float: left;
+            margin-right: 15px;
+            margin-top: -10px;
+            border: 1px solid #ededed;
+        }
+
+        .year,
+        .share {
+            text-align: right;
+        }
+
+        footer p,
+        footer a {
+            font-size: 13px;
+        }
+
+        /* mystyle */
+        .weixin {
+            position: relative;
+            font-size: 12px;
+        }
+
+        .weixin a img {
+            width: 300px;
+            height: 300px;
+            background: red;
+        }
+
+        .weixin .weixin_nr {
+            width: 145px;
+            height: 170px;
+            padding: 10px;
+            background: lightblue;
+            border-radius: 5px;
+            text-align: center;
+            position: absolute;
+            color: yellow;
+            left: 0px;
+            top: -160px;
+            display: none;
+        }
+
+        .weixin .weixin_nr img {
+            margin-bottom: 5px;
+        }
+
+        .weixin .weixin_nr .arrow {
+            width: 0;
+            height: 0;
+            border-top: 10px solid #fff;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            position: absolute;
+            left: 60px;
+            top: 156px;
+        }
+
+        .weixin.on .weixin_nr {
+            display: block;
+        }
+
+        .fa-wechat {
+            color: green;
+        }
+
+        .fixed-btn {
+            position: fixed;
+            right: 1%;
+            bottom: 3%;
+            border: 1px solid #eee;
+            background-color: white;
+            font-size: 24px;
+            z-index: 1040;
+        }
+
+        .fa:hover {
+            color: rgb(2, 252, 127);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            /* display: none; */
+            /* position: relative; */
+        }
+
+        #closeMap {
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            position: absolute;
+            z-index: 9999;
+            right: 0px;
+            top: 0px;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+            background: #f1f1f1;
+        }
+
+        #closeMap:hover {
+            background: gray;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div id="map">
+
+    </div>
+</div>
+<script>
+    var map = L.map('map').setView([51.932994, 4.509373], 8);
+    L.esri.tiledMapLayer({
+        url: "http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer"
+    }).addTo(map);
+    L.marker([51.941196, 4.512291], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'spinner',
+            prefix: 'fa',
+            markerColor: 'red',
+            spin: true
+        })
+    }).addTo(map);
+    L.marker([51.827913, 4.521303], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'coffee',
+            prefix: 'fa',
+            markerColor: 'red',
+            iconColor: '#f28f82'
+        })
+    }).addTo(map);
+    L.marker([51.736063, 4.502077], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'cog',
+            prefix: 'fa',
+            markerColor: 'purple',
+            iconColor: 'black'
+        })
+    }).addTo(map);
+    L.marker([51.632835, 4.506969], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'glass',
+            prefix: 'fa',
+            markerColor: 'green'
+        })
+    }).addTo(map);
+    L.marker([51.530295, 4.515209], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'shopping-cart',
+            prefix: 'fa',
+            markerColor: 'blue'
+        })
+    }).addTo(map);
+    L.marker([51.430083, 4.507742], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'info',
+            prefix: 'fa',
+            markerColor: 'orange'
+        })
+    }).addTo(map);
+    L.marker([51.330454, 4.527054], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'group',
+            prefix: 'fa',
+            markerColor: 'darkred'
+        })
+    }).addTo(map);
+    L.marker([51.229607, 4.527054], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'arrow-right',
+            prefix: 'fa',
+            markerColor: 'darkblue'
+        })
+    }).addTo(map);
+    L.marker([51.128919, 4.528856], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'twitter',
+            prefix: 'fa',
+            markerColor: 'cadetblue'
+        })
+    }).addTo(map);
+    L.marker([51.930295, 4.530745], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'phone',
+            prefix: 'fa',
+            markerColor: 'darkpurple'
+        })
+    }).addTo(map);
+    L.marker([51.925055, 4.612806], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'ambulance',
+            prefix: 'fa',
+            markerColor: 'darkgreen'
+        })
+    }).addTo(map);
+    L.marker([51.925902, 4.705768], {
+        icon: L.AwesomeMarkers.icon({
+            icon: 'medkit',
+            prefix: 'fa',
+            markerColor: 'darkblue'
+        })
+    }).addTo(map);
+</script>
+</body>
+
+</html>

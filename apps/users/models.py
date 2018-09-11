@@ -1,0 +1,59 @@
+import datetime
+
+from django.db import models
+from  django.contrib.auth.models import AbstractUser
+
+# Create your models here.
+class UserProfile(AbstractUser):
+    """
+    user information
+    """
+    name = models.CharField(max_length=30, null=True, blank=True, verbose_name='姓名')
+    birthday = models.DateField(null=True, blank=True, verbose_name='出生年月')
+    mobile = models.CharField(null=True, blank=True, max_length=11, verbose_name='电话号码')
+    gender = models.CharField(max_length=6, choices=(('male', '男'), ('female', '女')), default='male', verbose_name='性别')
+    email = models.CharField(max_length=100, null=True, blank=True, verbose_name='邮箱')
+
+    class Meta:
+        verbose_name = "用户"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.username
+
+class EmailVerifyRecord(models.Model):
+    code=models.CharField(max_length=20,verbose_name="验证码")
+    email=models.EmailField(max_length=50,verbose_name="邮件")
+    type_code=models.CharField(choices=(("register",u"register"),("forget",u"forget")),max_length=10)
+    send_time=models.DateField(default=datetime.datetime.now,verbose_name='添加时间')
+
+    class Meta:
+        verbose_name="邮件验证码"
+        verbose_name_plural=verbose_name
+
+class Banner(models.Model):
+    title=models.CharField(max_length=100,verbose_name="title")
+    image=models.ImageField(upload_to="banner/%Y/%m",verbose_name="lunbo",max_length=100)
+    url=models.URLField(max_length=200,verbose_name="url")
+    index=models.IntegerField(default=100,verbose_name="index")
+    add_time=models.DateField(default=datetime.datetime.now,verbose_name="time")
+
+    class Meta:
+        verbose_name="banner"
+        verbose_name_plural=verbose_name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
