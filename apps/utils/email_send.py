@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 import random
 from users.models import EmailVerifyRecord
+from datetime import datetime
 
 # 第三方 SMTP 服务
 mail_host = "smtp.qq.com"  # 设置服务器
@@ -26,12 +27,15 @@ def random_str(randomlength=8):
 
 
 def  register_send_email(email,type_code="register"):
-    email_record = EmailVerifyRecord()
     code = random_str(16)
-    email_record.code = code
-    email_record.email = email
-    email_record.type_code = type_code
-    email_record.save()
+    if EmailVerifyRecord.objects.filter(email=email).exists():
+        EmailVerifyRecord.objects.filter(email=email).update(code=code)
+    else:
+        email_record = EmailVerifyRecord()
+        email_record.code = code
+        email_record.email = email
+        email_record.type_code = type_code
+        email_record.save()
     if type_code == "register":
         email_body= "<h3>请点击下面的链接激活你的账号:<p>" \
                     "<a>https://aigis.pythonanywhere.com/active/"+code+"</a></p></h3>"

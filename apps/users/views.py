@@ -104,8 +104,13 @@ class RegisterView(View):
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
             username = request.POST.get("email", "")
-            if UserProfile.objects.filter(email=username):
+            if UserProfile.objects.filter(email=username,is_active=True):
                 msg = "邮箱已被注册！！"
+                return render(request, "users/register.html", locals())
+            elif UserProfile.objects.filter(email=username,is_active=False):
+                msg = "请激活您的邮箱"
+                send_type = "register"
+                register_send_email(username, send_type)
                 return render(request, "users/register.html", locals())
             password = request.POST.get("password", "")
             user_proflie = UserProfile()

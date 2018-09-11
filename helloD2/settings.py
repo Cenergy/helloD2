@@ -140,7 +140,7 @@ EMAIL_HOST_PASSWORD = "Cenergy.0919"
 EMAIL_USE_TLS = False
 EMAIL_FROM = "helloaigis@sina.com"
 
-DEBUG = False
+DEBUG = True
 if DEBUG:
     pass
 else:
