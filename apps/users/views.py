@@ -236,7 +236,7 @@ def BANAJAX(request):
         print(userid)
         voice_path = "./media/voice/" + userid + ".wav"
         system_type = plat.system()
-        if True:
+        try:
             if (system_type == 'Linux'):
                 from utils.voices import stt
                 voice_words = stt.XF_text(voice_path, 16000)
@@ -252,7 +252,7 @@ def BANAJAX(request):
                 "data": "1232131"
 
             }
-        else:
+        except:
             abc = {
                 "code": 400,
                 "message": "fail!",
