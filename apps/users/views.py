@@ -249,7 +249,7 @@ def BANAJAX(request):
             abc = {
                 "code": 200,
                 "message": "successs!!",
-                "data": "1232131"
+                "data": system_type
 
             }
         except:
