@@ -249,7 +249,7 @@ def BANAJAX(request):
             abc = {
                 "code": 400,
                 "message": "successs!!",
-                "data": voice_words
+                "data": "12212"
 
             }
         except:
