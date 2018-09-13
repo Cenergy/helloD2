@@ -218,13 +218,13 @@ def get_voices(request):
             f.write(hello)
         try:
             reginfs = {
-                "code": 200,
+                "code": 400,
                 "message": "success",
                 "data": "hello"
             }
         except:
             reginfs = {
-                "code": 400,
+                "code": 200,
                 "message": "failed",
                 "data": "注册失败"
             }
@@ -247,7 +247,7 @@ def BANAJAX(request):
                 voice_words = towords.main(voice_path)
             print("voice:", voice_words)
             abc = {
-                "code": 200,
+                "code": 400,
                 "message": "successs!!",
                 "data": voice_words
 
@@ -255,8 +255,8 @@ def BANAJAX(request):
         except:
             abc = {
                 "code": 400,
-                "message": "successs!",
-                "data": userid
+                "message": "fail!",
+                "data": "网络错误"
 
             }
         try:
