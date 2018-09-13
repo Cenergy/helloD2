@@ -5,7 +5,7 @@ import time
 import os.path as path
 
 PATH = path.abspath('.')
-Lib_PATH = PATH + '/libmsc.so'
+Lib_PATH = PATH + '/apps/utils/voices/libmsc.so'
 print("=====================")
 print(Lib_PATH)
  
