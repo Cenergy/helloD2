@@ -659,11 +659,8 @@
                             success: function (res) {
                                 console.log(res);
                                 let voices_data=JSON.parse(res.data)
-                                console.log(voices_data,"----------")
-                                $('#questions').val(voices_data.data);
+                                $('#questions').val(voices_data);
                                 layer.close(index);
-
-
                             },
                             error: function (res) {
                                 console.log(res)
