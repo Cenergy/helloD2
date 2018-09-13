@@ -655,12 +655,10 @@
                         $.ajax({
                             url: "/BANAJAX/",
                             type: 'POST',
-                            data: "",
+                            dataType: 'json',
                             success: function (res) {
                                 console.log(res);
-                                let voices_data=JSON.parse(res.data)
-                                console.log(voices_data)
-                                $('#questions').val(voices_data);
+                                $('#questions').val(res.datas);
                                 layer.close(index);
                             },
                             error: function (res) {

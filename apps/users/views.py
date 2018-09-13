@@ -237,19 +237,19 @@ def BANAJAX(request):
         voice_path = "./media/voice/" + userid + ".wav"
         system_type = plat.system()
         try:
-            # if (system_type == 'Linux'):
-            #     from utils.voices import stt
-            #     voice_words = stt.XF_text(voice_path, 16000)
-            # elif (system_type == 'Windows'):
-            #     from utils.voices import stt_windows
-            #     voice_words = stt_windows.XF_text(voice_path, 16000)
-            # else:
-            #     voice_words = towords.main(voice_path)
-            # print("voice:", voice_words)
+            if (system_type == 'Linux'):
+                from utils.voices import stt
+                voice_words = stt.XF_text(voice_path, 16000)
+            elif (system_type == 'Windows'):
+                from utils.voices import stt_windows
+                voice_words = stt_windows.XF_text(voice_path, 16000)
+            else:
+                voice_words = towords.main(voice_path)
+            print("voice:", voice_words)
             abc = {
                 "code": 200,
                 "message": "successs!!",
-                "data": system_type
+                "datas": voice_words
 
             }
         except:
@@ -263,4 +263,4 @@ def BANAJAX(request):
             os.remove(voice_path)
         except:
             pass
-        return HttpResponse(json.dumps(abc), content_type='application/json')
+        return JsonResponse(abc, content_type='application/json')
