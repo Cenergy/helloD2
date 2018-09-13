@@ -19,6 +19,7 @@ from django.views.generic import TemplateView
 import users.views, courses.views
 import xadmin
 from users import views
+from wechat import views
 from helloD2 import settings
 from django.views import static
 from rest_framework.documentation import include_docs_urls
@@ -34,8 +35,9 @@ urlpatterns = [
     url(r'^courses/', include('courses.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^docs/', include_docs_urls(title='heloworld')),
-
+    url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
+
     # 增加以下一行，以识别静态资源
     url(r'^static/(?P<path>.*)$', static.serve,
         {'document_root': settings.STATIC_ROOT}, name='static'),

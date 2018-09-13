@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'courses.apps.CoursesConfig',
+    'wechat.apps.WechatConfig',
     'xadmin',
     'crispy_forms',
     'captcha',
@@ -127,7 +128,6 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -153,5 +153,5 @@ API_KEY = "09d6805265afbd0a779cfd9e16a0f4c5"
 
 # DRF全局缓存时间设定
 REST_FRAMEWORK_EXTENSIONS = {
-    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 3*3600
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 3 * 3600
 }
