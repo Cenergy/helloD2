@@ -72,6 +72,7 @@ def autoreply(request):
         if msg_type == 'text':
             content=[]
             data_count, data_dict=get_source(MsgContent)
+            print(data_count,"===============")
             for k, v in data_dict.items():
                 this_value = "<a href='{0}'>{1}</a>".format(v["sourcedesc"], v["sourcename"])
                 content.append(this_value)
