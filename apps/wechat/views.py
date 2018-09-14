@@ -59,6 +59,7 @@ def autoreply(request):
         webData = request.body
         xmlData = ET.fromstring(webData)
 
+
         msg_type = xmlData.find('MsgType').text
         ToUserName = xmlData.find('ToUserName').text
         FromUserName = xmlData.find('FromUserName').text
@@ -71,7 +72,7 @@ def autoreply(request):
 
 
         if msg_type == 'text':
-            content = "<p>Hello World!</p><a href='http://www.baidu.com'>百度一下</a>"
+            content = xmlData.find('Content').text
             replyMsg = TextMsg(toUser, fromUser, content)
             print("成功了!!!!!!!!!!!!!!!!!!!")
             print(replyMsg)
