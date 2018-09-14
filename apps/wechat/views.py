@@ -70,7 +70,10 @@ def autoreply(request):
         fromUser = ToUserName
 
         if msg_type == 'text':
+            herf1="<a href='http://www.baidu.com'>1、百度啊</a>"
             content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent]
+            content.append(herf1)
+            content=','.join(content)
             replyMsg = TextMsg(toUser, fromUser, content)
             print("成功了!!!!!!!!!!!!!!!!!!!")
             print(replyMsg)
