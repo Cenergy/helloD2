@@ -82,7 +82,7 @@ def autoreply(request):
             return replyMsg.send()
 
         elif msg_type == 'image':
-            content = "图片已收到,谢谢"+MsgContent
+            content = "图片已收到,谢谢"
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
         elif msg_type == 'voice':
