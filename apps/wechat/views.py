@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from utils.get_sources import get_source
 
 
+
 # django默认开启csrf防护，这里使用@csrf_exempt去掉防护
 @csrf_exempt
 def weixin_main(request):
@@ -51,7 +52,8 @@ def weixin_main(request):
         return HttpResponse(othercontent)
 
 
-# 微信服务器推送消息是xml的，根据利用ElementTree来解析出的不同xml内容返回不同的回复信息，
+
+#微信服务器推送消息是xml的，根据利用ElementTree来解析出的不同xml内容返回不同的回复信息，
 # 就实现了基本的自动回复功能了，也可以按照需求用其他的XML解析方法
 def autoreply(request):
     try:
@@ -68,29 +70,23 @@ def autoreply(request):
         toUser = FromUserName
         fromUser = ToUserName
         if msg_type == 'text':
-            content = []
-            #data_count, data_dict = get_source.
-            #print(data_count, "===============")
-            b = {0: {'code': 'ybi5',
-                     'id': 1,
-                     'send_time': '2018-09-14',
-                     'sourcedesc': '链接:https://pan.baidu.com/s/1TFKbdogNL-25lDVlQI1hiQ  密码:ybi5',
-                     'sourcename': 'arcgis10.2',
-                     'sourceurl': 'https://pan.baidu.com/s/1TFKbdogNL-25lDVlQI1hiQ'},
-                 1: {'code': '79os',
-                     'id': 2,
-                     'send_time': '2018-09-14',
-                     'sourcedesc': '链接:https://pan.baidu.com/s/1NaroGJEEvqZdvQXaGNdwkg  密码:79os',
-                     'sourcename': 'arcgis10.5',
-                     'sourceurl': 'https://pan.baidu.com/s/1NaroGJEEvqZdvQXaGNdwkg'}}
-            for k, v in b.items():
-                this_value = "<a href='{0}'>{1}</a>".format(v["sourcedesc"], v["sourcename"])
-                content.append(this_value)
+            content=[]
+            data_count, data_dict=get_source(MsgContent)
+            if data_count>1:
+                content.append("相关类似资源如下：")
+                for k, v in data_dict.items():
+                    this_value = "<a href='{0}'>{1}</a>".format(v["sourcedesc"], v["sourcename"])
+                    content.append(this_value)
+            elif data_count==1:
+                for k, v in data_dict.items():
+                    this_value = "{0}的百度云盘{1}".format( v["sourcename"],v["sourcedesc"])
+                    content.append(this_value)
+            else:
+                content.append("没有相关资源！！")
             content = '\n'.join(content)
             replyMsg = TextMsg(toUser, fromUser, content)
-            print("成功了!!!!!!!!!!!!!!!!!!!")
-            print(replyMsg)
             return replyMsg.send()
+
 
         elif msg_type == 'image':
             content = "图片已收到,谢谢"
@@ -113,7 +109,7 @@ def autoreply(request):
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
         else:
-            # msg_type == 'link'
+            #msg_type == 'link'
             content = "链接已收到,谢谢"
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
