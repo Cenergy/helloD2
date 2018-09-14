@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from utils.get_sources import get_source
 
 
 
@@ -69,12 +70,11 @@ def autoreply(request):
         toUser = FromUserName
         fromUser = ToUserName
         if msg_type == 'text':
-
-            herf1="<a href='#' style='color:blue'>1、谷歌啊</a>"
-            herf2 = "<a href='http://www.baidu.com'>2、百度啊</a>"
-            content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent]
-            content.append(herf1)
-            content.append(herf2)
+            content=[]
+            data_count, data_dict=get_source(MsgContent)
+            for k, v in data_dict.items():
+                this_value = "<a href='{0}'>{1}</a>".format(v["sourcedesc"], v["sourcename"])
+                content.append(this_value)
             content='\n'.join(content)
             replyMsg = TextMsg(toUser, fromUser, content)
             print("成功了!!!!!!!!!!!!!!!!!!!")
