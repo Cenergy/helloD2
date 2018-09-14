@@ -68,52 +68,43 @@ def autoreply(request):
         MsgContent = xmlData.find('Content').text
         toUser = FromUserName
         fromUser = ToUserName
-        try:
-            hhh=MsgContent.sqlit("GISAI_")[-1]
-            content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你点的是" + hhh]
-            content = '\n'.join(content)
+        if msg_type == 'text':
+            herf1="<a href='http://www.baidu.com'>1、谷歌啊</a>"
+            herf2 = "<a href='http://www.baidu.com'>2、百度啊</a>"
+            content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent]
+            content.append(herf1)
+            content.append(herf2)
+            content='\n'.join(content)
             replyMsg = TextMsg(toUser, fromUser, content)
             print("成功了!!!!!!!!!!!!!!!!!!!")
             print(replyMsg)
             return replyMsg.send()
-        except:
-            if msg_type == 'text':
-                herf1="<a href='https://www.aigisss.com/wechat/'>GISAI_1、谷歌啊</a>"
-                herf2 = "<a href='https://www.aigisss.com/wechat/'>GISAI_2、百度啊</a>"
-                content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent]
-                content.append(herf1)
-                content.append(herf2)
-                content='\n'.join(content)
-                replyMsg = TextMsg(toUser, fromUser, content)
-                print("成功了!!!!!!!!!!!!!!!!!!!")
-                print(replyMsg)
-                return replyMsg.send()
 
-            elif msg_type == 'image':
-                content = "图片已收到,谢谢"
-                replyMsg = TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
-            elif msg_type == 'voice':
-                content = "语音已收到,谢谢"
-                replyMsg = TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
-            elif msg_type == 'video':
-                content = "视频已收到,谢谢"
-                replyMsg = TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
-            elif msg_type == 'shortvideo':
-                content = "小视频已收到,谢谢"
-                replyMsg = TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
-            elif msg_type == 'location':
-                content = "位置已收到,谢谢"
-                replyMsg = TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
-            else:
-                #msg_type == 'link'
-                content = "链接已收到,谢谢"
-                replyMsg = TextMsg(toUser, fromUser, content)
-                return replyMsg.send()
+        elif msg_type == 'image':
+            content = "图片已收到,谢谢"
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
+        elif msg_type == 'voice':
+            content = "语音已收到,谢谢"
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
+        elif msg_type == 'video':
+            content = "视频已收到,谢谢"
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
+        elif msg_type == 'shortvideo':
+            content = "小视频已收到,谢谢"
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
+        elif msg_type == 'location':
+            content = "位置已收到,谢谢"
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
+        else:
+            #msg_type == 'link'
+            content = "链接已收到,谢谢"
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
     except Exception as Argment:
         return Argment
 
