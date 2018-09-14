@@ -69,8 +69,8 @@ def autoreply(request):
         fromUser = ToUserName
         if msg_type == 'text':
             content = []
-            data_count, data_dict = get_source(MsgContent)
-            print(data_count, "===============")
+            #data_count, data_dict = get_source.
+            #print(data_count, "===============")
             b = {0: {'code': 'ybi5',
                      'id': 1,
                      'send_time': '2018-09-14',
