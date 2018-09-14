@@ -69,7 +69,8 @@ def autoreply(request):
         toUser = FromUserName
         fromUser = ToUserName
         if msg_type == 'text':
-            herf1="<a href='http://www.baidu.com'>1、谷歌啊</a>"
+
+            herf1="<a href='#' style='color:blue'>1、谷歌啊</a>"
             herf2 = "<a href='http://www.baidu.com'>2、百度啊</a>"
             content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent]
             content.append(herf1)
@@ -81,7 +82,7 @@ def autoreply(request):
             return replyMsg.send()
 
         elif msg_type == 'image':
-            content = "图片已收到,谢谢"
+            content = "图片已收到,谢谢"+MsgContent
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
         elif msg_type == 'voice':
