@@ -66,17 +66,21 @@ def autoreply(request):
         CreateTime = xmlData.find('CreateTime').text
         MsgType = xmlData.find('MsgType').text
         MsgId = xmlData.find('MsgId').text
+        content = xmlData.find('Content').text
 
         toUser = FromUserName
         fromUser = ToUserName
 
 
-        if msg_type == 'text':
-            content = xmlData.find('Content').text
-            replyMsg = TextMsg(toUser, fromUser, content)
-            print("成功了!!!!!!!!!!!!!!!!!!!")
-            print(replyMsg)
-            return replyMsg.send()
+        if type(content).__name__ == "unicode":
+            content = content[::-1]
+            content = content.encode('UTF-8')
+        elif type(content).__name__ == "str":
+            print(type(content).__name__)
+            content = content
+            content = content[::-1]
+        replyMsg = TextMsg(toUser, fromUser, content)
+        return replyMsg.send()
 
     except Exception as Argment:
         return Argment
