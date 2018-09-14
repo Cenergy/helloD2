@@ -71,7 +71,7 @@ def autoreply(request):
 
 
         if msg_type == 'text':
-            content = "Hello World!"
+            content = "<p>Hello World!</p><a href='http://www.baidu.com'>百度一下</a>"
             replyMsg = TextMsg(toUser, fromUser, content)
             print("成功了!!!!!!!!!!!!!!!!!!!")
             print(replyMsg)
