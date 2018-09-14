@@ -70,7 +70,7 @@ def autoreply(request):
         fromUser = ToUserName
 
         if msg_type == 'text':
-            content = "您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent
+            content = ["您好,欢迎来到Python大学习!希望我们可以一起进步!你说的是"+MsgContent]
             replyMsg = TextMsg(toUser, fromUser, content)
             print("成功了!!!!!!!!!!!!!!!!!!!")
             print(replyMsg)
