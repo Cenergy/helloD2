@@ -10,7 +10,10 @@ import xml.etree.ElementTree as ET
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+
+
 from utils.get_sources import get_source
+from utils.tuling_answer import get_tuling_answer
 
 
 
@@ -82,7 +85,8 @@ def autoreply(request):
                     this_value = "{0}的百度云盘{1}".format( v["sourcename"],v["sourcedesc"])
                     content.append(this_value)
             else:
-                content.append("没有相关资源！！")
+                tuling_answer=get_tuling_answer(MsgContent)
+                content.append(tuling_answer)
             content = '\n'.join(content)
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
