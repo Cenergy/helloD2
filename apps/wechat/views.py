@@ -78,7 +78,7 @@ def autoreply(request):
             if data_count>1:
                 content.append("相关类似资源如下：")
                 for k, v in data_dict.items():
-                    this_value = "<a href='{0}?key={1}'>{2}</a>".format("http://127.0.0.1:8000/sources/wxtalk/", v["sourcename"],v["sourcename"])
+                    this_value = "<a href='{0}?key={1}'>{2}</a>".format("https://www.aigisss.com/sources/wxtalk/", v["sourcename"],v["sourcename"])
                     content.append(this_value)
             elif data_count==1:
                 for k, v in data_dict.items():
