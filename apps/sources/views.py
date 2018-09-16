@@ -23,7 +23,7 @@ class QueryWechat(View):
         if data_count > 1:
             content.append("相关类似资源如下：<br>")
             for k, v in data_dict.items():
-                this_value = "<a href='{0}?key={1}' onclick=showAsk({2})>{3}</a></br>".format("http://127.0.0.1:8000/sources/wxtalk/",
+                this_value = "<a href='{0}?key={1}' onclick=showAsk({2})>{3}</a></br>".format("https://www.aigisss.com/sources/wxtalk/",
                                                                         v["sourcename"],  v["sourcename"],v["sourcename"])
                 content.append(this_value)
         elif data_count == 1:
