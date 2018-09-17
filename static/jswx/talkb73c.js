@@ -147,8 +147,9 @@ $(function () {
      * 文字发送
      */
     $(".send-btn").on("click", function () {
+        var num=-1;
         var msg = $("#msg").val();
-        showAsk(msg);
+        showAsk(num,msg);
     })
 })
 
@@ -204,7 +205,7 @@ function showAnswerMsg(msg) {
  * 提问
  * @param msg
  */
-function showAsk(msg) {
+function showAsk(num_id,msg) {
     var sendHTML = '<div class="group clear right">' +
         '<img src="/static/images/me.jpg" class="portrait right" alt=""/>' +
         '<p class="message right">' + msg + '</p>' +
@@ -214,7 +215,7 @@ function showAsk(msg) {
     $(".content").scrollTop($(".content")[0].scrollHeight);
     //清空输入框
     $("#msg").val("");
-    send(msg);
+    choose_send(num_id,msg);
 }
 
 /**
@@ -250,6 +251,20 @@ function send(msg) {
         url: "/sources/query_wechat/",
         type: 'POST',
         data: {"msg": msg},
+        dataType: 'json',
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            showAnswerMsg("网络连接错误哦哦哦");
+        },
+        success: function (result) {
+            showAnswerMsg(result.data);
+        }
+    });
+}
+function choose_send(num_id,msg) {
+    $.ajax({
+        url: "/sources/query_wechat/",
+        type: 'POST',
+        data: {"msg": msg,"num_id":num_id},
         dataType: 'json',
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             showAnswerMsg("网络连接错误哦哦哦");

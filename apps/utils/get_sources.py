@@ -10,4 +10,9 @@ def get_source(sourcename):
     data_count = all_data.iloc[:, 0].size
     data_dict = all_data.to_dict(orient='index')
     return data_count, data_dict
+def get_source_by_id(source_id):
+    query_sql = "select * from sources_sourcescore where id={}".format(source_id)
+    all_data = pd.read_sql(query_sql, connection)
+    data_dict = all_data.to_dict(orient='index')
+    return data_dict
 
