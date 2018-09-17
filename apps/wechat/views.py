@@ -71,6 +71,7 @@ def autoreply(request):
         MsgContent = xmlData.find('Content').text
         toUser = FromUserName
         fromUser = ToUserName
+        print(msg_type)
         if msg_type == 'text':
             content=[]
             data_count, data_dict=get_source(MsgContent)
@@ -89,7 +90,6 @@ def autoreply(request):
             content = '\n'.join(content)
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
-
 
         elif msg_type == 'image':
             content = "图片已收到,谢谢"
@@ -114,6 +114,7 @@ def autoreply(request):
         else:
             #msg_type == 'link'
             content = "链接已收到,谢谢"
+            print("1111111")
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
     except Exception as Argment:
