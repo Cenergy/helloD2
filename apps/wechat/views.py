@@ -62,7 +62,6 @@ def autoreply(request):
     try:
         webData = request.body
         xmlData = ET.fromstring(webData)
-
         msg_type = xmlData.find('MsgType').text
         ToUserName = xmlData.find('ToUserName').text
         FromUserName = xmlData.find('FromUserName').text
