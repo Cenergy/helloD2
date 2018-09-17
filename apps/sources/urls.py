@@ -14,5 +14,3 @@ urlpatterns = [
     url(r'^query_wechat/$', csrf_exempt(QueryWechat.as_view()), name="query_wechat"),
     url('^', weixin_main, name="wechat"),
 ]
-
-[]
