@@ -83,7 +83,7 @@ def autoreply(request):
         elif msg_type == 'event':
             MsgEvent = xmlData.find('Event').text
             if MsgEvent=="subscribe":
-                content = "谢谢您的关注！终于来了，小G已经在此等候多时。\n如果您想要搜资源，你可以直接输入搜索，比如'GIS'。" \
+                content = "谢谢您的关注！终于来了，小G已经在此等候多时。\n 如果您想要搜资源，你可以直接输入搜索，比如'GIS'。" \
                           "您也可以用语音的方式输入，除此之外，如果输入有文字的图片就可以返回其中的文字哦"
             else:
                 content = "感谢您的陪伴，请别离开我，告诉我，我改还不行吗[皱眉][皱眉]"
