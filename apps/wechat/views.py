@@ -1,30 +1,21 @@
 from django.shortcuts import render
 
 # Create your views here.
-
-
 import logging
 import hashlib
 import time
+import uuid
+import os
+import requests
 import xml.etree.ElementTree as ET
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-
+from aip import AipOcr
+from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
 
 from utils.get_sources import get_source
 from utils.tuling_answer import get_tuling_answer
-
-from aip import AipOcr
-
-
-# 定义常量
-APP_ID = '11800206'
-API_KEY = 'sAy8l7GrgGMBfesVoPkYtr0m'
-SECRET_KEY = 'Ex4Yitab1ZTq8y3FykTpa3kbGvpfUvjV'
-
-# 初始化文字识别分类器
-aipOcr=AipOcr(APP_ID, API_KEY, SECRET_KEY)
 
 
 
@@ -64,8 +55,6 @@ def weixin_main(request):
     else:
         webData = request.body
         xmlData = ET.fromstring(webData)
-        print(xmlData)
-        print(xmlData.find('MsgType').text)
         othercontent = autoreply(request)
         return HttpResponse(othercontent)
 
@@ -97,15 +86,7 @@ def autoreply(request):
             return replyMsg.send()
 
         elif msg_type == 'image':
-            content = "图片已收到,谢谢"
             PicUrl=xmlData.find('PicUrl').text
-            from PIL import Image
-            import pytesseract
-            import uuid
-            import os
-            import requests
-
-            # 上面都是导包，只需要下面这一行就能实现图片文字识别
             sysfile = os.path.abspath('.')
             unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
             unknownimgpath = sysfile + '/media/images/' + unknown_img_uuid + '.jpg'
@@ -113,18 +94,29 @@ def autoreply(request):
             img = requests.get(PicUrl)
             with open(unknownimgpath, 'ab') as f:
                 f.write(img.content)
+            # 初始化文字百度识别分类器
+            aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
             # 定义参数变量
             options = {
                 'detect_direction': 'true',
                 'language_type': 'CHN_ENG',
             }
-
-            result = aipOcr.webImage(get_file_content(unknownimgpath), options)
-            pic_words = []
-            for i in result["words_result"]:
-                pic_words.append(i["words"])
-            vector_word=''.join(pic_words)
-            replyMsg = TextMsg(toUser, fromUser, vector_word)
+            try:
+                result = aipOcr.webImage(get_file_content(unknownimgpath), options)
+                print(result)
+                if result["words_result_num"]==0:
+                    vector_word = "123"
+                else:
+                    pic_words = []
+                    for i in result["words_result"]:
+                        pic_words.append(i["words"])
+                    vector_word=''.join(pic_words)
+            except:
+                vector_word = "123"
+            vector_words = vector_word
+            print(vector_words,"========")
+            os.remove(unknownimgpath)
+            replyMsg = TextMsg(toUser, fromUser, vector_words)
             return replyMsg.send()
         elif msg_type == 'voice':
             content = "语音已收到,谢谢"

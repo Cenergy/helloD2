@@ -62,6 +62,9 @@ options = {
 }
 
 result = aipOcr.webImage(get_file_content('hello.jpg'),options)
+""" 调用表格文字识别 """
+image = get_file_content('haha.jpg')
+aipOcr.tableRecognitionAsync(image);
 pic_words=[]
 for i in result["words_result"]:
     print(i)
