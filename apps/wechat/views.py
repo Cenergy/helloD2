@@ -112,9 +112,8 @@ def autoreply(request):
                         pic_words.append(i["words"])
                     vector_word=''.join(pic_words)
             except:
-                vector_word = "123"
+                vector_word = "图中没有文字或未能识别"
             vector_words = vector_word
-            print(vector_words,"========")
             os.remove(unknownimgpath)
             replyMsg = TextMsg(toUser, fromUser, vector_words)
             return replyMsg.send()
