@@ -3,13 +3,14 @@ __author__ = 'Cenergy'
 __date__ = '15/9/18 上午10:37'
 
 import requests
+from helloD2.settings import TURING_API_KEY
 
 apiUrl = 'http://www.tuling123.com/openapi/api'
 
 
 def get_tuling_answer(question):
     data = {
-        'key': '4856a1d4c82d471b89f0437a02a02028',  # 如果这个Tuling Key不能用，那就换一个
+        'key': TURING_API_KEY,  # 如果这个Tuling Key不能用，那就换一个
         'info': question,  # 这是我们发出去的消息
         'userid': 'wechat-robot',  # 这里你想改什么都可以
     }
