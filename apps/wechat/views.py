@@ -105,7 +105,7 @@ def autoreply(request):
                 result = aipOcr.webImage(get_file_content(unknownimgpath), options)
                 print(result)
                 if result["words_result_num"]==0:
-                    vector_word = "123"
+                    vector_word = "图中没有文字或未能识别"
                 else:
                     pic_words = []
                     for i in result["words_result"]:
