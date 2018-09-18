@@ -51,6 +51,10 @@ def weixin_main(request):
             logging.error('%s' % e)
             return HttpResponse(echostr)
     else:
+        webData = request.body
+        xmlData = ET.fromstring(webData)
+        print(xmlData)
+        print(xmlData.find('MsgType').text)
         othercontent = autoreply(request)
         return HttpResponse(othercontent)
 
@@ -59,35 +63,25 @@ def weixin_main(request):
 #微信服务器推送消息是xml的，根据利用ElementTree来解析出的不同xml内容返回不同的回复信息，
 # 就实现了基本的自动回复功能了，也可以按照需求用其他的XML解析方法
 def autoreply(request):
-    try:
+    if True:
         webData = request.body
         xmlData = ET.fromstring(webData)
         msg_type = xmlData.find('MsgType').text
         ToUserName = xmlData.find('ToUserName').text
         FromUserName = xmlData.find('FromUserName').text
         CreateTime = xmlData.find('CreateTime').text
-        MsgType = xmlData.find('MsgType').text
-        MsgId = xmlData.find('MsgId').text
-        MsgContent = xmlData.find('Content').text
+        # MsgType = xmlData.find('MsgType').text
+        #MsgId = xmlData.find('MsgId').text
         toUser = FromUserName
         fromUser = ToUserName
-        print(msg_type)
         if msg_type == 'text':
-            content=[]
-            data_count, data_dict=get_source(MsgContent)
-            if data_count>1:
-                content.append("相关类似资源如下：")
-                for k, v in data_dict.items():
-                    this_value = "<a href='{0}?key={1}'>{2}</a>".format("https://www.aigisss.com/sources/wxtalk/", v["sourcename"],v["sourcename"])
-                    content.append(this_value)
-            elif data_count==1:
-                for k, v in data_dict.items():
-                    this_value = "{0}的百度云盘{1}".format( v["sourcename"],v["sourcedesc"])
-                    content.append(this_value)
-            else:
-                tuling_answer=get_tuling_answer(MsgContent)
-                content.append(tuling_answer)
+            MsgContent = xmlData.find('Content').text
+            content=get_content(MsgContent)
             content = '\n'.join(content)
+            replyMsg = TextMsg(toUser, fromUser, content)
+            return replyMsg.send()
+        elif msg_type == 'event':
+            content = "谢谢您的关注"
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
 
@@ -97,7 +91,15 @@ def autoreply(request):
             return replyMsg.send()
         elif msg_type == 'voice':
             content = "语音已收到,谢谢"
-            replyMsg = TextMsg(toUser, fromUser, content)
+            VoiceContent = xmlData.find('Recognition').text
+            if VoiceContent is not None:
+                voiceContent=["您的语音是：{0}".format(VoiceContent)]
+                content0 = get_content(VoiceContent)
+                voiceRes2=voiceContent+content0
+                content = '\n'.join(voiceRes2)
+                replyMsg = TextMsg(toUser, fromUser, content)
+            else:
+                replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
         elif msg_type == 'video':
             content = "视频已收到,谢谢"
@@ -114,11 +116,11 @@ def autoreply(request):
         else:
             #msg_type == 'link'
             content = "链接已收到,谢谢"
-            print("1111111")
             replyMsg = TextMsg(toUser, fromUser, content)
             return replyMsg.send()
-    except Exception as Argment:
-        return Argment
+    #except Exception as Argment:
+    else:
+        return "123"
 
 
 class Msg(object):
@@ -149,3 +151,21 @@ class TextMsg(Msg):
         </xml>
         """
         return XmlForm.format(**self.__dict)
+
+def get_content(MsgContent):
+    content = []
+    data_count, data_dict = get_source(MsgContent)
+    if data_count > 1:
+        content.append("相关类似资源如下：")
+        for k, v in data_dict.items():
+            this_value = "<a href='{0}?key={1}'>{2}</a>".format("https://www.aigisss.com/sources/wxtalk/",
+                                                                v["sourcename"], v["sourcename"])
+            content.append(this_value)
+    elif data_count == 1:
+        for k, v in data_dict.items():
+            this_value = "{0}的百度云盘{1}".format(v["sourcename"], v["sourcedesc"])
+            content.append(this_value)
+    else:
+        tuling_answer = get_tuling_answer(MsgContent)
+        content.append(tuling_answer)
+    return content
