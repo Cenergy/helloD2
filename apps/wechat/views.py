@@ -15,6 +15,17 @@ from django.http import HttpResponse
 from utils.get_sources import get_source
 from utils.tuling_answer import get_tuling_answer
 
+from aip import AipOcr
+
+
+# 定义常量
+APP_ID = '11800206'
+API_KEY = 'sAy8l7GrgGMBfesVoPkYtr0m'
+SECRET_KEY = 'Ex4Yitab1ZTq8y3FykTpa3kbGvpfUvjV'
+
+# 初始化文字识别分类器
+aipOcr=AipOcr(APP_ID, API_KEY, SECRET_KEY)
+
 
 
 # django默认开启csrf防护，这里使用@csrf_exempt去掉防护
@@ -87,13 +98,40 @@ def autoreply(request):
 
         elif msg_type == 'image':
             content = "图片已收到,谢谢"
-            replyMsg = TextMsg(toUser, fromUser, content)
+            PicUrl=xmlData.find('PicUrl').text
+            from PIL import Image
+            import pytesseract
+            import uuid
+            import os
+            import requests
+
+            # 上面都是导包，只需要下面这一行就能实现图片文字识别
+            sysfile = os.path.abspath('.')
+            unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
+            unknownimgpath = sysfile + '/media/images/' + unknown_img_uuid + '.jpg'
+
+            img = requests.get(PicUrl)
+            with open(unknownimgpath, 'ab') as f:
+                f.write(img.content)
+            # 定义参数变量
+            options = {
+                'detect_direction': 'true',
+                'language_type': 'CHN_ENG',
+            }
+
+            result = aipOcr.webImage(get_file_content(unknownimgpath), options)
+            pic_words = []
+            for i in result["words_result"]:
+                pic_words.append(i["words"])
+            vector_word=''.join(pic_words)
+            replyMsg = TextMsg(toUser, fromUser, vector_word)
             return replyMsg.send()
         elif msg_type == 'voice':
             content = "语音已收到,谢谢"
             VoiceContent = xmlData.find('Recognition').text
             if VoiceContent is not None:
                 voiceContent=["您的语音是：{0}".format(VoiceContent)]
+                VoiceContent=VoiceContent.replace('。','')
                 content0 = get_content(VoiceContent)
                 voiceRes2=voiceContent+content0
                 content = '\n'.join(voiceRes2)
@@ -169,3 +207,8 @@ def get_content(MsgContent):
         tuling_answer = get_tuling_answer(MsgContent)
         content.append(tuling_answer)
     return content
+
+
+def get_file_content(filePath):
+    with open(filePath, 'rb') as fp:
+        return fp.read()
