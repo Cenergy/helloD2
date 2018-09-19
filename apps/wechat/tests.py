@@ -61,13 +61,44 @@ options = {
     'language_type': 'CHN_ENG',
 }
 
-result = aipOcr.webImage(get_file_content('hello.jpg'),options)
-""" 调用表格文字识别 """
-image = get_file_content('haha.jpg')
-aipOcr.tableRecognitionAsync(image);
-pic_words=[]
-for i in result["words_result"]:
-    print(i)
-    pic_words.append(i["words"])
+# result = aipOcr.webImage(get_file_content('hello.jpg'),options)
 
-print(''.join(pic_words))
+
+""" 调用表格识别结果 """
+# 初始化文字识别分类器
+client=AipOcr(APP_ID, API_KEY, SECRET_KEY)
+image = get_file_content('hhh.jpg')
+hhh=aipOcr.tableRecognitionAsync(image)
+print(hhh)
+
+# requestId = hhh["result"][0]["request_id"]
+import time
+
+import datetime
+
+
+
+#long running
+
+
+
+
+""" 带参数调用表格识别结果 """
+# picUrl="error"
+# options["result_type"] = "json"
+# starttime = datetime.datetime.now()
+# aaa=client.getTableRecognitionResult(requestId, options)
+# print(aaa)
+# while True:
+#
+#     try:
+#         picUrl=aaa["result"]["result_data"]
+#         if  picUrl!='':
+#             break
+#     except:
+#         pass
+#     endtime = datetime.datetime.now()
+#     if (endtime - starttime).seconds>15:
+#         picUrl = "error"
+#         break
+# print(picUrl)

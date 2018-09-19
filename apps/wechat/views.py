@@ -74,6 +74,7 @@ def autoreply(request):
         #MsgId = xmlData.find('MsgId').text
         toUser = FromUserName
         fromUser = ToUserName
+        print(msg_type)
         if msg_type == 'text':
             MsgContent = xmlData.find('Content').text
             content=get_content(MsgContent)
@@ -83,8 +84,11 @@ def autoreply(request):
         elif msg_type == 'event':
             MsgEvent = xmlData.find('Event').text
             if MsgEvent=="subscribe":
-                content = "谢谢您的关注！终于来了，小G已经在此等候多时。\n如果您想要搜资源，你可以直接输入搜索，比如'GIS'。" \
-                          "\n您也可以用语音的方式输入。\n除此之外，如果输入有文字的图片就可以返回其中的文字哦"
+                content = "终于等到你，小g已在此恭候多时。\n" \
+                          "这是一个gis与ai的公众号，您可以输入关键词搜索资源。" \
+                          "如输入'arcgis'，小g会为你提供关于arcgis的各种资源。\n" \
+                          "您也可以通过语音输入搜索。\n" \
+                          "除此之外，小g还能将您发送的图片中的文字读取出来哦。"
             else:
                 content = "感谢您的陪伴，请别离开我，告诉我，我改还不行吗[皱眉][皱眉]"
             replyMsg = TextMsg(toUser, fromUser, content)
