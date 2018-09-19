@@ -13,11 +13,22 @@ class SourcesCore(models.Model):
     )
     id=models.IntegerField(primary_key=True,verbose_name="资源ID")
     sourcename=models.CharField(max_length=100,verbose_name='资源名称')
-    sourceurl=models.URLField(verbose_name="资源地址",null=True,blank=True)
-    code=models.CharField(max_length=20,verbose_name="提取码",null=True,blank=True)
-    sourcedesc = models.CharField(max_length=200, null=True,blank=True,verbose_name='综合描述')
+    sourceurl=models.URLField(verbose_name="资源地址",null=True,blank=True,help_text="可不填，会自动从资源描述里读取")
+    code=models.CharField(max_length=20,verbose_name="提取码",null=True,blank=True,help_text="可不填，会自动从资源描述里读取")
+    sourcedesc = models.CharField(max_length=200, null=True,blank=True,verbose_name='综合描述', help_text="默认是百度云的资源，如果不是，上面两个请填写")
     question_type = models.IntegerField(choices=SOURCES_TYPE, verbose_name="资源类型", help_text="资源类型", default=0)
     send_time=models.DateField(default=datetime.datetime.now,verbose_name='添加时间')
+
+    def save(self, *args, **kwargs):
+        if self.sourceurl is None:
+            abc = self.sourcedesc.split()
+            urllink = abc[0].split("链接:")
+            urlcode = abc[-1].split("密码:")
+            self.sourceurl=urllink[-1]
+            self.code=urlcode[-1]
+        else:
+            pass
+        return super(SourcesCore, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name="资源集合"
