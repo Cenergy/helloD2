@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="/static/css/magnific-popup.css">
 
     <script src="/static/js/modernizr-2.6.2.min.js"></script>  <!-- Modernizr /-->
-    <script src="../static/js/layui.all.js"></script>
-    <link rel="stylesheet" href="../static/css/layui.css">
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <script src="/static/layui/layui.all.js"></script>
     <script type="text/javascript" src="/static/js/HZRecorders.js"></script>
     <style>
         .voiceBox {
@@ -207,7 +207,7 @@
             <div class="col-sm-4 wow fadeInDown text-center">
                 <img class="rotate" src="/static/img/icon/tweet.svg" alt="Generic placeholder image">
                 <h3>语音识别</h3>
-                <p class="lead">
+                <p class="lead">点击开始然后点停止就好了！
                 <div class="voiceBox">
                     <input id="questions" name="code" type="text" placeholder="点话筒试试">
                     <button onclick="startRecord()"><img src="../static/img/voice.png"></button>
@@ -222,50 +222,54 @@
             <div class="col-sm-4 wow fadeInDown text-center">
                 <img class="rotate" src="/static/img/icon/picture.svg" alt="Generic placeholder image">
                 <h3>图像识别</h3>
-                <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
-                    congolium sic ad nauseum. </p>
-                <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
-            </div><!-- /.col-lg-4 -->
+                <p class="lead">
+                    <div class="layui-upload-drag" id="test10">
+                        <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+            </p>
+            <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
+        </div><!-- /.col-lg-4 -->
 
-            <div class="col-sm-4 wow fadeInDown text-center">
-                <img class="rotate" src="/static/img/icon/retina.svg" alt="Generic placeholder image">
-                <h3>推荐算法</h3>
-                <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
-                    congolium sic ad nauseum. </p>
-                <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
-            </div><!-- /.col-lg-4 -->
+        <div class="col-sm-4 wow fadeInDown text-center">
+            <img class="rotate" src="/static/img/icon/retina.svg" alt="Generic placeholder image">
+            <h3>推荐算法</h3>
+            <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
+                congolium sic ad nauseum. </p>
+            <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
+        </div><!-- /.col-lg-4 -->
 
-        </div><!-- /.row -->
+    </div><!-- /.row -->
 
-        <div class="row tworow">
+    <div class="row tworow">
 
-            <div class="col-sm-4  wow fadeInDown text-center">
-                <img class="rotate" src="/static/img/icon/laptop.svg" alt="Generic placeholder image">
-                <h3>机器学习</h3>
-                <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
-                    congolium sic ad nauseum. </p>
-                <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
-            </div><!-- /.col-lg-4 -->
+        <div class="col-sm-4  wow fadeInDown text-center">
+            <img class="rotate" src="/static/img/icon/laptop.svg" alt="Generic placeholder image">
+            <h3>机器学习</h3>
+            <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
+                congolium sic ad nauseum. </p>
+            <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
+        </div><!-- /.col-lg-4 -->
 
-            <div class="col-sm-4 wow fadeInDown text-center">
-                <a href="/map/">
-                    <img class="rotate" src="/static/img/icon/map.svg" alt="Generic placeholder image">
-                    <h3>地图</h3>
-                    <p class="lead">加载各种的地图</p>
-                </a>
-                <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
-            </div><!-- /.col-lg-4 -->
+        <div class="col-sm-4 wow fadeInDown text-center">
+            <a href="/map/">
+                <img class="rotate" src="/static/img/icon/map.svg" alt="Generic placeholder image">
+                <h3>地图</h3>
+                <p class="lead">加载各种的地图</p>
+            </a>
+            <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
+        </div><!-- /.col-lg-4 -->
 
-            <div class="col-sm-4 wow fadeInDown text-center">
-                <img class="rotate" src="/static/img/icon/browser.svg" alt="Generic placeholder image">
-                <h3>网络爬虫</h3>
-                <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
-                    congolium sic ad nauseum. </p>
-                <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
-            </div><!-- /.col-lg-4 -->
+        <div class="col-sm-4 wow fadeInDown text-center">
+            <img class="rotate" src="/static/img/icon/browser.svg" alt="Generic placeholder image">
+            <h3>网络爬虫</h3>
+            <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
+                congolium sic ad nauseum. </p>
+            <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
+        </div><!-- /.col-lg-4 -->
 
-        </div><!-- /.row -->
-    </div>
+    </div><!-- /.row -->
+</div>
 </div>
 
 <!-- Use it -->
@@ -672,6 +676,40 @@
         });
         layer.closeAll();
     }
+</script>
+{#图片识别的#}
+<script>
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+        var formData = new FormData();
+
+        //拖拽上传
+        upload.render({
+            elem: '#test10'
+            , url: '/sources/upload/'
+            , accept: 'images'
+            , before: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#test10').attr('src', result); //图片链接（base64）
+                    var abc=$('#test10').attr('src')
+                    formData.append("hello", abc);
+                });
+            }
+            , data: {
+                id: function () {
+                    return $('#test10').attr("src");
+                },
+                "abc":formData
+            }
+            , done: function (res) {
+                console.log(res)
+            },
+            error: function (res) {
+                console.log(res)
+            }
+        });
+    });
 </script>
 </body>
 

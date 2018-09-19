@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-
+import json
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
 
@@ -53,3 +53,35 @@ class QueryWechat(View):
                 "data": "失败"
             }
         return JsonResponse(reginfs, content_type='application/json')
+
+class SourcesUpload(View):
+    def get(self,request):
+        print(request.GET)
+        try:
+            reginfs = {
+                "code": 400,
+                "message": "success",
+                "data": "hello"
+            }
+        except:
+            reginfs = {
+                "code": 200,
+                "message": "failed",
+                "data": "注册失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+    def post(self,request):
+        print(request.POST.get("abc"))
+        try:
+            reginfs = {
+                "code": 400,
+                "message": "success",
+                "data": "hello"
+            }
+        except:
+            reginfs = {
+                "code": 200,
+                "message": "failed",
+                "data": "注册失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
