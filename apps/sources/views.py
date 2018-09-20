@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-import json,os,uuid
+import json,os,uuid,datetime
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
 
@@ -10,6 +10,8 @@ from utils.tuling_answer import get_tuling_answer
 
 from aip import AipOcr
 from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
+
+import pandas as pd
 
 
 class WechatTalk(View):
@@ -84,8 +86,8 @@ class SourcesUpload(View):
             f = request.FILES["file"]
             sysfile = os.path.abspath('.')
             unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
-            imgpath='/static/img2word/' + unknown_img_uuid+'.jpg'
-            unknownimgpath = sysfile + imgpath
+            imgpath=unknown_img_uuid
+            unknownimgpath = sysfile + '/static/img2word/' + imgpath+'.jpg'
             with open(unknownimgpath, 'wb+') as destination:
                 for chunk in f.chunks():
                     destination.write(chunk)
@@ -107,7 +109,7 @@ class ImgtoWords(View):
         try:
             sysfile = os.path.abspath('.')
             imgpath = request.session.get("imgpath")
-            unknownimgpath = sysfile + imgpath
+            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
             os.remove(unknownimgpath)
             reginfs = {
                 "code": 444,
@@ -126,7 +128,7 @@ class ImgtoWords(View):
         # h获取图片的路径
         imgpath = request.session.get("imgpath")
         sysfile = os.path.abspath('.')
-        unknownimgpath = sysfile + imgpath
+        unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
         options = {
             'detect_direction': 'true',
             'language_type': 'CHN_ENG',
@@ -146,7 +148,7 @@ class ImgtoWords(View):
             vector_word = "图中没有文字或未能识别"
         imginfo={}
         imginfo["vector_words"] = vector_word
-        imginfo["imgpath"]=imgpath
+        imginfo["imgpath"]='/static/img2word/' + imgpath + '.jpg'
         try:
             reginfs = {
                 "code": 400,
@@ -166,3 +168,73 @@ class ImgtoWords(View):
             return fp.read()
 def img2wordRes(request):
     return render(request, "sources/img2wordRes.html", {})
+
+class ImgtoExcel(View):
+    def get(self, request):
+        try:
+            sysfile = os.path.abspath('.')
+            imgpath = request.session.get("imgpath")
+            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
+            os.remove(unknownimgpath)
+            reginfs = {
+                "code": 444,
+                "message": "success",
+                "data": "hello"
+            }
+        except:
+            reginfs = {
+                "code": 222,
+                "message": "failed",
+                "data": "失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+    def post(self, request):
+        # 图片的处理
+        # h获取图片的路径
+        imgpath = request.session.get("imgpath")
+        sysfile = os.path.abspath('.')
+        unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
+        options = {
+            'detect_direction': 'true',
+            'language_type': 'CHN_ENG',
+        }
+        picUrl = "error"
+        try:
+            aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
+            result = aipOcr.tableRecognitionAsync(self.get_file_content(unknownimgpath), options)
+            starttime = datetime.datetime.now()
+            while True:
+                try:
+                    requestId = result["result"][0]["request_id"]
+                    aaa = aipOcr.getTableRecognitionResult(requestId, options)
+                    picUrl = aaa["result"]["result_data"]
+                    if picUrl != '':
+                        break
+                except:
+                    picUrl = "error"
+                endtime = datetime.datetime.now()
+                if (endtime - starttime).seconds > 20:
+                    picUrl = "error"
+                    break
+            print(picUrl, "====================")
+            excel_source = pd.read_excel(picUrl, header=1)
+            excel_name = "/static/img2word/" + imgpath + ".xls"
+            print(excel_name,'------------')
+            excel_source.to_excel(excel_name)
+            reginfs = {
+                "code": 400,
+                "message": "success",
+                "data": "123"
+            }
+        except:
+            picUrl = "error"
+            reginfs = {
+                "code": 200,
+                "message": "failed",
+                "data": "失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+
+    def get_file_content(self,filePath):
+        with open(filePath, 'rb') as fp:
+            return fp.read()

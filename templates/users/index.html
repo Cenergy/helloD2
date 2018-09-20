@@ -110,6 +110,11 @@
         .dropdown {
             text-align: center;
         }
+
+        .layui-upload-drag {
+            border: 1px solid #63C0FF;
+            border-style: dashed;
+        }
     </style>
 </head>
 
@@ -221,11 +226,11 @@
 
             <div class="col-sm-4 wow fadeInDown text-center">
                 <img class="rotate" src="/static/img/icon/picture.svg" alt="Generic placeholder image">
-                <h3>图像识别</h3>
+                <h3>文字识别</h3>
                 <p class="lead">
                     <div class="layui-upload-drag" id="test10">
                         <i class="layui-icon"></i>
-                <p>点击上传，或将文件拖拽到此处</p>
+                <p>点击上传图片或将图片拖到此处</p>
             </div>
             </p>
             <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
@@ -262,9 +267,15 @@
 
         <div class="col-sm-4 wow fadeInDown text-center">
             <img class="rotate" src="/static/img/icon/browser.svg" alt="Generic placeholder image">
-            <h3>网络爬虫</h3>
-            <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
-                congolium sic ad nauseum. </p>
+            <h3>图表转换</h3>
+            <p class="lead">点击上传含有表格的图片
+            <div>
+                <button type="button" class="layui-btn layui-btn-danger" id="test7">
+                    <i class="layui-icon"></i>上传图片
+                </button>
+
+            </div>
+            </p>
             <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
         </div><!-- /.col-lg-4 -->
 
@@ -705,8 +716,8 @@
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
-                            let reswords=res.data.vector_words;
-                            let resurl=res.data.imgpath;
+                            let reswords = res.data.vector_words;
+                            let resurl = res.data.imgpath;
                             layer.open({
                                 title: "识别结果",
                                 type: 2,
@@ -744,6 +755,43 @@
                 console.log(res)
             }
         });
+    });
+</script>
+{#图表转换#}
+<script>
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+
+        //设定文件大小限制
+        upload.render({
+            elem: '#test7'
+            , url: '/sources/upload/'
+            , accept: 'images'
+            , done: function (res) {
+                if (res.code == 400) {
+                    layer.msg("正在解析中", {time: 3000});
+                    $.ajax({
+                        url: "/sources/img2excel/",
+                        type: "POST",
+                        data: {idname: 'abc'},
+                        success: function (res) {
+                           console.log(res)
+                        },
+                        error: function () {
+                            layer.msg("服务器内部错误", {time: 2000})
+                        }
+                    })
+                } else {
+
+                }
+            },
+            error: function (res) {
+                console.log(res)
+            }
+        });
+
+
     });
 </script>
 </body>
