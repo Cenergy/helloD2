@@ -119,7 +119,8 @@ def autoreply(request):
                     pic_words = []
                     for i in result["words_result"]:
                         pic_words.append(i["words"])
-                    vector_word=''.join(pic_words)
+                    pic_words = [('<p>' + i + '</p>') for i in pic_words]
+                    vector_word = ''.join(pic_words)
             except:
                 vector_word = "图中没有文字或未能识别"
             vector_words = vector_word

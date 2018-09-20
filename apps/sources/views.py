@@ -134,13 +134,13 @@ class ImgtoWords(View):
         try:
             aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
             result = aipOcr.webImage(self.get_file_content(unknownimgpath), options)
-            print(result)
             if result["words_result_num"] == 0:
                 vector_word = "图中没有文字或未能识别"
             else:
                 pic_words = []
                 for i in result["words_result"]:
                     pic_words.append(i["words"])
+                pic_words=[('<p>'+i+'</p>') for i in pic_words]
                 vector_word = ''.join(pic_words)
         except:
             vector_word = "图中没有文字或未能识别"
@@ -164,3 +164,5 @@ class ImgtoWords(View):
     def get_file_content(self,filePath):
         with open(filePath, 'rb') as fp:
             return fp.read()
+def img2wordRes(request):
+    return render(request, "sources/img2wordRes.html", {})

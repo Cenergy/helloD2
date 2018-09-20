@@ -699,19 +699,18 @@
             }
             , done: function (res) {
                 if (res.code == 400) {
+                    layer.msg("正在解析中", {time: 3000});
                     $.ajax({
                         url: "/sources/img2words/",
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
-                            layer.msg("正在解析中", {time: 1000});
-                            console.log(res.data);
                             let reswords=res.data.vector_words;
                             let resurl=res.data.imgpath;
                             layer.open({
                                 title: "识别结果",
                                 type: 2,
-                                content: "/test/",
+                                content: "/sources/img2wordRes/#resTxt",
                                 area: ['80%', '80%'],
                                 btn: ['关闭'],
                                 {#父页面向子页面传值#}
