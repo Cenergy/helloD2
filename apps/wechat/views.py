@@ -89,7 +89,7 @@ def autoreply(request):
                           "如输入'arcgis'，小g会为你提供关于arcgis的各种资源。\n" \
                           "您也可以通过语音输入搜索。\n" \
                           "除此之外，小g还能将您发送的图片中的文字读取出来哦。\n" \
-                          "最后附上<a href='https://www.aigisss.com'>个人小网站</a>"
+                          "最后附上<a href='https://www.aigisss.com'>👉 👉 👉 个人小网站👈 👈 👈</a>👈 👈 👈"
 
             else:
                 content = "感谢您的陪伴，请别离开我，告诉我，我改还不行吗[皱眉][皱眉]"
