@@ -268,11 +268,13 @@
         <div class="col-sm-4 wow fadeInDown text-center">
             <img class="rotate" src="/static/img/icon/browser.svg" alt="Generic placeholder image">
             <h3>图表转换</h3>
-            <p class="lead">点击上传含有表格的图片
+            <p class="lead">
+                点击上传含有表格的图片
             <div>
                 <button type="button" class="layui-btn layui-btn-danger" id="test7">
                     <i class="layui-icon"></i>上传图片
                 </button>
+                <span id="img2excel"></span>
 
             </div>
             </p>
@@ -770,13 +772,19 @@
             , accept: 'images'
             , done: function (res) {
                 if (res.code == 400) {
-                    layer.msg("正在解析中", {time: 3000});
+                    layer.msg("正在解析中", {time: 6000});
                     $.ajax({
                         url: "/sources/img2excel/",
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
-                           console.log(res)
+                            if (res.code == 400) {
+                                excel_html = "<br><p><a href='/sources/excel_download/'>下载文件</a></p>";
+                                $("#img2excel").append(excel_html)
+                            } else {
+
+                            }
+                            console.log(res.data)
                         },
                         error: function () {
                             layer.msg("服务器内部错误", {time: 2000})

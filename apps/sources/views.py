@@ -216,25 +216,56 @@ class ImgtoExcel(View):
                 if (endtime - starttime).seconds > 20:
                     picUrl = "error"
                     break
-            print(picUrl, "====================")
-            excel_source = pd.read_excel(picUrl, header=1)
-            excel_name = "/static/img2word/" + imgpath + ".xls"
-            print(excel_name,'------------')
+            excel_source = pd.read_excel(picUrl)
+            excel_name = sysfile+"/static/img2word/" + imgpath + ".xls"
             excel_source.to_excel(excel_name)
             reginfs = {
                 "code": 400,
                 "message": "success",
-                "data": "123"
+                "data": imgpath
             }
         except:
             picUrl = "error"
             reginfs = {
                 "code": 200,
-                "message": "failed",
-                "data": "失败"
+                "message": "fail",
+                "data": "fail"
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
     def get_file_content(self,filePath):
         with open(filePath, 'rb') as fp:
             return fp.read()
+from django.http import StreamingHttpResponse
+
+
+def excel_download(request):
+    """
+    sql 文件下载
+    :param request:
+    :return:
+    """
+    sysfile = os.path.abspath('.')
+    imgpath = request.session.get("imgpath")
+    the_file_name = imgpath + '.xls'
+    filename = sysfile+'/static/img2word/{}'.format(the_file_name)  # 要下载的文件路径
+    response = StreamingHttpResponse(readFile(filename))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+    return response
+
+
+def readFile(filename, chunk_size=512):
+    """
+    缓冲流下载文件方法
+    :param filename:
+    :param chunk_size:
+    :return:
+    """
+    with open(filename, 'rb') as f:
+        while True:
+            c = f.read(chunk_size)
+            if c:
+                yield c
+            else:
+                break
