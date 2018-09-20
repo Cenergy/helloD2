@@ -682,7 +682,6 @@
     layui.use('upload', function () {
         var $ = layui.jquery
             , upload = layui.upload;
-        var formData = new FormData();
 
         //拖拽上传
         upload.render({
@@ -692,18 +691,55 @@
             , before: function (obj) {
                 obj.preview(function (index, file, result) {
                     $('#test10').attr('src', result); //图片链接（base64）
-                    var abc=$('#test10').attr('src')
-                    formData.append("hello", abc);
+                    this.data = {
+                        "imgbase64": $('#test10').attr('src')
+                    };
                 });
-            }
-            , data: {
-                id: function () {
-                    return $('#test10').attr("src");
-                },
-                "abc":formData
+
             }
             , done: function (res) {
-                console.log(res)
+                if (res.code == 400) {
+                    $.ajax({
+                        url: "/sources/img2words/",
+                        type: "POST",
+                        data: {idname: 'abc'},
+                        success: function (res) {
+                            layer.msg("正在解析中", {time: 1000});
+                            console.log(res.data);
+                            let reswords=res.data.vector_words;
+                            let resurl=res.data.imgpath;
+                            layer.open({
+                                title: "识别结果",
+                                type: 2,
+                                content: "/test/",
+                                area: ['80%', '80%'],
+                                btn: ['关闭'],
+                                {#父页面向子页面传值#}
+                                success: function (layero, index) {
+                                    let body = layer.getChildFrame('body', index);
+                                    body.find('#resTxt').html(reswords);
+                                    body.find('#pic').attr('src', resurl);
+                                },
+                                closeBtn: 0,
+                                end: function () {
+                                    $.ajax({
+                                        url: "/sources/img2words/",
+                                        type: "GET",
+                                        data: {idname: 'abc'},
+                                        success: function (res) {
+                                            console.log(res.data)
+                                        }
+                                    })
+                                }
+                            });
+                        },
+                        error: function () {
+                            layer.msg("服务器内部错误", {time: 2000})
+                        }
+                    })
+                } else {
+
+                }
             },
             error: function (res) {
                 console.log(res)

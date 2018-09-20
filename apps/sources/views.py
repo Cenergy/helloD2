@@ -1,27 +1,32 @@
 from django.shortcuts import render
 
 # Create your views here.
-import json
+import json,os,uuid
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
 
-
-from utils.get_sources import get_source,get_source_by_id
+from utils.get_sources import get_source, get_source_by_id
 from utils.tuling_answer import get_tuling_answer
 
+from aip import AipOcr
+from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
+
+
 class WechatTalk(View):
-    def get(self,request):
-        return render(request,"sources/talk.html",{})
+    def get(self, request):
+        return render(request, "sources/talk.html", {})
+
 
 class QueryWechat(View):
-    def get(self,request):
-        return render(request,"sources/talk.html",{})
-    def post(self,request):
+    def get(self, request):
+        return render(request, "sources/talk.html", {})
+
+    def post(self, request):
         source = request.POST.get("msg")
-        num_id = int(request.POST.get("num_id",-1))
+        num_id = int(request.POST.get("num_id", -1))
         content = []
-        if num_id!=-1:
-            data_dict=get_source_by_id(num_id)
+        if num_id != -1:
+            data_dict = get_source_by_id(num_id)
             for k, v in data_dict.items():
                 this_value = "{0}的百度云盘<a href={1}>{2}</a>".format(v["sourcename"], v["sourceurl"], v["sourcedesc"])
                 content.append(this_value)
@@ -30,11 +35,12 @@ class QueryWechat(View):
             if data_count > 1:
                 content.append("相关类似资源如下：<br>")
                 for k, v in data_dict.items():
-                    this_value = "<a  href='#'  class='source_answer' onclick=showAsk({0},'{1}')>{2}</a></br>".format(v["id"],v["sourcename"],v["sourcename"])
+                    this_value = "<a  href='#'  class='source_answer' onclick=showAsk({0},'{1}')>{2}</a></br>".format(
+                        v["id"], v["sourcename"], v["sourcename"])
                     content.append(this_value)
             elif data_count == 1:
                 for k, v in data_dict.items():
-                    this_value = "{0}的百度云盘<a href={1}>{2}</a>".format(v["sourcename"], v["sourceurl"],v["sourcedesc"])
+                    this_value = "{0}的百度云盘<a href={1}>{2}</a>".format(v["sourcename"], v["sourceurl"], v["sourcedesc"])
                     content.append(this_value)
             else:
                 tuling_answer = get_tuling_answer(source)
@@ -54,8 +60,9 @@ class QueryWechat(View):
             }
         return JsonResponse(reginfs, content_type='application/json')
 
+
 class SourcesUpload(View):
-    def get(self,request):
+    def get(self, request):
         print(request.GET)
         try:
             reginfs = {
@@ -70,9 +77,19 @@ class SourcesUpload(View):
                 "data": "注册失败"
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
-    def post(self,request):
-        print(request.POST.get("abc"))
+
+    def post(self, request):
+        # 上传图片的处理
         try:
+            f = request.FILES["file"]
+            sysfile = os.path.abspath('.')
+            unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
+            imgpath='/static/img2word/' + unknown_img_uuid+'.jpg'
+            unknownimgpath = sysfile + imgpath
+            with open(unknownimgpath, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+            request.session["imgpath"] = imgpath
             reginfs = {
                 "code": 400,
                 "message": "success",
@@ -85,3 +102,65 @@ class SourcesUpload(View):
                 "data": "注册失败"
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
+class ImgtoWords(View):
+    def get(self, request):
+        try:
+            sysfile = os.path.abspath('.')
+            imgpath = request.session.get("imgpath")
+            unknownimgpath = sysfile + imgpath
+            os.remove(unknownimgpath)
+            reginfs = {
+                "code": 444,
+                "message": "success",
+                "data": "hello"
+            }
+        except:
+            reginfs = {
+                "code": 222,
+                "message": "failed",
+                "data": "失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+    def post(self, request):
+        # 图片的处理
+        # h获取图片的路径
+        imgpath = request.session.get("imgpath")
+        sysfile = os.path.abspath('.')
+        unknownimgpath = sysfile + imgpath
+        options = {
+            'detect_direction': 'true',
+            'language_type': 'CHN_ENG',
+        }
+        try:
+            aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
+            result = aipOcr.webImage(self.get_file_content(unknownimgpath), options)
+            print(result)
+            if result["words_result_num"] == 0:
+                vector_word = "图中没有文字或未能识别"
+            else:
+                pic_words = []
+                for i in result["words_result"]:
+                    pic_words.append(i["words"])
+                vector_word = ''.join(pic_words)
+        except:
+            vector_word = "图中没有文字或未能识别"
+        imginfo={}
+        imginfo["vector_words"] = vector_word
+        imginfo["imgpath"]=imgpath
+        try:
+            reginfs = {
+                "code": 400,
+                "message": "success",
+                "data": imginfo
+            }
+        except:
+            reginfs = {
+                "code": 200,
+                "message": "failed",
+                "data": "失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+
+    def get_file_content(self,filePath):
+        with open(filePath, 'rb') as fp:
+            return fp.read()
