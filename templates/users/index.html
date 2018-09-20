@@ -772,7 +772,7 @@
             , accept: 'images'
             , done: function (res) {
                 if (res.code == 400) {
-                    layer.msg("正在解析中", {time: 6000});
+                    layer.msg("正在解析中", {time:5000});
                     $.ajax({
                         url: "/sources/img2excel/",
                         type: "POST",
