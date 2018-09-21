@@ -721,7 +721,7 @@
             }
             , done: function (res) {
                 if (res.code == 400) {
-                    let img_tips=layer.msg("正在解析中", {time: 20000});
+                    let img_tips = layer.msg("正在解析中", {time: 20000});
                     $.ajax({
                         url: "/sources/img2words/",
                         type: "POST",
@@ -798,6 +798,10 @@
                                 excel_html = "<div class='layui-row' style='margin-top:10px;'><a href='/sources/excel_download/' class='layui-btn layui-btn-normal'><i class='layui-icon layui-icon-download-circle'></i>下载表格</a></div>";
                                 $("#img2excel").append(excel_html)
                             } else {
+                                $("#img2excel").empty();
+                                $("#excel_tips").remove();
+                                excel_html = "<div id='excel_tips' class='layui-row' style='margin-top:10px;'><span class='layui-btn layui-btn-disabled'>没有生成表格或出错</span></div>";
+                                $("#img2excel").append(excel_html);
 
                             }
                             console.log(res.data)

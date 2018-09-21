@@ -216,15 +216,23 @@ class ImgtoExcel(View):
                 if (endtime - starttime).seconds > 20:
                     picUrl = "error"
                     break
-            excel_source = pd.read_excel(picUrl)
-            excel_name = sysfile+"/static/img2word/" + imgpath + ".xls"
-            excel_source.to_excel(excel_name)
-            request.session["excel_img"] = imgpath
-            reginfs = {
-                "code": 400,
-                "message": "success",
-                "data": imgpath
-            }
+            if picUrl == "error":
+                reginfs = {
+                    "code": 200,
+                    "message": "fail",
+                    "data": "fail"
+                }
+            else:
+                excel_source = pd.read_excel(picUrl)
+                excel_name = sysfile+"/static/img2word/" + imgpath + ".xls"
+                excel_source.to_excel(excel_name)
+                request.session["excel_img"] = imgpath
+                excel_size=excel_source.iloc[:, 0].size
+                reginfs = {
+                    "code": 400,
+                    "message": "success",
+                    "data": imgpath
+                }
         except:
             picUrl = "error"
             reginfs = {
