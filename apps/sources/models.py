@@ -33,3 +33,12 @@ class SourcesCore(models.Model):
     class Meta:
         verbose_name="资源集合"
         verbose_name_plural=verbose_name
+# 因为有API有次数限制
+class SourceLimit(models.Model):
+    id = models.IntegerField(primary_key=True, verbose_name="ID")
+    num_count=models.IntegerField(default=50,verbose_name="次数")
+    limit_time=models.DateField(default=datetime.date.today,verbose_name='有效时间')
+
+    class Meta:
+        verbose_name="次数管理"
+        verbose_name_plural=verbose_name

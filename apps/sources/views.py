@@ -4,6 +4,7 @@ from django.shortcuts import render
 import json,os,uuid,datetime
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import StreamingHttpResponse
 
 from utils.get_sources import get_source, get_source_by_id
 from utils.tuling_answer import get_tuling_answer
@@ -262,8 +263,6 @@ class ImgtoExcel(View):
     def get_file_content(self,filePath):
         with open(filePath, 'rb') as fp:
             return fp.read()
-from django.http import StreamingHttpResponse
-
 
 def excel_download(request):
     """

@@ -95,9 +95,14 @@ import base64
 import json
 with open(r"hhh.jpg",'rb') as f:
     data = f.read()
-b64pic = base64.b64encode(data)
-dd = str(b64pic)[2:-1]
-header = {'imgbase64':dd}
-json_header = json.dumps(header)
-response = requests.get('http://localhost:8000/courses/img2excel/',data=header)
-response.text
+
+
+import datetime
+
+a=datetime.datetime.now()
+b=datetime.timedelta(days=1,hours=0, minutes=0, seconds=0)
+c=datetime.timedelta(days=0,hours=22, minutes=0, seconds=0)
+today = datetime.date.today()
+yestoday = today - datetime.timedelta(days=1)
+tomorrow = today + datetime.timedelta(days=1)
+print(yestoday,today,tomorrow)

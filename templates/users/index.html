@@ -273,6 +273,7 @@
             <div>
                 <button type="button" class="layui-btn layui-btn-normal" id="test7">
                     <i class="layui-icon"></i>上传图片
+                    <span class="layui-badge">50</span>
                 </button>
                 <span id="img2excel">
                 </span>
@@ -772,7 +773,7 @@
             elem: '#test7'
             , url: '/sources/upload/'
             , accept: 'images'
-            ,before:function (res) {
+            , before: function (res) {
                 $("#img2excel").empty();
             }
             , done: function (res) {
@@ -783,7 +784,7 @@
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
-                            if (res.code==400) {
+                            if (res.code == 400) {
                                 layer.close(excel_tip1);
                                 let excel_html = res.data.excel_html;
                                 let resurl = '/static/img2word/' + res.data.imgpath + '.jpg';
@@ -792,12 +793,16 @@
                                     type: 2,
                                     content: "/sources/img2wordRes/#resTxt",
                                     area: ['80%', '80%'],
-                                    btn: ['关闭'],
+                                    btn: ['下载', '关闭'],
                                     {#父页面向子页面传值#}
                                     success: function (layero, index) {
                                         let body = layer.getChildFrame('body', index);
                                         body.find('#resTxt').append(excel_html);
                                         body.find('#pic').attr('src', resurl);
+                                    },
+                                    btn1: function (index, layero) {
+                                        $(".layui-layer-btn0").attr("href","/sources/excel_download/");
+                                        return false
                                     },
                                     closeBtn: 0,
                                     end: function () {
@@ -815,7 +820,7 @@
                                 layer.close(excel_tip1);
                                 $("#img2excel").empty();
                                 $("#excel_tips").remove();
-                                excel_html = "<div id='excel_tips' class='layui-row' style='margin-top:10px;'><span class='layui-btn layui-btn-danger'>没有生成表格或出错</span></div>";
+                                excel_html = "<div id='excel_tips' class='layui-row' style='margin-top:10px;'><span class='layui-btn layui-btn-danger'>图片中没有表格或出错</span></div>";
                                 $("#img2excel").append(excel_html);
                             }
                         },
