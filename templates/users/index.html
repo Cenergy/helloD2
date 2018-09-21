@@ -271,18 +271,10 @@
             <p class="lead">
                 点击上传含有表格的图片
             <div>
-                <button type="button" class="layui-btn layui-btn-danger" id="test7">
+                <button type="button" class="layui-btn layui-btn-normal" id="test7">
                     <i class="layui-icon"></i>上传图片
                 </button>
                 <span id="img2excel">
-                    {% ifequal excel_img 'failed' %}
-
-                    {% else %}
-                        <div class='layui-row' style='margin-top:10px;'>
-                            <a href='/sources/excel_download/' class='layui-btn layui-btn-normal'>
-                                <i class='layui-icon layui-icon-download-circle'></i>下载表格
-                            </a></div>
-                    {% endifequal %}
                 </span>
 
             </div>
@@ -780,10 +772,10 @@
             elem: '#test7'
             , url: '/sources/upload/'
             , accept: 'images'
-            , done: function (res) {
-                excel_html = "<span id='excel_tips'><br><p>这里将会出现你要的文件</p></span>";
+            ,before:function (res) {
                 $("#img2excel").empty();
-                $("#img2excel").append(excel_html);
+            }
+            , done: function (res) {
                 if (res.code == 400) {
                     let excel_tip1 = layer.msg("正在生成中", {time: 20000});
                     $.ajax({
@@ -791,20 +783,41 @@
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
-                            if (res.code == 400) {
+                            if (res.code==400) {
+                                layer.close(excel_tip1);
+                                let excel_html = res.data.excel_html;
+                                let resurl = '/static/img2word/' + res.data.imgpath + '.jpg';
+                                layer.open({
+                                    title: "识别结果",
+                                    type: 2,
+                                    content: "/sources/img2wordRes/#resTxt",
+                                    area: ['80%', '80%'],
+                                    btn: ['关闭'],
+                                    {#父页面向子页面传值#}
+                                    success: function (layero, index) {
+                                        let body = layer.getChildFrame('body', index);
+                                        body.find('#resTxt').append(excel_html);
+                                        body.find('#pic').attr('src', resurl);
+                                    },
+                                    closeBtn: 0,
+                                    end: function () {
+                                        $.ajax({
+                                            url: "/sources/img2excel/",
+                                            type: "GET",
+                                            data: {idname: 'abc'},
+                                            success: function (res) {
+                                                console.log(res.data)
+                                            }
+                                        })
+                                    }
+                                });
+                            } else {
                                 layer.close(excel_tip1);
                                 $("#img2excel").empty();
                                 $("#excel_tips").remove();
-                                excel_html = "<div class='layui-row' style='margin-top:10px;'><a href='/sources/excel_download/' class='layui-btn layui-btn-normal'><i class='layui-icon layui-icon-download-circle'></i>下载表格</a></div>";
-                                $("#img2excel").append(excel_html)
-                            } else {
-                                $("#img2excel").empty();
-                                $("#excel_tips").remove();
-                                excel_html = "<div id='excel_tips' class='layui-row' style='margin-top:10px;'><span class='layui-btn layui-btn-disabled'>没有生成表格或出错</span></div>";
+                                excel_html = "<div id='excel_tips' class='layui-row' style='margin-top:10px;'><span class='layui-btn layui-btn-danger'>没有生成表格或出错</span></div>";
                                 $("#img2excel").append(excel_html);
-
                             }
-                            console.log(res.data)
                         },
                         error: function () {
                             layer.msg("服务器内部错误", {time: 2000})

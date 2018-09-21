@@ -174,8 +174,11 @@ class ImgtoExcel(View):
         try:
             sysfile = os.path.abspath('.')
             imgpath = request.session.get("imgpath")
+            print(imgpath)
             unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
+            excel_name = sysfile + "/static/img2word/" + imgpath + ".xls"
             os.remove(unknownimgpath)
+            os.remove(excel_name)
             reginfs = {
                 "code": 444,
                 "message": "success",
@@ -217,27 +220,41 @@ class ImgtoExcel(View):
                     picUrl = "error"
                     break
             if picUrl == "error":
+                os.remove(unknownimgpath)
                 reginfs = {
                     "code": 200,
-                    "message": "fail",
+                    "message": "fail1",
                     "data": "fail"
                 }
             else:
+                excel_json={}
                 excel_source = pd.read_excel(picUrl)
                 excel_name = sysfile+"/static/img2word/" + imgpath + ".xls"
                 excel_source.to_excel(excel_name)
-                request.session["excel_img"] = imgpath
-                excel_size=excel_source.iloc[:, 0].size
-                reginfs = {
-                    "code": 400,
-                    "message": "success",
-                    "data": imgpath
-                }
+                excel_html=excel_source.to_html(classes='layui-table')
+                excel_json["excel_html"]=excel_html
+                excel_json["imgpath"]=imgpath
+                row,col=excel_source.shape
+                if row==0:
+                    os.remove(unknownimgpath)
+                    os.remove(excel_name)
+                    reginfs = {
+                        "code": 200,
+                        "message": "fail2",
+                        "data": "fail"
+                    }
+                else:
+                    reginfs = {
+                        "code": 400,
+                        "message": "success",
+                        "data": excel_json
+                    }
         except:
             picUrl = "error"
+            os.remove(unknownimgpath)
             reginfs = {
                 "code": 200,
-                "message": "fail",
+                "message": "fail3",
                 "data": "fail"
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
