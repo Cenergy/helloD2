@@ -721,12 +721,13 @@
             }
             , done: function (res) {
                 if (res.code == 400) {
-                    layer.msg("正在解析中", {time: 3000});
+                    let img_tips=layer.msg("正在解析中", {time: 20000});
                     $.ajax({
                         url: "/sources/img2words/",
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
+                            layer.close(img_tips);
                             let reswords = res.data.vector_words;
                             let resurl = res.data.imgpath;
                             layer.open({
@@ -816,11 +817,6 @@
 
 
     });
-</script>
-{#cookie处理#}
-<script>
-    var x = document.cookie;
-    console.log(x)
 </script>
 </body>
 
