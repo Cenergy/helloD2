@@ -219,6 +219,7 @@ class ImgtoExcel(View):
             excel_source = pd.read_excel(picUrl)
             excel_name = sysfile+"/static/img2word/" + imgpath + ".xls"
             excel_source.to_excel(excel_name)
+            request.session["excel_img"] = imgpath
             reginfs = {
                 "code": 400,
                 "message": "success",

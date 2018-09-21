@@ -274,7 +274,16 @@
                 <button type="button" class="layui-btn layui-btn-danger" id="test7">
                     <i class="layui-icon"></i>上传图片
                 </button>
-                <span id="img2excel"></span>
+                <span id="img2excel">
+                    {% ifequal excel_img 'failed' %}
+
+                    {% else %}
+                        <div class='layui-row' style='margin-top:10px;'>
+                            <a href='/sources/excel_download/' class='layui-btn layui-btn-normal'>
+                                <i class='layui-icon layui-icon-download-circle'></i>下载表格
+                            </a></div>
+                    {% endifequal %}
+                </span>
 
             </div>
             </p>
@@ -771,15 +780,21 @@
             , url: '/sources/upload/'
             , accept: 'images'
             , done: function (res) {
+                excel_html = "<span id='excel_tips'><br><p>这里将会出现你要的文件</p></span>";
+                $("#img2excel").empty();
+                $("#img2excel").append(excel_html);
                 if (res.code == 400) {
-                    layer.msg("正在解析中", {time:5000});
+                    let excel_tip1 = layer.msg("正在生成中", {time: 20000});
                     $.ajax({
                         url: "/sources/img2excel/",
                         type: "POST",
                         data: {idname: 'abc'},
                         success: function (res) {
                             if (res.code == 400) {
-                                excel_html = "<br><p><a href='/sources/excel_download/'>下载文件</a></p>";
+                                layer.close(excel_tip1);
+                                $("#img2excel").empty();
+                                $("#excel_tips").remove();
+                                excel_html = "<div class='layui-row' style='margin-top:10px;'><a href='/sources/excel_download/' class='layui-btn layui-btn-normal'><i class='layui-icon layui-icon-download-circle'></i>下载表格</a></div>";
                                 $("#img2excel").append(excel_html)
                             } else {
 
@@ -801,6 +816,11 @@
 
 
     });
+</script>
+{#cookie处理#}
+<script>
+    var x = document.cookie;
+    console.log(x)
 </script>
 </body>
 

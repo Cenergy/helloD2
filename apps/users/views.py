@@ -57,6 +57,7 @@ class CustomBackend(ModelBackend):
 class IndexView(View):
     def get(self, request):
         user_name = request.session.get("user_name", " ")
+        excel_img = request.session.get("excel_img", "failed")
         return render(request, "users/index.html", locals())
 
 
