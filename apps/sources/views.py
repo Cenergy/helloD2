@@ -5,6 +5,7 @@ import json,os,uuid,datetime
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.http import StreamingHttpResponse
+from django.db import connection
 
 from utils.get_sources import get_source, get_source_by_id
 from utils.tuling_answer import get_tuling_answer
@@ -207,6 +208,10 @@ class ImgtoExcel(View):
             aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
             result = aipOcr.tableRecognitionAsync(self.get_file_content(unknownimgpath), options)
             starttime = datetime.datetime.now()
+            #api-1
+            sub_one_sql = "UPDATE 'sources_sourcelimit' SET num_count=num_count-1"
+            sub_one_cursor = connection.cursor()
+            sub_one_cursor.execute(sub_one_sql)
             while True:
                 try:
                     requestId = result["result"][0]["request_id"]

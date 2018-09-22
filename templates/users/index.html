@@ -273,7 +273,13 @@
             <div>
                 <button type="button" class="layui-btn layui-btn-normal" id="test7">
                     <i class="layui-icon"></i>上传图片
-                    <span class="layui-badge">50</span>
+                    <span class="layui-badge" id="limit_count">
+                        {% if num_count < 0 %}
+                            0
+                            {% else %}
+                            {{ num_count }}
+                        {% endif %}
+                        </span>
                 </button>
                 <span id="img2excel">
                 </span>
@@ -811,7 +817,7 @@
                                             type: "GET",
                                             data: {idname: 'abc'},
                                             success: function (res) {
-                                                console.log(res.data)
+                                                window.location.reload();
                                             }
                                         })
                                     }
@@ -839,6 +845,18 @@
 
 
     });
+</script>
+<script>
+    if($('#limit_count').text()<=0){
+        $('#test7').addClass('layui-btn-disabled');
+        $('#test7').removeClass('layui-btn-normal');
+        $('#test7').attr('disabled','disabled');
+        $('#test7').attr('title','次数限制，明天再试。');
+        $('#limit_count').addClass('layui-bg-gray');
+    }else{
+
+    }
+
 </script>
 </body>
 

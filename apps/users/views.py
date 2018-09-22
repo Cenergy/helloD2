@@ -1,6 +1,7 @@
-import os,json,uuid,base64
+import os,json,uuid,base64,datetime
 import platform as plat
 
+import pandas as pd
 from django.shortcuts import render, render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
@@ -14,6 +15,7 @@ from django.contrib.auth.hashers import make_password
 from utils.email_send import register_send_email
 from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
+from django.db import connection
 
 
 from utils.voices import towords
@@ -57,6 +59,17 @@ class CustomBackend(ModelBackend):
 class IndexView(View):
     def get(self, request):
         user_name = request.session.get("user_name", " ")
+        # 判断apide时间有效性
+        query_sql = "select * from sources_sourcelimit where id={abc}".format(abc=1)
+        all_data = pd.read_sql(query_sql, connection)
+        today = datetime.date.today().strftime('%Y-%m-%d')
+        if str(all_data["limit_time"][0])==str(today):
+            pass
+        else:
+            sub_one_sql = "UPDATE 'sources_sourcelimit' SET num_count=50,limit_time='%s'" % today
+            sub_one_cursor = connection.cursor()
+            sub_one_cursor.execute(sub_one_sql)
+        num_count=all_data["num_count"][0]
         return render(request, "users/index.html", locals())
 
 
