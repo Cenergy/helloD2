@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
-import users.views, courses.views,sources.views
+import users.views, courses.views, sources.views
 import xadmin
 from users import views
 from wechat import views
@@ -32,10 +32,11 @@ handler500 = users.views.page_error
 urlpatterns = [
     # url(r'^users/', include('users.urls')),
     url('xadmin/', xadmin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls', namespace="rest_framework")),
     url(r'^courses/', include('courses.urls')),
     url(r'^sources/', include('sources.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^docs/', include_docs_urls(title='heloworld')),
+    url(r'docs/', include_docs_urls(title="Hello我的")),
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
 

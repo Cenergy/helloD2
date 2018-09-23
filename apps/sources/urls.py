@@ -8,6 +8,13 @@ from wechat.views import weixin_main
 from sources.views import QueryWechat, WechatTalk, SourcesUpload, ImgtoWords, img2wordRes, ImgtoExcel, excel_download
 
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authtoken import views
+from rest_framework.routers import DefaultRouter
+from sources import views
+
+router = DefaultRouter()
+
+router.register(r'goods', views.SourcesCoreSerializers, base_name='goods')
 
 urlpatterns = [
     url('img2wordRes/$', img2wordRes, name="img2wordRes"),
