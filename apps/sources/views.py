@@ -15,11 +15,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,mixins,generics,viewsets,filters
 from rest_framework.pagination import PageNumberPagination
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authentication import TokenAuthentication
-from rest_framework_extensions.cache.mixins import CacheResponseMixin
 from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
-from rest_framework_jwt.views import obtain_jwt_token
 
 from aip import AipOcr
 from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
@@ -312,18 +309,12 @@ def readFile(filename, chunk_size=512):
                 break
 
 #资源获取的restful api接口
+class SourcesCoreViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
 
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 12
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-    page_query_param = "page"
-
-class SourcesCoreListViewSet(CacheResponseMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     """
-    这是所有资源的描述,会成为description。资源的列表，分页，过滤，搜索，排序。
+    list：商品的分类列表数据
     """
     queryset = SourcesCore.objects.all()
-    serializer_class = SourcesCoreSerializers
+    serializer_class=SourcesCoreSerializers
 
 

@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os, sys,datetime
+import os, sys, datetime
+from apps import utils
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -57,14 +58,12 @@ INSTALLED_APPS = [
     'DjangoUeditor',
     'django_filters',
     'corsheaders',
-    'social_django',
-    'rest_framework.authtoken',
-    'rest_framework_docs',
+    'rest_framework_swagger',
 ]
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'utils.middleware.RecordUrlMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -144,6 +143,11 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+#swagger 设置
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+
+#邮箱设置
 EMAIL_HOST = "smtp.sina.com"
 EMAIL_PORT = 25
 EMAIL_HOST_USER = "helloaigis@sina.com"
@@ -164,11 +168,6 @@ REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 # 云片网apikey 配置
 API_KEY = "09d6805265afbd0a779cfd9e16a0f4c5"
 
-# DRF全局缓存时间设定
-REST_FRAMEWORK_EXTENSIONS = {
-    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 3 * 3600
-}
-
 # 百度识别# 定义常量
 BAIDU_APP_ID = '11800206'
 BAIDU_API_KEY = 'sAy8l7GrgGMBfesVoPkYtr0m'
@@ -176,35 +175,6 @@ BAIDU_SECRET_KEY = 'Ex4Yitab1ZTq8y3FykTpa3kbGvpfUvjV'
 
 # 图灵api
 TURING_API_KEY = 'bf61c090a1bc4cfabc43e20e2d5b307b'
-
-REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
-    }
-}
-
-# 设置过期时间
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-}
-
-# 设置缓存过期时间。
-REST_FRAMEWORK_EXTENSIONS = {
-    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60
-}
 
 # 自定义日志输出信息
 LOGGING = {

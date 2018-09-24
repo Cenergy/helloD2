@@ -23,6 +23,9 @@ from wechat import views
 from helloD2 import settings
 from django.views import static
 from rest_framework.documentation import include_docs_urls
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title="我的docs")
 
 # custom_error的路由!
 handler403 = users.views.permission_denied
@@ -36,7 +39,7 @@ urlpatterns = [
     url(r'^courses/', include('courses.urls')),
     url(r'^sources/', include('sources.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'docs/', include_docs_urls(title="Hello我的")),
+    url(r'docs/', schema_view),
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
 

@@ -17,6 +17,8 @@ from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRed
 from django.shortcuts import render, render_to_response
 from django.db import connection
 
+from rest_framework import permissions, renderers, viewsets
+
 
 from utils.voices import towords
 
@@ -80,6 +82,8 @@ class LogoutView(View):
 
 
 class LoginView(View):
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name = "users/login.html"
     def get(self, request):
         return render(request, "users/login.html", locals())
 
@@ -97,7 +101,9 @@ class LoginView(View):
                 if user.is_active:
                     login(request, user)
                     request.session["user_name"] = username
-                    return HttpResponseRedirect('/')
+                    pre_url = request.session.get("pre_url_path", "/")
+                    return redirect(pre_url)
+                    # return HttpResponseRedirect('/')
                     # return render(request, "users/index.html", locals())
                 else:
                     return render(request, "users/login.html", {"msg": "用户未激活！"})
