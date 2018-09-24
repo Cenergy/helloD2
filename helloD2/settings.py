@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'captcha',
     'rest_framework',
     'DjangoUeditor',
-    'django_filters',
     'corsheaders',
     'rest_framework_swagger',
 ]

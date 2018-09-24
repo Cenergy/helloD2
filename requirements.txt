@@ -5,17 +5,44 @@
 # apps/courses/apps.py: 1
 # apps/courses/models.py: 1
 # apps/courses/tests.py: 1
-# apps/courses/urls.py: 5
-# apps/courses/views.py: 1,5,6
+# apps/courses/urls.py: 5,7
+# apps/courses/views.py: 3,4,5
+# apps/sources/admin.py: 1
+# apps/sources/apps.py: 1
+# apps/sources/migrations/0001_initial.py: 6
+# apps/sources/migrations/0002_auto_20180914_1729.py: 5
+# apps/sources/migrations/0003_sourcescore_question_type.py: 5
+# apps/sources/migrations/0004_auto_20180921_2359.py: 6
+# apps/sources/migrations/0005_auto_20180922_0004.py: 5
+# apps/sources/models.py: 1
+# apps/sources/tests.py: 1
+# apps/sources/urls.py: 5,6,10
+# apps/sources/views.py: 6,7,8
 # apps/users/admin.py: 1
 # apps/users/apps.py: 1
 # apps/users/forms.py: 7
 # apps/users/migrations/0001_initial.py: 8,9
+# apps/users/migrations/0002_auto_20180914_1722.py: 6
 # apps/users/models.py: 3,4
 # apps/users/tests.py: 1
 # apps/users/urls.py: 5,6
-# apps/users/views.py: 16
-# apps/utils/email_send.py: 11
+# apps/users/views.py: 17,18
+# apps/utils/email_send.py: 1
+# apps/utils/email_send_sina.py: 11
+# apps/utils/get_sources.py: 5
+# apps/utils/middleware.py: 6
+# apps/wechat/admin.py: 1
+# apps/wechat/apps.py: 1
+# apps/wechat/models.py: 1
+# apps/wechat/tests.py: 1
+# apps/wechat/urls.py: 6,7
+# apps/wechat/views.py: 1,12,13
+# extra_apps/DjangoUeditor/forms.py: 3
+# extra_apps/DjangoUeditor/models.py: 2,3
+# extra_apps/DjangoUeditor/settings.py: 2
+# extra_apps/DjangoUeditor/urls.py: 2,5
+# extra_apps/DjangoUeditor/views.py: 15,17
+# extra_apps/DjangoUeditor/widgets.py: 2,3,4,5,6,7
 # extra_apps/xadmin/__init__.py: 18,19,20
 # extra_apps/xadmin/adminx.py: 6
 # extra_apps/xadmin/apps.py: 1,2,3
@@ -68,13 +95,24 @@
 # extra_apps/xadmin/views/list.py: 11,12,13,14
 # extra_apps/xadmin/views/website.py: 2,3,4,5,6,7
 # extra_apps/xadmin/widgets.py: 10
-# helloD/urls.py: 17,18,23
-# helloD/wsgi.py: 12
+# helloD2/urls.py: 17,18,24
+# helloD2/wsgi.py: 12
 # manage.py: 8
 Django == 1.11.8
 
 # extra_apps/xadmin/plugins/export.py: 28
 XlsxWriter == 1.0.2
+
+# helloD2/settings.py: 14
+ank == 1.5.5
+
+# helloD2/settings.py: 14
+apps-sdk == 0.2.4.1
+
+# apps/courses/views.py: 9
+# apps/sources/views.py: 21
+# apps/wechat/views.py: 14
+baidu_aip == 2.2.7.0
 
 # extra_apps/xadmin/layout.py: 4,6,7
 # extra_apps/xadmin/plugins/inline.py: 12
@@ -89,13 +127,20 @@ django_formtools == 2.1
 # extra_apps/xadmin/plugins/importexport.py: 56
 django_import_export == 1.0.1
 
+# helloD2/urls.py: 26
+django_rest_swagger == 2.2.0
+
 # extra_apps/xadmin/plugins/xversion.py: 26
 django_reversion_patchman == 2.1.1
 
 # apps/users/forms.py: 9
 django_simple_captcha == 0.5.5
 
-# helloD/urls.py: 24
+# apps/sources/serializers.py: 6
+# apps/sources/urls.py: 11,12
+# apps/sources/views.py: 19,320,321
+# apps/users/views.py: 20
+# helloD2/urls.py: 25
 djangorestframework == 3.8.2
 
 # extra_apps/xadmin/plugins/export.py: 4
@@ -107,17 +152,69 @@ future == 0.16.0
 # extra_apps/xadmin/plugins/themes.py: 3
 httplib2 == 0.11.3
 
+# apps/sources/tests.py: 6
+numpy == 1.14.2
+
+# apps/sources/tests.py: 5
+opencv_python == 3.3.0.10
+
+# helloD2/settings.py: 14
+oricreate == 0.0.4a7
+
+# apps/courses/views.py: 7
+# apps/sources/views.py: 24
+# apps/users/views.py: 4
+# apps/utils/get_sources.py: 6
+pandas == 0.23.4
+
+# helloD2/settings.py: 14
+pti-analyzer == 0.0.19
+
+# apps/sources/tests.py: 8
+pytesseract == 0.2.4
+
+# apps/utils/tuling_answer.py: 5
+# apps/wechat/tests.py: 6,9,93
+# apps/wechat/views.py: 9
+requests == 2.18.4
+
+# helloD2/settings.py: 14
+scikit-rf == 0.14.9
+
 # extra_apps/xadmin/plugins/themes.py: 12
-six == 1.11.0
+six == 1.10.0
+
+# apps/sources/urls.py: 8,13
+# helloD2/urls.py: 19
+sources == 1.1.0
+
+# helloD2/settings.py: 14
+superdesk-core == 1.25.1
+
+# helloD2/settings.py: 14
+superdesk-server == 0.1.6
+
+# apps/sources/tests.py: 7
+tqdm == 4.17.1
 
 # apps/users/urls.py: 7,9
-# apps/utils/email_send.py: 10
-# helloD/urls.py: 19,21
+# apps/utils/email_send.py: 9
+# apps/utils/email_send_sina.py: 10
+# helloD2/urls.py: 19,21
 users == 1.0.dev0
 
-# apps/users/views.py: 14,19,230,233
+# apps/sources/views.py: 10,11
+# apps/users/views.py: 15,23,260,263
+# apps/wechat/views.py: 17,18
+# extra_apps/DjangoUeditor/test_try.py: 2
 utils == 0.9.0
 
+# apps/sources/urls.py: 7
+# apps/wechat/urls.py: 8
+# helloD2/urls.py: 22
+wechat == 0.4.16
+
+# apps/sources/adminx.py: 5,6
 # apps/users/adminx.py: 5,6
 # apps/users/urls.py: 8
 # extra_apps/xadmin/__init__.py: 4,29,48
@@ -168,8 +265,12 @@ utils == 0.9.0
 # extra_apps/xadmin/views/form.py: 17,18,19
 # extra_apps/xadmin/views/list.py: 16
 # extra_apps/xadmin/views/website.py: 11,12,13
-# helloD/urls.py: 20
+# helloD2/urls.py: 20
 xadmin == 0.6.1
 
+# apps/sources/tests.py: 9
 # extra_apps/xadmin/plugins/export.py: 22
 xlwt == 1.2.0
+
+# helloD2/settings.py: 14
+xmemx == 0.0.2

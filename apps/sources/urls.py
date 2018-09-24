@@ -13,11 +13,8 @@ from rest_framework.routers import DefaultRouter
 from sources import views
 
 
-router = DefaultRouter()
-
-router.register(r'goods', views.SourcesCoreViewSet, base_name='goods')
-
 urlpatterns = [
+    url(r'goods/$', views.SnippetList.as_view(),name="goods"),
     url('img2wordRes/$', img2wordRes, name="img2wordRes"),
     url('excel_download/$', excel_download, name="excel_download"),
     url(r'^wxtalk/', WechatTalk.as_view(), name="talk_wechat"),

@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^courses/', include('courses.urls')),
     url(r'^sources/', include('sources.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
+    # url(r'docs/', include_docs_urls(title="AIGIS")),
     url(r'docs/', schema_view),
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
