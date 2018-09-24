@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
 
-    # 增加以下一行，以识别静态资源
+    ## 增加以下一行，以识别静态资源
     url(r'^static/(?P<path>.*)$', static.serve,
         {'document_root': settings.STATIC_ROOT}, name='static'),
 
