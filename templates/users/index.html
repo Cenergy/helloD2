@@ -276,7 +276,7 @@
                     <span class="layui-badge" id="limit_count">
                         {% if num_count < 0 %}
                             0
-                            {% else %}
+                        {% else %}
                             {{ num_count }}
                         {% endif %}
                         </span>
@@ -428,7 +428,7 @@
             </div>
 
             <div class="col-sm-6  block wow bounceIn">
-                <a href="https://www.baidu.com">
+                <a href="javascript:void(0)" source-type="1" class="source_core">
                     <div class="row">
 
                         <div class="col-md-4 box-icon rotate">
@@ -436,46 +436,54 @@
                         </div>
                         <div class="col-md-8 box-ct">
                             <h3> 视频资源 </h3>
+                            <p> hello ipsum dolor sit ametconsectetur adipiscing elit. Suspendisse orci quam. </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 block wow bounceIn">
+                <a href="javascript:void(0)" source-type="2" class="source_core">
+                    <div class="row">
+                        <div class="col-md-4 box-icon rotate">
+                            <i class="fa fa-picture-o fa-4x "> </i>
+                        </div>
+                        <div class="col-md-8 box-ct">
+                            <h3> 专业资源 </h3>
+                            <p> Nullam mo arcu ac molestie scelerisqu vulputate, molestie ligula gravida, tempus
+                                ipsum.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row tworow">
+            <div class="col-sm-6  block wow bounceIn">
+                <a href="javascript:void(0)" source-type="3" class="source_core">
+                    <div class="row">
+                        <div class="col-md-4 box-icon rotate">
+                            <i class="fa fa-magic fa-4x "> </i>
+                        </div>
+                        <div class="col-md-8 box-ct">
+                            <h3> 软件资源 </h3>
                             <p> Lorem ipsum dolor sit ametconsectetur adipiscing elit. Suspendisse orci quam. </p>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-sm-6 block wow bounceIn">
-                <div class="row">
-                    <div class="col-md-4 box-icon rotate">
-                        <i class="fa fa-picture-o fa-4x "> </i>
+                <a href="javascript:void(0)" source-type="0" class="source_core">
+                    <div class="row">
+                        <div class="col-md-4 box-icon rotate">
+                            <i class="fa fa-heart fa-4x "> </i>
+                        </div>
+                        <div class="col-md-8 box-ct">
+                            <h3> 其他资源</h3>
+                            <p> Nullam mo arcu ac molestie scelerisqu vulputate, molestie ligula gravida, tempus
+                                ipsum.</p>
+                        </div>
                     </div>
-                    <div class="col-md-8 box-ct">
-                        <h3> 专业资源 </h3>
-                        <p> Nullam mo arcu ac molestie scelerisqu vulputate, molestie ligula gravida, tempus ipsum.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row tworow">
-            <div class="col-sm-6  block wow bounceIn">
-                <div class="row">
-                    <div class="col-md-4 box-icon rotate">
-                        <i class="fa fa-magic fa-4x "> </i>
-                    </div>
-                    <div class="col-md-8 box-ct">
-                        <h3> 办公资源 </h3>
-                        <p> Lorem ipsum dolor sit ametconsectetur adipiscing elit. Suspendisse orci quam. </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 block wow bounceIn">
-                <div class="row">
-                    <div class="col-md-4 box-icon rotate">
-                        <i class="fa fa-heart fa-4x "> </i>
-                    </div>
-                    <div class="col-md-8 box-ct">
-                        <h3> 编程资源</h3>
-                        <p> Nullam mo arcu ac molestie scelerisqu vulputate, molestie ligula gravida, tempus ipsum.</p>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
@@ -807,7 +815,7 @@
                                         body.find('#pic').attr('src', resurl);
                                     },
                                     btn1: function (index, layero) {
-                                        $(".layui-layer-btn0").attr("href","/sources/excel_download/");
+                                        $(".layui-layer-btn0").attr("href", "/sources/excel_download/");
                                         return false
                                     },
                                     closeBtn: 0,
@@ -847,16 +855,24 @@
     });
 </script>
 <script>
-    if($('#limit_count').text()<=0){
+    if ($('#limit_count').text() <= 0) {
         $('#test7').addClass('layui-btn-disabled');
         $('#test7').removeClass('layui-btn-normal');
-        $('#test7').attr('disabled','disabled');
-        $('#test7').attr('title','次数限制，明天再试。');
+        $('#test7').attr('disabled', 'disabled');
+        $('#test7').attr('title', '次数限制，明天再试。');
         $('#limit_count').addClass('layui-bg-gray');
-    }else{
+    } else {
 
     }
 
+</script>
+<script>
+    $(document).on('click', '.source_core', function () {
+        var source_type=($(this).attr("source-type"));
+        $.ajax({
+            url:"api/v1/sources/?question_type="+source_type
+        })
+    })
 </script>
 </body>
 
