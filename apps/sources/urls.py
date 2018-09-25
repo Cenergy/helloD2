@@ -14,7 +14,6 @@ from sources import views
 
 
 urlpatterns = [
-    url(r'goods/$', views.SnippetList.as_view(),name="goods"),
     url('img2wordRes/$', img2wordRes, name="img2wordRes"),
     url('excel_download/$', excel_download, name="excel_download"),
     url(r'^wxtalk/', WechatTalk.as_view(), name="talk_wechat"),

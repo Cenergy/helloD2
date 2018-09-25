@@ -47,15 +47,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'courses.apps.CoursesConfig',
     'sources.apps.SourcesConfig',
     'wechat.apps.WechatConfig',
     'xadmin',
+    'DjangoUeditor',
     'crispy_forms',
     'captcha',
     'rest_framework',
-    'DjangoUeditor',
     'corsheaders',
     'rest_framework_swagger',
 ]
@@ -142,11 +143,11 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-#swagger 设置
+# swagger 设置
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 
-#邮箱设置
+# 邮箱设置
 EMAIL_HOST = "smtp.sina.com"
 EMAIL_PORT = 25
 EMAIL_HOST_USER = "helloaigis@sina.com"

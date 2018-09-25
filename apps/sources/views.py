@@ -10,7 +10,6 @@ from django.db import connection
 from utils.get_sources import get_source, get_source_by_id
 from utils.tuling_answer import get_tuling_answer
 from .models import SourcesCore
-from .serializers import SourcesCoreSerializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,mixins,generics,viewsets,filters
@@ -308,26 +307,7 @@ def readFile(filename, chunk_size=512):
             else:
                 break
 
-#资源获取的restful api接口
-class SourcesCoreViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
-
-    """
-    list：商品的分类列表数据
-    """
-    queryset = SourcesCore.objects.all()
-    serializer_class=SourcesCoreSerializers
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
 
 
-class SnippetList(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
-    def get(self, request, format=None):
-        snippets = SourcesCore.objects.all()
-        serializer = SourcesCoreSerializers(snippets, many=True)
-        return Response(serializer.data)
 
 
