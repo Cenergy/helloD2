@@ -869,8 +869,13 @@
 <script>
     $(document).on('click', '.source_core', function () {
         var source_type=($(this).attr("source-type"));
+        let source_uri='api/v1/sources/?question_type='+source_type;
         $.ajax({
-            url:"api/v1/sources/?question_type="+source_type
+            url:source_uri,
+            type:"GET",
+            success:function (res) {
+               console.log(res)
+            }
         })
     })
 </script>
