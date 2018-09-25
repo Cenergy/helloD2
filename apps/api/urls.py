@@ -6,9 +6,12 @@ from django.conf.urls import url, include
 from api import views
 
 from rest_framework.routers import DefaultRouter
+
+from api.views import SourcesCoreViewset
+
 router = DefaultRouter()
 
-#router.register(r'goods', GoodsListViewSet, base_name='goods')
+router.register(r'v1/sources', SourcesCoreViewset, base_name='sources')
 
 urlpatterns = [
     url(r'v1/goods/$', views.SnippetList.as_view(), name="goods"),
