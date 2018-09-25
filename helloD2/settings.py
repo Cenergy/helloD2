@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'captcha',
     'rest_framework',
+    'django_filters',
     'corsheaders',
     'rest_framework_swagger',
 ]

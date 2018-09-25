@@ -8,6 +8,16 @@ from api.serializers import SourcesCoreSerializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,mixins,generics,viewsets,filters
+from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+    page_query_param = "page"
 
 
 class SnippetList(APIView):
@@ -21,9 +31,12 @@ class SnippetList(APIView):
 class SourcesCoreViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     list:
-        商品分类列表数据
+        资源分类列表数据
     retrieve:
-        获取商品分类详情
+        获取资源分类详情
     """
-    queryset = SourcesCore.objects.filter(question_type=2)
+    queryset = SourcesCore.objects.all()
+    pagination_class = StandardResultsSetPagination
     serializer_class = SourcesCoreSerializers
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('question_type', 'sourcename')
