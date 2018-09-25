@@ -25,7 +25,7 @@ from django.views import static
 from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title="我的docs")
+schema_view = get_swagger_view(title="AIGIS's API")
 
 # custom_error的路由!
 handler403 = users.views.permission_denied
@@ -34,7 +34,7 @@ handler500 = users.views.page_error
 
 urlpatterns = [
     # url(r'^users/', include('users.urls')),
-    url('xadmin/', xadmin.site.urls),
+    url('admin/', xadmin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace="rest_framework")),
     url(r'^courses/', include('courses.urls')),
     url(r'^sources/', include('sources.urls')),

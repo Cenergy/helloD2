@@ -144,8 +144,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # swagger 设置
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
+LOGIN_URL = '/api-auth/login/'
+LOGOUT_URL = '/api-auth/logout/'
 
 # 邮箱设置
 EMAIL_HOST = "smtp.sina.com"
