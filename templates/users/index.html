@@ -869,7 +869,7 @@
 <script>
     $(document).on('click', '.source_core', function () {
         var source_type = ($(this).attr("source-type"));
-        let source_uri = 'api/v1/goods/?question_type=' + source_type;
+        let source_uri = '/sources/sourceExcel/?question_type=' + source_type;
         $.ajax({
             url: source_uri,
             type: "GET",
@@ -877,12 +877,15 @@
                 layer.open({
                     title: "资源列表",
                     type: 2,
-                    content: "/sources/sourceExcel/",
+                    content: source_uri,
+                    shade: [0.8, '#393d49'],
+                    shadeClose: true,
                     area: ['80%', '80%'],
                     btn: ['关闭'],
                     {#父页面向子页面传值#}
                     success: function (layero, index) {
                         let body = layer.getChildFrame('body', index);
+                        {#body.find('#source_type').html(source_type);#}
                     },
                     closeBtn: 0,
                 });

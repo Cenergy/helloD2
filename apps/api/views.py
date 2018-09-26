@@ -31,7 +31,7 @@ class SnippetList(APIView):
 
     def get(self, request, format=None):
         print(request.query_params,"------------")
-        question_type = request.query_params.get("question_type", False)
+        question_type = request.query_params.get("question_type", -1)
         page_info = request.query_params.get("page", 1)
         limit_info = request.query_params.get("limit", 10)
         key_word = request.query_params.get("key[id]", False)
@@ -46,10 +46,10 @@ class SnippetList(APIView):
             count = len(datas)
             query_sql = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'  LIMIT {1},{2} ".format(key_word,page_start-1, int(limit_info))
         else:
-            count_sql = "SELECT * FROM sources_sourcescore"
+            count_sql = "SELECT * FROM sources_sourcescore where question_type={0}".format(question_type)
             datas = pd.read_sql(count_sql, connection)
             count = len(datas)
-            query_sql = "SELECT * FROM sources_sourcescore LIMIT %d,%d" % (page_start-1, int(limit_info))
+            query_sql = "SELECT * FROM sources_sourcescore where question_type={0} LIMIT {1},{2}" .format(question_type,page_start-1, int(limit_info))
         snippets = SourcesCore.objects.raw(query_sql)
         serializer = SourcesCoreSerializers(snippets, many=True)
         data = {"code": 0, "msg": "", "count": count, "data": serializer.data}
