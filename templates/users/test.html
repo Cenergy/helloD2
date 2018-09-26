@@ -1,44 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Landing Page Title</title>
-<link href="/static/css/bootstrap.css" rel="stylesheet">
-<link href="/static/css/resultyle.css" rel="stylesheet">
-<link rel="icon" href="images/favicons/favicon.png">
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        html,body{
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
-<body data-spy="scroll" data-target=".navMenuCollapse">
-<div id="wrap">
-	<nav class="navbar bg-color1 dark-bg">
-		<div class="container"> <a class="navbar-brand goto" href="#">
-            <img src="/static/images/logo.png" height="25" alt="logo">看图识字</a>
-		</div>
-	</nav>
-	<section id="content-left" class="bg-color3">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-6 col-md-push-6">
-                    <img class="screen" id="pic" src=" " alt="识别的图片" style="height:200px;width:auto">
-                </div>
-				<div class="col-md-5 col-md-pull-6">
-					<h2>识图结果</h2>
-					<h4 class="sub-title">Page Builder</h4>
-					<p><div id="resTxt"></div></p>
-				</div>
-			</div>
-		</div>
-	</section>
-</div>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+    </div>
+    <button class="layui-btn layui-btn-normal" data-type="reload">搜索</button>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script src="/static/layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            , url: '/api/v1/goods/'
+            , page: true //开启分页
+            , limit: 10
+            , toolbar: '#toolbarDemo'
+            , defaultToolbar: ['filter', 'exports']
+            , title: '资源数据表'
+            , cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                , {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true}
+                , {field: 'sourcename', title: '资源名称', edit: 'text'}
+                , {
+                    field: 'sourceurl', title: '资源地址', width: 400, templet: function (res) {
+                        return '<a style="color:blue" href="' + res.sourceurl + '">' + res.sourceurl + '</a>'
+                    }
+                }
+                , {field: 'code', title: '密码', fixed: 'right'}
+            ]]
+        });
+    });
+</script>
+
 </body>
 </html>

@@ -306,6 +306,8 @@ def readFile(filename, chunk_size=512):
                 yield c
             else:
                 break
+def sourceExcel(request):
+    return render(request, "sources/sourcesExcel.html", {})
 
 
 

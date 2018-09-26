@@ -10,8 +10,11 @@ from rest_framework.response import Response
 from rest_framework import status, mixins, generics, viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from  django.db import connection
 
 from .filters import SourcesCoreFilter
+import pandas as pd
+
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -27,9 +30,30 @@ class SnippetList(APIView):
     """
 
     def get(self, request, format=None):
-        snippets = SourcesCore.objects.all()
+        print(request.query_params,"------------")
+        question_type = request.query_params.get("question_type", False)
+        page_info = request.query_params.get("page", 1)
+        limit_info = request.query_params.get("limit", 10)
+        key_word = request.query_params.get("key[id]", False)
+        if int(page_info) == 1:
+            page_start = int(page_info)
+        else:
+            max_info = int(page_info) * int(limit_info)
+            page_start = max_info - int(limit_info) + 1
+        if key_word:
+            query_sql0 = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'".format(key_word)
+            datas = pd.read_sql(query_sql0, connection)
+            count = len(datas)
+            query_sql = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'  LIMIT {1},{2} ".format(key_word,page_start-1, int(limit_info))
+        else:
+            count_sql = "SELECT * FROM sources_sourcescore"
+            datas = pd.read_sql(count_sql, connection)
+            count = len(datas)
+            query_sql = "SELECT * FROM sources_sourcescore LIMIT %d,%d" % (page_start-1, int(limit_info))
+        snippets = SourcesCore.objects.raw(query_sql)
         serializer = SourcesCoreSerializers(snippets, many=True)
-        return Response(serializer.data)
+        data = {"code": 0, "msg": "", "count": count, "data": serializer.data}
+        return Response(data)
 
 
 class SourcesCoreViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -39,6 +63,7 @@ class SourcesCoreViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, views
     retrieve:
         获取资源分类详情
     """
+
     queryset = SourcesCore.objects.all()
     pagination_class = StandardResultsSetPagination
     serializer_class = SourcesCoreSerializers
