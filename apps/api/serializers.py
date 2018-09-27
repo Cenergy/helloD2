@@ -15,6 +15,10 @@ from sources.models import SourcesCore
 ###SourcesCore
 
 class  SourcesCoreSerializers(serializers.ModelSerializer):
+    def validate(self, attrs):
+        attrs["mobile"] = attrs["sourcename"]
+        del attrs["code"]
+        return attrs
 
     class Meta:
         model = SourcesCore

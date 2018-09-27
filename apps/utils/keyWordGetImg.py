@@ -1,3 +1,6 @@
+# -*-coding:utf-8 -*-
+__author__ = 'Cenergy'
+__date__ = '27/9/18 下午9:57'
 import requests
 import re
 import os

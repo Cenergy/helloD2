@@ -62,6 +62,7 @@ class SourcesList(APIView):
     """
 
     def get(self, request, format=None):
+        print(request.query_params)
         question_type = request.query_params.get("question_type", -1)
         key_word = request.query_params.get("key_word", False)
         if key_word:
