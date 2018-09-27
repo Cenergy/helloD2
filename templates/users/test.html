@@ -1,60 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>layui</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+    <meta charset="UTF-8">
+    <!--视口的设置，让网页能等比例的缩放到对应设备中-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--告诉ie浏览器用最新内核去渲染网页-->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
 </head>
 <body>
 
-<table class="layui-hide" id="test" lay-filter="test"></table>
+    <!--
+        作者：bilaisheng@163.com
+        时间：2017-10-11
+        描述：bootstrap 中文网 布局排列
+    -->
 
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-inline">
-        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+    <style type="text/css">
+        .container .items{border: 1px solid #EEEEEE;padding: 10px;margin-bottom: 15px;}
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <div class="items text-center">
+                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/codeguide.png?1507601668481" />
+                    <h3>Bootstrap 编码规范</h3>
+                    <p>by @mdo</p>
+                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <div class="items text-center">
+                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/yarn.png?1507601668481" />
+                    <h3>Bootstrap 编码规范</h3>
+                    <p>by @mdo</p>
+                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <div class="items text-center">
+                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/react.png?1507601668481" />
+                    <h3>Bootstrap 编码规范</h3>
+                    <p>by @mdo</p>
+                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <div class="items text-center">
+                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/webpack.png?1507601668481" />
+                    <h3>Bootstrap 编码规范</h3>
+                    <p>by @mdo</p>
+                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <button class="layui-btn layui-btn-normal" data-type="reload">搜索</button>
-</script>
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
 
-
-<script src="/static/layui/layui.js" charset="utf-8"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-
-<script>
-    layui.use('table', function () {
-        var table = layui.table;
-
-        table.render({
-            elem: '#test'
-            , url: '/api/v1/goods/'
-            , page: true //开启分页
-            , limit: 10
-            , toolbar: '#toolbarDemo'
-            , defaultToolbar: ['filter', 'exports']
-            , title: '资源数据表'
-            , cols: [[
-                {type: 'checkbox', fixed: 'left'}
-                , {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true}
-                , {field: 'sourcename', title: '资源名称', edit: 'text'}
-                , {
-                    field: 'sourceurl', title: '资源地址', width: 400, templet: function (res) {
-                        return '<a style="color:blue" href="' + res.sourceurl + '">' + res.sourceurl + '</a>'
-                    }
-                }
-                , {field: 'code', title: '密码', fixed: 'right'}
-            ]]
-        });
-    });
-</script>
-
+    <!--jquery.js 一定要放在bootstrap.min.js之前，如果不放报错-->
+    <script type="text/javascript" src="/static/js/jquery.min.js" ></script>
+    <script type="text/javascript" src="/static/js/bootstrap.js" ></script>
 </body>
 </html>
