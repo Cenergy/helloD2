@@ -1,64 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
+
+
+<!-- Mirrored from www.bootcss.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Sep 2018 05:18:45 GMT -->
+
 <head>
-    <meta charset="UTF-8">
-    <!--视口的设置，让网页能等比例的缩放到对应设备中-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!--告诉ie浏览器用最新内核去渲染网页-->
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <meta charset="utf-8">
+    <title>Bootstrap中文网</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="使用这一框架。">
+    <meta name="keywords" content="入门">
+    <meta name="author" content="Bootstrap中文网">
+    <meta name="application-name" content="bootcss.com">
+
+    <!-- Site CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/assets/css/site.minad66.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+    <!-- Favicons -->
+    {#  <link rel="apple-touch-icon-precomposed" href="https://assets.bootcss.com/www/assets/ico/apple-touch-icon-precomposed.png?1532594948592">#}
+    {#  <link rel="shortcut icon" href="https://assets.bootcss.com/www/assets/ico/favicon.png?1532594948592">#}
+
 </head>
+
 <body>
+<div class="container projects">
 
-    <!--
-        作者：bilaisheng@163.com
-        时间：2017-10-11
-        描述：bootstrap 中文网 布局排列
-    -->
-
-    <style type="text/css">
-        .container .items{border: 1px solid #EEEEEE;padding: 10px;margin-bottom: 15px;}
-    </style>
-    <div class="container">
+    <div class="projects-header page-header">
         <div class="row">
-            <div class="col-lg-3 col-md-4">
-                <div class="items text-center">
-                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/codeguide.png?1507601668481" />
-                    <h3>Bootstrap 编码规范</h3>
-                    <p>by @mdo</p>
-                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4">
-                <div class="items text-center">
-                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/yarn.png?1507601668481" />
-                    <h3>Bootstrap 编码规范</h3>
-                    <p>by @mdo</p>
-                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4">
-                <div class="items text-center">
-                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/react.png?1507601668481" />
-                    <h3>Bootstrap 编码规范</h3>
-                    <p>by @mdo</p>
-                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4">
-                <div class="items text-center">
-                    <img class="img-responsive" src="https://static.bootcss.com/www/assets/img/webpack.png?1507601668481" />
-                    <h3>Bootstrap 编码规范</h3>
-                    <p>by @mdo</p>
-                    <p>Bootstrap 编码规范：编写灵活、稳定、高质量的 HTML 和 CSS 代码的规范。</p>
-                </div>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="输入资源名称">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">搜索一下</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.row -->
+    </div>
+
+    <div class="row" id="all_for_user">
+
+    </div>
+</div>
+
+
+<footer class="footer ">
+    <div class="container">
+        <div class="row footer-top">
+            <div class="col-md-6 col-lg-6">
+                <h4>
+                    <img src="https://assets.bootcss.com/www/assets/img/logo.png?1532594948592">
+                </h4>
+                <p>我们一直致力于为广大开发者提供更多的优质技术文档和辅助开发工具！</p>
             </div>
         </div>
     </div>
+</footer>
 
-    <!--jquery.js 一定要放在bootstrap.min.js之前，如果不放报错-->
-    <script type="text/javascript" src="/static/js/jquery.min.js" ></script>
-    <script type="text/javascript" src="/static/js/bootstrap.js" ></script>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/unveil/1.3.0/jquery.unveil.min.js"></script>
+<script src="https://cdn.bootcss.com/scrollup/2.4.1/jquery.scrollUp.min.js"></script>
+<script src="https://cdn.bootcss.com/toc/0.3.2/toc.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
+<script src="/static/assets/js/site.minad66.js"></script>
+<script>
+    $(document).ready(function () {
+        var test = window.location.href;
+        var source_type = test.split("/test/?")[1];
+        var source_url = '/api/v1/resources/?' + source_type;
+        $.ajax({
+            url: source_url,
+            type: "GET",
+            success: function (res) {
+                for (var i = 0; i < res.data.length; i++) {
+                    var card_html = '<div class="col-sm-6 col-md-4 col-lg-3 ">' +
+                        '<div class="thumbnail">' +
+                        '<a href="http://www.youzhan.org/" title="'+res.data[i].sourcename+'" target="_blank">' +
+                        '<img class="lazy" src="/static/images/default.png" width="300" height="150"  alt="Bootstrap 优站精选">' +
+                        '</a><div class="caption"><h3>' +
+                        '<a href="http://www.youzhan.org/" title="Bootstrap 优站精选" target="_blank">'+res.data[i].sourcename+'<br>' +
+                        '<small style="margin:10px;"><a href="http://www.baidu.com"><button type="button" class="btn btn-primary">下载</button></a></small>' +
+                        '</a></h3>' +
+                        '<p>提取码'+res.data[i].code+'</p>' +
+                        '</div></div></div>';
+                    $("#all_for_user").append(card_html)
+                }
+            }
+        })
+    });
+</script>
+
 </body>
+
 </html>

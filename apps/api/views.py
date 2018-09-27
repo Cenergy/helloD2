@@ -56,6 +56,29 @@ class SnippetList(APIView):
         return Response(data)
 
 
+class SourcesList(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+
+    def get(self, request, format=None):
+        question_type = request.query_params.get("question_type", -1)
+        key_word = request.query_params.get("key_word", False)
+        if key_word:
+            query_sql = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'".format(key_word)
+            datas = pd.read_sql(query_sql, connection)
+            count = len(datas)
+        else:
+            count_sql = "SELECT * FROM sources_sourcescore where question_type={0}".format(question_type)
+            datas = pd.read_sql(count_sql, connection)
+            count = len(datas)
+            query_sql = "SELECT * FROM sources_sourcescore where question_type={0}" .format(question_type)
+        snippets = SourcesCore.objects.raw(query_sql)
+        serializer = SourcesCoreSerializers(snippets, many=True)
+        data = {"code": 0, "msg": "", "count": count, "data": serializer.data}
+        return Response(data)
+
+
 class SourcesCoreViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     list:
