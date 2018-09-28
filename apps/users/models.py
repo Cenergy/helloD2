@@ -42,6 +42,16 @@ class Banner(models.Model):
         verbose_name="banner"
         verbose_name_plural=verbose_name
 
+class Suggestion(models.Model):
+    suggest_name = models.CharField(max_length=100, verbose_name="用户名",null=True, blank=True)
+    suggest_content = models.TextField(verbose_name="建议内容",null=False, blank=False)
+    email = models.EmailField(max_length=50, verbose_name="邮件地址",null=False, blank=False)
+    add_time = models.DateField(default=datetime.datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = "用户建议"
+        verbose_name_plural = verbose_name
+
 
 
 
