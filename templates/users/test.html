@@ -72,7 +72,9 @@
 <script src="https://cdn.bootcss.com/toc/0.3.2/toc.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
 <script src="/static/assets/js/site.minad66.js"></script>
+<script src="/static/layui/layui.all.js"></script>
 <script>
+
     $(document).ready(function () {
         var test = window.location.href;
         var source_type = test.split("/test/?")[1];
@@ -87,6 +89,7 @@
         $("#search").click(function () {
             var key_word = $("#word_key").val();
             if (key_word == "") {
+                layer.msg('不能空空如也！');
                 return false
             }
             var search_url = '/api/v1/resources/?key_word=' + key_word;
@@ -94,8 +97,12 @@
                 url: search_url,
                 type: "GET",
                 success: function (res) {
-                    $("#all_for_user").empty();
-                    append_html("#all_for_user", res);
+                    if (res.data.length == 0) {
+                        layer.msg('この鬼はない，请换其他名字试试');
+                    } else {
+                        $("#all_for_user").empty();
+                        append_html("#all_for_user", res);
+                    }
                 }
             });
         });
