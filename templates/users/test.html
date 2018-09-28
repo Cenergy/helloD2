@@ -57,7 +57,7 @@
                 {#                <h4>#}
                 {#                    <img src="https://assets.bootcss.com/www/assets/img/logo.png?1532594948592">#}
                 {#                </h4>#}
-                <p>一直致力于提供优质的GIS和AI技术文档和辅助开发工具！</p>
+                <p>致力于提供优质的GIS和AI技术文档和辅助开发工具！</p>
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@
                             '<img class="lazy" src="' + res.data[i].source_img + '" width="300" height="150"  alt="Bootstrap 优站精选">' +
                             '</a><div class="caption"><h3 style="color:blue">' +
                             '' + res.data[i].sourcename +
-                            '</h3>' + '<br><b><a class="layui-btn layui-btn-sm" href="' + res.data[i].sourceurl + '"><i class="layui-icon layui-icon-download-circle"></i>下载地址</a></b><br><br>' +
+                            '</h3>' + '<br><b><a target="_blank" class="layui-btn layui-btn-sm" href="' + res.data[i].sourceurl + '"><i class="layui-icon layui-icon-download-circle"></i>下载地址</a></b><br><br>' +
                             '<p>资源' + res.data[i].sourcename + "的提取码或密码是：" + res.data[i].code + '</p>' +
                             '</div></div></div>';
                         $("#all_for_user").append(card_html)
