@@ -99,7 +99,7 @@
         });
         $("#search").click(function () {
             var key_word = $("#word_key").val();
-            var search_url='/api/v1/resources/?key_word=' + key_word;
+            var search_url = '/api/v1/resources/?key_word=' + key_word;
             $.ajax({
                 url: search_url,
                 type: "GET",
@@ -119,7 +119,15 @@
                     }
                 }
             });
-        })
+        });
+        {#绑定enter的事件#}
+        $(document).keyup(function (event) {
+            if (event.keyCode == 13) {
+                $("#search").trigger("click");
+            }
+        });
+
+
     });
 </script>
 
