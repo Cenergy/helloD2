@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 import users.views
 import xadmin
 from users import views
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     url('login/$', views.LoginView.as_view(), name="login"),
@@ -20,6 +21,7 @@ urlpatterns = [
     url(r'^forget/$', views.ForgetPwdView.as_view(), name="forget_pwd"),
     url(r'^modify_pwd/$', views.ModifyPwdView.as_view(), name="modify_pwd"),
     url(r'^user_info/$', views.UserinfoView.as_view(), name="user_info"),
+    url(r'^user_suggest/$', csrf_exempt(views.UserSuggestion.as_view()), name="user_suggest"),
     url(r'^get_voices/$', views.get_voices),
     url(r'^BANAJAX/$', views.BANAJAX),
     url('^$', views.IndexView.as_view(), name="index"),

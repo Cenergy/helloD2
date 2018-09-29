@@ -1,4 +1,4 @@
-import os,json,uuid,base64,datetime
+import os, json, uuid, base64, datetime
 import platform as plat
 
 import pandas as pd
@@ -18,7 +18,6 @@ from django.shortcuts import render, render_to_response
 from django.db import connection
 
 from rest_framework import permissions, renderers, viewsets
-
 
 from utils.voices import towords
 
@@ -41,6 +40,7 @@ def permission_denied(request):
 def test(request):
     return render(request, "users/test.html", {})
 
+
 def map(request):
     return render(request, "users/map.html")
 
@@ -58,6 +58,7 @@ class CustomBackend(ModelBackend):
         except Exception as e:
             return None
 
+
 class IndexView(View):
     def get(self, request):
         user_name = request.session.get("user_name", " ")
@@ -65,13 +66,13 @@ class IndexView(View):
         query_sql = "select * from sources_sourcelimit where id={abc}".format(abc=1)
         all_data = pd.read_sql(query_sql, connection)
         today = datetime.date.today().strftime('%Y-%m-%d')
-        if str(all_data["limit_time"][0])==str(today):
+        if str(all_data["limit_time"][0]) == str(today):
             pass
         else:
             sub_one_sql = "UPDATE 'sources_sourcelimit' SET num_count=50,limit_time='%s'" % today
             sub_one_cursor = connection.cursor()
             sub_one_cursor.execute(sub_one_sql)
-        num_count=all_data["num_count"][0]
+        num_count = all_data["num_count"][0]
         return render(request, "users/index.html", locals())
 
 
@@ -84,13 +85,14 @@ class LogoutView(View):
 class LoginView(View):
     renderer_classes = [renderers.TemplateHTMLRenderer]
     template_name = "users/login.html"
+
     def get(self, request):
         return render(request, "users/login.html", locals())
 
     def post(self, request):
         login_form = LoginForm(request.POST)
         username = request.POST.get("username", "")
-        username=username.lower()
+        username = username.lower()
         password = request.POST.get("password", "")
         if login_form.is_valid():
             # request.session["username"] = username
@@ -124,11 +126,11 @@ class RegisterView(View):
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
             username = request.POST.get("email", "")
-            username=username.lower()
-            if UserProfile.objects.filter(email=username,is_active=True):
+            username = username.lower()
+            if UserProfile.objects.filter(email=username, is_active=True):
                 msg = "邮箱已被注册！！"
                 return render(request, "users/register.html", locals())
-            elif UserProfile.objects.filter(email=username,is_active=False):
+            elif UserProfile.objects.filter(email=username, is_active=False):
                 msg = "请激活您的邮箱"
                 send_type = "register"
                 register_send_email(username, send_type)
@@ -153,7 +155,7 @@ class ActiveUserView(View):
         if all_records:
             for record in all_records:
                 email = record.email
-                email=email.lower()
+                email = email.lower()
                 user = UserProfile.objects.get(email=email)
                 user.is_active = True
                 user.save()
@@ -171,7 +173,7 @@ class ForgetPwdView(View):
     def post(self, request):
         forget_form = ForgetForm(request.POST)
         username = request.POST.get("email", "")
-        username=username.lower()
+        username = username.lower()
         if forget_form.is_valid():
             if UserProfile.objects.filter(email=username):
                 email = request.POST.get("email", "")
@@ -195,7 +197,7 @@ class ResetPwdView(View):
         if all_records:
             for record in all_records:
                 email = record.email
-                email=email.lower()
+                email = email.lower()
                 return render(request, "users/password_reset.html", locals())
         else:
             return render(request, "users/active_fail.html", locals())
@@ -208,7 +210,7 @@ class ModifyPwdView(View):
             pwd1 = request.POST.get("password1", "")
             pwd2 = request.POST.get("password2", "")
             email = request.POST.get("email", "")
-            email=email.lower()
+            email = email.lower()
             if pwd1 != pwd2:
                 msg = "两次密码不一致"
                 return render(request, "users/password_reset.html", locals())
@@ -224,6 +226,7 @@ class ModifyPwdView(View):
 class UserinfoView(View):
     def get(self, request):
         return render(request, "users/usercenter-info.html")
+
 
 @csrf_exempt
 def get_voices(request):
@@ -248,6 +251,8 @@ def get_voices(request):
                 "data": "注册失败"
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
+
+
 @csrf_exempt
 def BANAJAX(request):
     if request.method == "POST":
@@ -282,3 +287,27 @@ def BANAJAX(request):
         except:
             pass
         return JsonResponse(abc, content_type='application/json')
+
+# 用户建议或者意见
+class UserSuggestion(View):
+    def get(self,request):
+        pass
+    def post(self,request):
+        suggest_email=request.POST.get("suggest_email", "")
+        suggest_user = request.POST.get("suggest_user", "")
+        suggest_message = request.POST.get("suggest_message", "")
+        try:
+            reginfs = {
+                "code": 400,
+                "message": "success",
+                "data": "hello"
+            }
+        except:
+            reginfs = {
+                "code": 200,
+                "message": "failed",
+                "data": "注册失败"
+            }
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+
+

@@ -507,7 +507,7 @@
                 <p class="lead" style="margin-top:0">提提您的建议或意见</p>
             </div>
 
-            <form role="form" action="" method="post">
+            <div role="form">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="InputName">名称</label>
@@ -536,10 +536,10 @@
                         </div>
                     </div>
 
-                    <input type="submit" name="submit" id="submit" value="提交"
+                    <input type="submit" name="submit" id="Inputsubmit" value="提交"
                            class="btn wow tada btn-embossed btn-primary pull-right">
                 </div>
-            </form>
+            </div>
 
             <hr class="featurette-divider hidden-lg">
             <div class="col-md-5 col-md-push-1 address">
@@ -902,9 +902,24 @@
     })();
 </script>
 <script>
-    let suggest_email=$("#InputEmail").val();
-    let suggest_user=$("#InputName").val();
-    let suggest_message=$("#InputMessage").val();
+    let suggest_email = $("#InputEmail").val();
+    let suggest_user = $("#InputName").val();
+    let suggest_message = $("#InputMessage").val();
+    let suggest_submit = $("#Inputsubmit");
+    let suggest_data={};
+    suggest_data["suggest_email"]=suggest_email;
+    suggest_data["suggest_user"]=suggest_user;
+    suggest_data["suggest_message"]=suggest_message;
+    suggest_submit.click(function () {
+        $.ajax({
+            url:"/user_suggest/",
+            type:"POST",
+            data:suggest_data,
+            success:function (res) {
+                console.log(res);
+            }
+        })
+    })
 </script>
 
 </body>
