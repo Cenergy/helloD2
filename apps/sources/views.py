@@ -309,6 +309,9 @@ def readFile(filename, chunk_size=512):
 def sourceExcel(request):
     return render(request, "sources/sourcesExcel.html", {})
 
+def sourceList(request):
+    return render(request, "sources/sourcesList.html", {})
+
 
 
 

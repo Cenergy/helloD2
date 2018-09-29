@@ -70,7 +70,7 @@ class SourcesList(APIView):
             datas = pd.read_sql(query_sql, connection)
             count = len(datas)
         else:
-            if question_type==-1:
+            if int(question_type)==-1:
                 count_sql = "SELECT * FROM sources_sourcescore"
                 datas = pd.read_sql(count_sql, connection)
                 count = len(datas)
