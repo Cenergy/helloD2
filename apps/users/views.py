@@ -7,12 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
-from .models import UserProfile, EmailVerifyRecord
+from .models import UserProfile, EmailVerifyRecord,Suggestion
 from django.db.models import Q
 from django.views.generic.base import View
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from django.contrib.auth.hashers import make_password
-from utils.email_send import register_send_email
+from utils.email_send import register_send_email,common_send_email
 from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.db import connection
@@ -293,18 +293,24 @@ class UserSuggestion(View):
     def get(self,request):
         pass
     def post(self,request):
-        suggest_email=request.POST.get("suggest_email", "")
-        suggest_user = request.POST.get("suggest_user", "")
-        suggest_message = request.POST.get("suggest_message", "")
         try:
+            suggest_email = request.POST.get("suggest_email", "")
+            suggest_user = request.POST.get("suggest_user", "无名")
+            suggest_message = request.POST.get("suggest_message", "")
+            suggest_data = Suggestion()
+            suggest_data.email = suggest_email
+            suggest_data.suggest_name = suggest_user
+            suggest_data.suggest_content = suggest_message
+            suggest_data.save()
+            common_send_email(suggest_email)
             reginfs = {
-                "code": 400,
+                "code": 202,
                 "message": "success",
                 "data": "hello"
             }
         except:
             reginfs = {
-                "code": 200,
+                "code": 400,
                 "message": "failed",
                 "data": "注册失败"
             }

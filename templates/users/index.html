@@ -902,21 +902,25 @@
     })();
 </script>
 <script>
-    let suggest_email = $("#InputEmail").val();
-    let suggest_user = $("#InputName").val();
-    let suggest_message = $("#InputMessage").val();
     let suggest_submit = $("#Inputsubmit");
-    let suggest_data={};
-    suggest_data["suggest_email"]=suggest_email;
-    suggest_data["suggest_user"]=suggest_user;
-    suggest_data["suggest_message"]=suggest_message;
     suggest_submit.click(function () {
+        let suggest_email = $("#InputEmail").val();
+        let suggest_user = $("#InputName").val();
+        let suggest_message = $("#InputMessage").val();
+        let suggest_data = {};
+        suggest_data["suggest_email"] = suggest_email;
+        suggest_data["suggest_user"] = suggest_user;
+        suggest_data["suggest_message"] = suggest_message;
         $.ajax({
-            url:"/user_suggest/",
-            type:"POST",
-            data:suggest_data,
-            success:function (res) {
-                console.log(res);
+            url: "/user_suggest/",
+            type: "POST",
+            data: suggest_data,
+            success: function (res) {
+                if(res.code==202){
+                     layer.msg("消息已收到", {time: 2000})
+                }else{
+                    layer.msg("消息发送失败哦，稍后再试！", {time: 2000})
+                }
             }
         })
     })

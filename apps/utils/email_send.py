@@ -64,6 +64,18 @@ def  register_send_email(email,type_code="register"):
             smtpObj.quit()
         except smtplib.SMTPException as e:
             print(e)
-
+def  common_send_email(email):
+    email_body= "<h3>您好，您的建议或意见我已收到，有空常来<p><a href='https://www.aigisss.com/'>https://www.aigisss.com</a></p></h3>"
+    message = MIMEText(email_body, 'html', 'utf-8')
+    message['From'] = Header("AIGIS网", 'utf-8')
+    try:
+        subject = 'AIGIS网'
+        message['Subject'] = Header(subject, 'utf-8')
+        smtpObj = smtplib.SMTP_SSL(mail_host, 465)
+        smtpObj.login(mail_user, mail_pass)
+        smtpObj.sendmail(sender, [email], message.as_string())
+        smtpObj.quit()
+    except smtplib.SMTPException as e:
+        print(e)
 if __name__ == '__main__':
     register_send_email('673598118@qq.com',type_code ="forget")
