@@ -11,9 +11,9 @@ from datetime import datetime
 
 # 第三方 SMTP 服务
 mail_host = "smtp.qq.com"  # 设置服务器
-mail_user = "673598118@qq.com"  # 用户名
-mail_pass = "olxthuaragspbfic"  # 口令,QQ邮箱是输入授权码，在qq邮箱设置 里用验证过的手机发送短信获得，不含空格
-sender = 'cenergy@foxmail.com'
+mail_user = "aigiser@foxmail.com"  # 用户名
+mail_pass = "jmpfewnbvyscfjcd"  # 口令,QQ邮箱是输入授权码，在qq邮箱设置 里用验证过的手机发送短信获得，不含空格
+sender = 'aigiser@foxmail.com'
 
 
 
@@ -64,8 +64,21 @@ def  register_send_email(email,type_code="register"):
             smtpObj.quit()
         except smtplib.SMTPException as e:
             print(e)
-def  common_send_email(email):
-    email_body= "<h3>您好，您的建议或意见我已收到，有空常来<p><a href='https://www.aigisss.com/'>https://www.aigisss.com</a></p></h3>"
+def  common_send_email(email,use_email,content):
+    email_body= "<h3>用户"+use_email+"提出：<p>"+content+"</p></h3>"
+    message = MIMEText(email_body, 'html', 'utf-8')
+    message['From'] = Header("AIGIS网", 'utf-8')
+    try:
+        subject = 'AIGIS网'
+        message['Subject'] = Header(subject, 'utf-8')
+        smtpObj = smtplib.SMTP_SSL(mail_host, 465)
+        smtpObj.login(mail_user, mail_pass)
+        smtpObj.sendmail(sender, [email], message.as_string())
+        smtpObj.quit()
+    except smtplib.SMTPException as e:
+        print(e)
+def  common_reply_email(email,content):
+    email_body= "<h3>关于您建议或意见，<p>"+content+"，</p>有空常来<p><a href='https://www.aigisss.com/'>https://www.aigisss.com</a></p></h3>"
     message = MIMEText(email_body, 'html', 'utf-8')
     message['From'] = Header("AIGIS网", 'utf-8')
     try:

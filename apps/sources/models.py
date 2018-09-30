@@ -19,7 +19,7 @@ class SourcesCore(models.Model):
     code=models.CharField(max_length=20,verbose_name="提取码",null=True,blank=True,help_text="可不填，会自动从资源描述里读取")
     sourcedesc = models.CharField(max_length=200, null=True,blank=True,verbose_name='综合描述', help_text="默认是百度云的资源，如果不是，上面两个请填写")
     question_type = models.IntegerField(choices=SOURCES_TYPE, verbose_name="资源类型", help_text="资源类型", default=0)
-    source_img=models.ImageField(max_length=200,upload_to="sources/images/",default="sources/images/default.png",storage=renameImg.ImageStorage(),help_text="资源图片")
+    source_img=models.ImageField(null=True,blank=True,upload_to="sources/images/",default="sources/images/default.png",storage=renameImg.ImageStorage(),verbose_name="资源图片")
     send_time=models.DateField(default=datetime.datetime.now,verbose_name='添加时间')
 
     def save(self, *args, **kwargs):

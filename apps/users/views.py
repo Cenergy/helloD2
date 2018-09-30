@@ -38,7 +38,9 @@ def permission_denied(request):
 
 
 def test(request):
-    return render(request, "users/test.html", {})
+    from utils.word_get_pic import getIntPages
+    dataList=getIntPages("蔬菜",1)
+    return render(request, "users/test.html", locals())
 
 
 def map(request):
@@ -302,7 +304,8 @@ class UserSuggestion(View):
             suggest_data.suggest_name = suggest_user
             suggest_data.suggest_content = suggest_message
             suggest_data.save()
-            common_send_email(suggest_email)
+            # 发邮件回复用户已收到
+            common_send_email("673598118@qq.com",suggest_email,suggest_message)
             reginfs = {
                 "code": 202,
                 "message": "success",

@@ -1,10 +1,15 @@
+# -*-coding:utf-8 -*-
+__author__ = 'Cenergy'
+__date__ = '29/9/18 下午5:18'
+
+
 import requests
 import re
 import os
 
 def getIntPages(keyword, pages):
     params = []
-    for i in range(30, 30*pages+30, 30):
+    for i in range(1, 30*pages+30, 30):
         params.append({
             'tn':'resultjson_com',
             'ipn': 'rj',
@@ -33,7 +38,7 @@ def getIntPages(keyword, pages):
         urls.append(img_urls)
         #urls.append(requests.get(url,params = i).json().get('data'))开始尝试的json提取方法
         #print("%d times : " % x, img_urls)
-    return urls
+    return urls[0]
 
 def fetch_img(path,dataList):
     if not os.path.exists(path):
