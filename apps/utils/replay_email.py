@@ -8,9 +8,9 @@ from email.header import Header
 
 # 第三方 SMTP 服务
 mail_host = "smtp.qq.com"  # 设置服务器
-mail_user = "673598118@qq.com"  # 用户名
-mail_pass = "olxthuaragspbfic"  # 口令,QQ邮箱是输入授权码，在qq邮箱设置 里用验证过的手机发送短信获得，不含空格
-sender = 'cenergy@foxmail.com'
+mail_user = "aigiser@foxmail.com"  # 用户名
+mail_pass = "jmpfewnbvyscfjcd"  # 口令,QQ邮箱是输入授权码，在qq邮箱设置 里用验证过的手机发送短信获得，不含空格
+sender = 'aigiser@foxmail.com'
 
 def  common_reply_email(email,suggest,content):
     email_body= "<h3>关于您提出的<span style='color:blue'>"+suggest+"</span>的相关建议或意见，回复如下：<p>"+content+"</p><p>有空常来<a href='https://www.aigisss.com/'>https://www.aigisss.com</a></p><p>感谢您的支持</p></h3>"
