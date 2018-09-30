@@ -61,10 +61,10 @@ class Suggestion(models.Model):
         verbose_name = "用户建议"
         verbose_name_plural = verbose_name
     def save(self, *args, **kwargs):
-        if self.suggest_type==1:
-            common_reply_email(self.email,self.suggest_content,self.reply_content)
-        else:
+        if self.suggest_type==0:
             pass
+        else:
+            common_reply_email(self.email, self.suggest_content, self.reply_content)
         # return super(Suggestion, self).delete(*args, **kwargs)
         return super(Suggestion, self).save(*args, **kwargs)
 
