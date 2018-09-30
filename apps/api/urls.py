@@ -8,14 +8,14 @@ from api import views
 from rest_framework.routers import DefaultRouter
 
 from api.views import SourcesCoreViewset
-
+from django.views.decorators.csrf import csrf_exempt
 router = DefaultRouter()
 
 router.register(r'v1/sources', SourcesCoreViewset, base_name='sources')
 
 urlpatterns = [
     url(r'v1/goods/$', views.SnippetList.as_view(), name="goods"),
-    url(r'v1/suggestions/', views.SuggestionsView.as_view(), name="suggestions"),
+    url(r'v1/suggestions/', csrf_exempt(views.SuggestionsView.as_view()), name="suggestions"),
     url(r'v1/resources/$', views.SourcesList.as_view(), name="resources"),
     url(r'', include(router.urls)),
 ]

@@ -170,7 +170,11 @@
                         <div class="dropdown">
                             <div type="button" class="btn dropdown-toggle" id="dropdownMenu1"
                                  data-toggle="dropdown" data-hover="dropdown">
-                                {{ user_name }}
+                                {% ifnotequal user_name " " %}
+                                    {{ user_name }}
+                                {% else %}
+
+                                {% endifnotequal %}
                                 <span class="caret"></span>
                             </div>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -522,7 +526,7 @@
                         <label for="InputEmail">邮箱</label>
                         <div class="input-group">
                             <input type="email" class="form-control" id="InputEmail" name="InputEmail"
-                                   placeholder="请输入你的邮箱" required>
+                                   placeholder="请输入你的邮箱" required value="{{ user_name }}">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
                         </div>
                     </div>
@@ -908,15 +912,15 @@
         let suggest_user = $("#InputName").val();
         let suggest_message = $("#InputMessage").val();
         let suggest_data = {};
-        if(suggest_email==""&&suggest_message==""){
+        if (suggest_email == "" && suggest_message == "") {
             layer.msg("邮箱和内容不能空！！", {time: 2000});
             return false
         }
-        if(suggest_email==""){
+        if (suggest_email == "") {
             layer.msg("邮箱不能为空！", {time: 2000});
             return false
         }
-        if(suggest_message==""){
+        if (suggest_message == "") {
             layer.msg("内容不能为空！", {time: 2000});
             return false
         }
@@ -924,7 +928,7 @@
         suggest_data["suggest_user"] = suggest_user;
         suggest_data["suggest_message"] = suggest_message;
         $(this).attr('disabled', 'disabled');
-        var that_= $(this);
+        var that_ = $(this);
         $.ajax({
             url: "/api/v1/suggestions/",
             type: "POST",
