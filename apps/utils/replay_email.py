@@ -13,7 +13,7 @@ mail_pass = "olxthuaragspbfic"  # 口令,QQ邮箱是输入授权码，在qq邮�
 sender = 'cenergy@foxmail.com'
 
 def  common_reply_email(email,suggest,content):
-    email_body= "<h3>关于您提出的"+suggest+"建议或意见，回复如下：<p>"+content+"</p>有空常来<p><a href='https://www.aigisss.com/'>https://www.aigisss.com</a></p></h3>"
+    email_body= "<h3>关于您提出的<span style='color:blue'>"+suggest+"</span>建议或意见，回复如下：<p>"+content+"</p>有空常来<p><a href='https://www.aigisss.com/'>https://www.aigisss.com</a></p></h3>"
     message = MIMEText(email_body, 'html', 'utf-8')
     message['From'] = Header("AIGIS网", 'utf-8')
     try:
