@@ -68,7 +68,6 @@ class Suggestion(models.Model):
         # return super(Suggestion, self).delete(*args, **kwargs)
         return super(Suggestion, self).save(*args, **kwargs)
 
-
     def __str__(self):
         return self.email
 

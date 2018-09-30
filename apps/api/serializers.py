@@ -11,15 +11,16 @@ __date__ = '10/8/18 下午4:26'
 from rest_framework import serializers
 
 from sources.models import SourcesCore
+from users.models import Suggestion
 
 ###SourcesCore
 
 class  SourcesCoreSerializers(serializers.ModelSerializer):
-    def validate(self, attrs):
-        attrs["mobile"] = attrs["sourcename"]
-        del attrs["code"]
-        return attrs
-
     class Meta:
         model = SourcesCore
+        fields="__all__"
+
+class  SuggestionSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Suggestion
         fields="__all__"

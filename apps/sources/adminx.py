@@ -16,8 +16,6 @@ class SourcesCoreAdmin(object):
 xadmin.site.register(SourcesCore,SourcesCoreAdmin)
 
 
-
-
 class SourceLimitAdmin(object):
     list_display=['num_count','limit_time']
     search_fields = ['num_count','limit_time']

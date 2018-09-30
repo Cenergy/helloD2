@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from sources.models import SourcesCore
+
 from api.serializers import SourcesCoreSerializers
 
 from rest_framework.views import APIView
@@ -13,6 +13,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from  django.db import connection
 
 from .filters import SourcesCoreFilter
+from utils.email_send import register_send_email,common_send_email
+from sources.models import SourcesCore
+from users.models import Suggestion
 import pandas as pd
 
 
@@ -101,3 +104,33 @@ class SourcesCoreViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, views
     # filter_fields = ('question_type', 'sourcename')
     filter_class = SourcesCoreFilter
     search_fields = ('sourcename',)
+
+class SuggestionsView(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+
+    def post(self, request, format=None):
+        try:
+            suggest_email = request.POST.get("suggest_email", "")
+            suggest_user = request.POST.get("suggest_user", " ")
+            suggest_message = request.POST.get("suggest_message", "")
+            suggest_data = Suggestion()
+            suggest_data.email = suggest_email
+            suggest_data.suggest_name = suggest_user
+            suggest_data.suggest_content = suggest_message
+            suggest_data.save()
+            # 发邮件回复用户已收到
+            common_send_email("673598118@qq.com",suggest_email,suggest_message)
+            reginfs = {
+                "code": 202,
+                "message": "success",
+                "data": "恭喜，成功了"
+            }
+        except:
+            reginfs = {
+                "code": 400,
+                "message": "failed",
+                "data": "失败"
+            }
+        return Response(reginfs)

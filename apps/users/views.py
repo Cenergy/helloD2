@@ -297,7 +297,7 @@ class UserSuggestion(View):
     def post(self,request):
         try:
             suggest_email = request.POST.get("suggest_email", "")
-            suggest_user = request.POST.get("suggest_user", "无名")
+            suggest_user = request.POST.get("suggest_user", " ")
             suggest_message = request.POST.get("suggest_message", "")
             suggest_data = Suggestion()
             suggest_data.email = suggest_email

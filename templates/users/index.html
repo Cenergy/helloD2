@@ -507,13 +507,13 @@
                 <p class="lead" style="margin-top:0">提提您的建议或意见</p>
             </div>
 
-            <div role="form">
+            <form role="form" method="POST" action="#">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="InputName">名称</label>
                         <div class="input-group">
                             <input type="text" class="form-control" name="InputName" id="InputName"
-                                   placeholder="请输入用户名">
+                                   placeholder="请输入用户名(选填)">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
                         </div>
                     </div>
@@ -528,7 +528,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="InputMessage">信息</label>
+                        <label for="InputMessage">内容</label>
                         <div class="input-group">
                             <textarea name="InputMessage" id="InputMessage" class="form-control" rows="5"
                                       required></textarea>
@@ -537,9 +537,9 @@
                     </div>
 
                     <input type="submit" name="submit" id="Inputsubmit" value="提交"
-                           class="btn wow tada btn-embossed btn-primary pull-right">
+                           class="btn wow tada btn-embossed btn-primary pull-right" style="float:right">
                 </div>
-            </div>
+            </form>
 
             <hr class="featurette-divider hidden-lg">
             <div class="col-md-5 col-md-push-1 address">
@@ -908,19 +908,38 @@
         let suggest_user = $("#InputName").val();
         let suggest_message = $("#InputMessage").val();
         let suggest_data = {};
+        if(suggest_email==""&&suggest_message==""){
+            layer.msg("邮箱和内容不能空！！", {time: 2000});
+            return false
+        }
+        if(suggest_email==""){
+            layer.msg("邮箱不能为空！", {time: 2000});
+            return false
+        }
+        if(suggest_message==""){
+            layer.msg("内容不能为空！", {time: 2000});
+            return false
+        }
         suggest_data["suggest_email"] = suggest_email;
         suggest_data["suggest_user"] = suggest_user;
         suggest_data["suggest_message"] = suggest_message;
+        $(this).attr('disabled', 'disabled');
+        var that_= $(this);
         $.ajax({
-            url: "/user_suggest/",
+            url: "/api/v1/suggestions/",
             type: "POST",
             data: suggest_data,
             success: function (res) {
-                if(res.code==202){
-                     layer.msg("消息已收到", {time: 2000})
-                }else{
+                that_.removeAttr('disabled');
+                if (res.code == 202) {
+                    layer.msg("消息已收到", {time: 2000})
+                } else {
                     layer.msg("消息发送失败哦，稍后再试！", {time: 2000})
                 }
+            },
+            error: function (res) {
+                that_.removeAttr('disabled');
+                layer.msg("提交次数超限，明天再试！或者登陆可提升限额", {time: 2000})
             }
         })
     })
