@@ -511,7 +511,7 @@
                 <p class="lead" style="margin-top:0">提提您的建议或意见</p>
             </div>
 
-            <form role="form" method="POST" action="#">
+            <div role="form">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="InputName">名称</label>
@@ -543,7 +543,7 @@
                     <input type="submit" name="submit" id="Inputsubmit" value="提交"
                            class="btn wow tada btn-embossed btn-primary pull-right" style="float:right">
                 </div>
-            </form>
+            </div>
 
             <hr class="featurette-divider hidden-lg">
             <div class="col-md-5 col-md-push-1 address">
@@ -907,6 +907,7 @@
 </script>
 <script>
     let suggest_submit = $("#Inputsubmit");
+    var limit = true;
     suggest_submit.click(function () {
         let suggest_email = $("#InputEmail").val();
         let suggest_user = $("#InputName").val();
@@ -929,23 +930,31 @@
         suggest_data["suggest_message"] = suggest_message;
         $(this).attr('disabled', 'disabled');
         var that_ = $(this);
-        $.ajax({
-            url: "/api/v1/suggestions/",
-            type: "POST",
-            data: suggest_data,
-            success: function (res) {
-                that_.removeAttr('disabled');
-                if (res.code == 202) {
-                    layer.msg("消息已收到", {time: 2000})
-                } else {
-                    layer.msg("消息发送失败哦，稍后再试！", {time: 2000})
+        if (limit) {
+            $.ajax({
+                url: "/api/v1/suggestions/",
+                type: "POST",
+                data: suggest_data,
+                success: function (res) {
+                    limit = false;
+                    that_.removeAttr('disabled');
+                    if (res.code == 202) {
+                        layer.msg("消息已收到", {time: 2000})
+                    } else {
+                        layer.msg("消息发送失败哦，稍后再试！", {time: 2000})
+                    }
+                },
+                error: function (res) {
+                    limit = true;
+                    that_.removeAttr('disabled');
+                    layer.msg("提交次数超限，明天再试！或者登陆可提升限额", {time: 2000})
                 }
-            },
-            error: function (res) {
-                that_.removeAttr('disabled');
-                layer.msg("提交次数超限，明天再试！或者登陆可提升限额", {time: 2000})
-            }
-        })
+            })
+        } else {
+            that_.removeAttr('disabled');
+            layer.msg("请勿重复提交", {time: 2000})
+        }
+
     })
 </script>
 

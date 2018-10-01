@@ -111,36 +111,26 @@ class SuggestionsView(APIView):
     """
 
     def post(self, request, format=None):
-        justOne=True
-        if justOne:
-            try:
-                suggest_email = request.POST.get("suggest_email", "")
-                suggest_user = request.POST.get("suggest_user", " ")
-                suggest_message = request.POST.get("suggest_message", "")
-                suggest_data = Suggestion()
-                suggest_data.email = suggest_email
-                suggest_data.suggest_name = suggest_user
-                suggest_data.suggest_content = suggest_message
-                suggest_data.save()
-                # 发邮件回复用户已收到
-                common_send_email("673598118@qq.com",suggest_email,suggest_message)
-                justOne=False
-                reginfs = {
-                    "code": 202,
-                    "message": "success",
-                    "data": "恭喜，成功了"
-                }
-            except:
-                justOne = True
-                reginfs = {
-                    "code": 400,
-                    "message": "failed",
-                    "data": "提交失败"
-                }
-        else:
+        try:
+            suggest_email = request.POST.get("suggest_email", "")
+            suggest_user = request.POST.get("suggest_user", " ")
+            suggest_message = request.POST.get("suggest_message", "")
+            suggest_data = Suggestion()
+            suggest_data.email = suggest_email
+            suggest_data.suggest_name = suggest_user
+            suggest_data.suggest_content = suggest_message
+            suggest_data.save()
+            # 发邮件回复用户已收到
+            common_send_email("673598118@qq.com",suggest_email,suggest_message)
             reginfs = {
-                "code": 401,
+                "code": 202,
+                "message": "success",
+                "data": "恭喜，成功了"
+            }
+        except:
+            reginfs = {
+                "code": 400,
                 "message": "failed",
-                "data": "请勿重复提交"
+                "data": "失败"
             }
         return Response(reginfs)
