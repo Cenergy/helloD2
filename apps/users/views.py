@@ -112,7 +112,7 @@ class LoginView(View):
                 else:
                     return render(request, "users/login.html", {"msg": "用户未激活！"})
             else:
-                msg = "密码错误"
+                msg = "密码错误!"
                 return render(request, "users/login.html", locals())
         else:
             login_form = login_form
