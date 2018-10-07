@@ -719,6 +719,7 @@
             , url: '/sources/upload/'
             , accept: 'images'
             , before: function (obj) {
+                let img_tips0 = layer.msg("正在解析中", {time: 20000});
                 obj.preview(function (index, file, result) {
                     $('#test10').attr('src', result); //图片链接（base64）
                     this.data = {
@@ -728,6 +729,7 @@
 
             }
             , done: function (res) {
+                layer.close(img_tips0);
                 let img_tips = layer.msg("正在解析中", {time: 20000});
                 if (res.code == 400) {
                     $.ajax({
@@ -789,9 +791,11 @@
             , url: '/sources/upload/'
             , accept: 'images'
             , before: function (res) {
+                let excel_tip0 = layer.msg("正在生成中", {time: 20000});
                 $("#img2excel").empty();
             }
             , done: function (res) {
+                layer.close(excel_tip0);
                 let excel_tip1 = layer.msg("正在生成中", {time: 20000});
                 if (res.code == 400) {
                     $.ajax({
