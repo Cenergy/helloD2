@@ -729,7 +729,6 @@
 
             }
             , done: function (res) {
-                layer.close(img_tips0);
                 let img_tips = layer.msg("正在解析中", {time: 20000});
                 if (res.code == 400) {
                     $.ajax({
@@ -795,7 +794,6 @@
                 $("#img2excel").empty();
             }
             , done: function (res) {
-                layer.close(excel_tip0);
                 let excel_tip1 = layer.msg("正在生成中", {time: 20000});
                 if (res.code == 400) {
                     $.ajax({
