@@ -729,8 +729,8 @@
 
             }
             , done: function (res) {
-                let img_tips = layer.msg("正在解析中", {time: 20000});
                 if (res.code == 400) {
+                    let img_tips = layer.msg("正在解析中", {time: 20000});
                     $.ajax({
                         url: "/sources/img2words/",
                         type: "POST",
@@ -794,8 +794,8 @@
                 $("#img2excel").empty();
             }
             , done: function (res) {
-                let excel_tip1 = layer.msg("正在生成中", {time: 20000});
                 if (res.code == 400) {
+                    let excel_tip1 = layer.msg("正在生成中", {time: 20000});
                     $.ajax({
                         url: "/sources/img2excel/",
                         type: "POST",
