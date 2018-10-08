@@ -13,6 +13,7 @@ urlpatterns = [
     url('login/$', views.LoginView.as_view(), name="login"),
     url('test/$', views.test, name="test"),
     url('map/$', views.map),
+    url('regface/$', csrf_exempt(views.RegImage.as_view()), name="regface"),
     url('logout/$', views.LogoutView.as_view(), name="logout"),
     url('register/$', views.RegisterView.as_view(), name="register"),
     url(r'^captcha/', include('captcha.urls')),

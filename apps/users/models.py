@@ -72,6 +72,16 @@ class Suggestion(models.Model):
         return self.email
 
 
+class FaceUser(models.Model):
+    id = models.IntegerField(primary_key=True)
+    faceid = models.TextField(verbose_name='用户唯一值')
+    username = models.TextField(verbose_name='用户名')
+    knowfacecode = models.TextField(verbose_name='用户人脸矩阵')
+    class Meta:
+        verbose_name="用户人脸"
+        verbose_name_plural=verbose_name
+
+
 
 
 

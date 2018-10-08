@@ -1,13 +1,14 @@
-import os, json, uuid, base64, datetime
+import os, json, uuid, base64, datetime,random,string
 import platform as plat
 
 import pandas as pd
+import numpy as np
 from django.shortcuts import render, render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
-from .models import UserProfile, EmailVerifyRecord,Suggestion
+from .models import UserProfile, EmailVerifyRecord,Suggestion,FaceUser
 from django.db.models import Q
 from django.views.generic.base import View
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
@@ -20,6 +21,7 @@ from django.db import connection
 from rest_framework import permissions, renderers, viewsets
 
 from utils.voices import towords
+import face_recognition
 
 
 # custom_error404
@@ -318,5 +320,108 @@ class UserSuggestion(View):
                 "data": "注册失败"
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
+
+#人脸识别
+
+
+class RegImage(View):
+    def get(self,request):
+        pass
+    def post(self,request):
+        faceid = request.POST.get("faceid")
+        sysfile = os.path.abspath('.')
+        img =  base64.b64decode(faceid.split(',')[-1])
+        unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
+        uknownimgpath = sysfile + '/media/face/' + unknown_img_uuid + '.jpg'
+        with open(uknownimgpath, 'wb') as f:
+            f.write(img)
+        faceuser_sql = "SELECT * from 'users_faceuser'"
+        all_face_user = pd.read_sql(faceuser_sql, connection)
+        user_count = len(all_face_user)
+        if user_count==0:
+            FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
+            request.session["userfaceid"] = faceid
+            request.session["username"] = ran_name
+            abcs = {
+                "code": 201,
+                "message": "successsed",
+                "data": {"usename": "hhh1", "facename": ran_name}
+            }
+        else:
+            known_faces = all_face_user["knowfacecode"].values
+            user_index = list(all_face_user["id"].values)
+
+            fff = [eval(','.join(i.split())) for i in known_faces]
+            known_faces = []
+            for i in fff:
+                known_faces.append(np.array(i))
+            # # unkonw的
+            face_id = ""
+            try:
+                unknown_image = face_recognition.load_image_file(uknownimgpath)
+                unknown_face_encoding = face_recognition.face_encodings(unknown_image)[0]
+                results = list(
+                    face_recognition.compare_faces(known_faces, unknown_face_encoding, tolerance=0.39))
+                for i, j in zip(results, user_index):
+                    if i == True:
+                        that_sql = "SELECT * from 'users_faceuser' where id=%d" % j
+                        user_result = pd.read_sql(that_sql, connection)
+                        face_name = user_result["username"].values[0]
+                        match_index = j
+                        face_id = user_result["faceid"].values[0]
+                        break
+                    else:
+                        face_name = "Unknown"
+                abcs = {
+                    "code": 202,
+                    "message": "failed",
+                    "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
+                }
+            except:
+                abcs = {
+                    "code": 201,
+                    "message": "successsed",
+                    "data": {"usename": "hhh1", "facename": "123123"}
+                }
+                face_name, match_index = "noFace", "notMatch"
+            if face_name == "Unknown":
+                known_image = face_recognition.load_image_file(uknownimgpath)
+                known_face_encoding = face_recognition.face_encodings(unknown_image)[0]
+                ran_name = ''.join(random.sample(string.ascii_letters, 6))
+                faceid = (str(uuid.uuid1())).replace("-", "")
+                newimgpath = sysfile + '/static/face/faceLibrary/'
+                randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
+                os.renames(uknownimgpath, randimgname)
+                FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
+                request.session["userfaceid"] = faceid
+                request.session["username"] = ran_name
+                abcs = {
+                    "code": 201,
+                    "message": "successsed",
+                    "data": {"usename": "hhh1", "facename": ran_name}
+                }
+            elif face_name == "noFace":
+                abcs = {
+                    "code": 202,
+                    "message": "failed",
+                    "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
+                }
+            else:
+                request.session["userfaceid"] = face_id
+                request.session["username"] = face_name
+                abcs = {
+                    "code": 201,
+                    "message": "successsed",
+                    "data": {"usename": "hhh1", "facename": face_name}
+                }
+            try:
+                os.remove(uknownimgpath)
+            except:
+                pass
+            return HttpResponse(json.dumps(abcs), content_type='application/json')
+
+
+
+
 
 
