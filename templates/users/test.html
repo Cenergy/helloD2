@@ -1,15 +1,273 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <title>注册账号</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            background: url("/static/images/bg2.jpg") no-repeat no-repeat;
+            background-size: cover;
+        }
+
+        .login {
+            width: auto;
+            height: auto;
+            margin: auto;
+            background: #ccf0f1;
+        }
+
+        .login:before {
+            display: block;
+            content: '';
+            width: 100%;
+            height: 6px;
+            background-image: -webkit-linear-gradient(left, blue 0%, blue 25%, green 25%, green 50%, yellow 50%,
+            yellow 75%, red 75%, red 100%);
+        }
+
+        .three img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .three div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btnbox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
+
 <body>
-{% for i in dataList %}
-    <div><img src="{{ i }}" alt=""></div>
-{% endfor %}
+<div class="login">
+    <div class="c-box bg-box">
+        <div class="login-box">
+            <div class="fl form-box">
+                <div class="tab">
+                    <h1 style="text-align: center">人脸快速验证</h1>
+                </div>
+                <div class="tab-form">
+                    <div class="faceBox" style=" display: flex;flex-direction: column;justify-content: space-between;">
+                        <div class="facevideo" style="width: 280px;height: 210px;text-align: center">
+                            <div class="facevideo" style="width: 100%;height: 100%">
+                                <video style="width: 100%;height: 100%"></video>
+                                <canvas style="width: 100%;height: 100%;display: none"></canvas>
+                            </div>
+                        </div>
+                        <div class="three" style=" display: flex;justify-content: space-between;margin: 10px">
+                            <div><img src="../static/images/facepage/面对.png" alt="正对屏幕"><span>正对屏幕</span></div>
+                            <div><img src="../static/images/facepage/光线.png" alt="光线充足"><span>光线充足</span></div>
+                            <div><img src="../static/images/facepage/无人.png" alt="周边无人"><span>周边无人</span></div>
+                        </div>
+                        <div class="btnbox">
+                            <button type="button" id="snap" class="layui-btn layui-btn-normal">开始识别
+                            </button>
+                        </div>
+                        <input type="hidden" id="face" name="face">
+                    </div>
+                </div>
+                <p class="form-p" style="margin: 10px">不想识别？<a href="{% url 'index' %}">[返回首页]</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/jquery.min.js" type="text/javascript"></script>
+<script src="/static/js/unslider.js" type="text/javascript"></script>
+<script src="/static/js/login.js" type="text/javascript"></script>
+<script src="/static/layui/layui.all.js"></script>
+<script>
+    function $s(elem) {
+        return document.querySelector(elem)
+    }
+
+    var canvas = $s('canvas'),
+        context = canvas.getContext('2d'),
+        video = $s('video'),
+        snap = $s('#snap'),
+        face = $s('#face'),
+        mediaStreamTrack;
+    video.muted = true;
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        }).then(function (stream) {
+            try {
+                video.srcObject = stream
+            } catch (e) {
+                mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+            }
+            console.log(stream, "1111")
+
+            video.play();
+        }).catch(function (error) {
+            console.log(error)
+        })
+    }
+    else if (navigator.getMedia) {
+        navigator.getMedia({
+            video: true
+        }), function (stream) {
+            try {
+                video.srcObject = stream
+            } catch (e) {
+                mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+            }
+            video.play();
+        }, function (error) {
+            console.log(error)
+        }
+    }
+    snap.addEventListener('click', function () {
+        //  var wh = parent.window.screen.availHeight; // 1743 1500 1699
+        var ww = parent.window.innerWidth; // 980 980 980
+
+        context.drawImage(video, 0, 0, 300, 150);
+        //   context.drawImage(video, 0, 0, 300, 300);
+        $('canvas').show();
+        $('video').hide();
+        face.value = canvas.toDataURL('image/png');
+        var username = $("#username").val() || "zheshiyigenibuhuixiangdaodemingzi";
+        var faceid = $("#face").val();
+        var index = layer.load();
+        var that = $(this);
+        that.text('识别中...');
+        $.ajax({
+            url: "/getpic/",
+            type: "post",
+            dataType: 'json',
+            data: {"username": username, "faceid": faceid},
+            success: function (data) {
+                if (data.code === 200) {
+                    layer.close(index);
+                    that.text('识别成功');
+                    layer.open({
+                        type: 1,
+                        title: '',
+                        closeBtn: 0,
+                        area: ['35.4%', '41.7%'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/验证失败.png" alt="验证失败">' +
+                        '            <p>验证失败！</p>' +
+                        '            <p>非常抱歉，暂无您的用户信息</p>' +
+                        '            <p>是否现在注册？</p>' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="text" id="username" placeholder="请输入用户名">' +
+                        '    </div>' +
+                        '    <button class="one" onclick="imgreg()">马上注册</button>' +
+                        '    <button class="two" onclick="cancel()">暂不注册</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+                    // 虚拟键盘注册
+                    $('.softkeys').softkeys({
+                        target: $('input#username'),
+                        layout: [
+                            [],
+                            [
+                                'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+                            ],
+                            [
+                                'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+                            ],
+                            [
+                                'z', 'x', 'c', 'v', 'b', 'n', 'm',
+                                'delete',
+                            ]
+                        ]
+                    });
+                } else if (data.code === 201) {
+                    layer.close(index);
+                    that.text('识别成功');
+                    parent.window.location.href = '/conpc/';
+                } else if (data.code === 202) {
+                    layer.close(index);
+                    that.text('开始识别');
+                    layer.msg(data.data.error);
+                    $('canvas').hide();
+                    $('video').show();
+                }
+                console.log(data);
+            }, error: function (data) {
+                layer.msg('系统繁忙，请重试');
+                parent.window.location.reload();
+                console.log("错误" + data.message);
+            }
+        });
+    }, false);
+
+    function imgreg() {
+        var username1 = $("#username").val();
+        var faceid1 = $("#face").val();
+        if (!username1 || username1 === '' || username1 === "") {
+            layer.msg('请输入您的名字！');
+            return;
+        }
+        if (username1.length >= 6) {
+            layer.msg('请填写长度为6以下的注册名');
+            return;
+        }
+        if (username1 === 'Unknown' || username1 === 'notknow') {
+            layer.msg('系统预留姓名，请您重新设定姓名！');
+            return;
+        }
+        $.ajax({
+            url: "/imgreg/",
+            type: "post",
+            dataType: 'json',
+            data: {"username": username1, "faceid": faceid1},
+            success: function (data) {
+                layer.msg('注册成功！');
+                layer.closeAll();
+                parent.window.location.href = '/conpc/';
+            }, error: function (data) {
+                layer.msg('注册失败，请再次尝试!');
+                console.log("错误" + data.message);
+            }
+        });
+
+
+    }
+
+    function cancel() {
+        window.history.back(-2);
+    }
+
+    $(document).on('click', '.backbtn button', function () {
+        var backchange = '<img class="backchange" src="../static/images/facepage/back.png" alt="返回">';
+        $(this).html(backchange);
+        window.history.back();
+    })
+</script>
 </body>
 </html>
