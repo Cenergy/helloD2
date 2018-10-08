@@ -78,8 +78,8 @@
                         </div>
                         <div class="three" style=" display: flex;justify-content: space-between;margin: 10px">
                             <div><img src="/static/images/facepage/face0ang.png" alt="正对屏幕"><span>正对屏幕</span></div>
-                            <div><img src="../static/images/facepage/light.png" alt="光线充足"><span>光线充足</span></div>
-                            <div><img src="../static/images/facepage/noother.png" alt="周边无人"><span>周边无人</span></div>
+                            <div><img src="/static/images/facepage/light.png" alt="光线充足"><span>光线充足</span></div>
+                            <div><img src="/static/images/facepage/noother.png" alt="周边无人"><span>周边无人</span></div>
                         </div>
                         <div class="btnbox">
                             <button type="button" id="snap" class="layui-btn layui-btn-normal">开始识别
@@ -158,7 +158,7 @@
         var that = $(this);
         that.text('识别中...');
         $.ajax({
-            url: "/getpic/",
+            url: "/regface/",
             type: "post",
             dataType: 'json',
             data: {"username": username, "faceid": faceid},
@@ -209,7 +209,7 @@
                 } else if (data.code === 201) {
                     layer.close(index);
                     that.text('识别成功');
-                    parent.window.location.href = '/conpc/';
+                    parent.window.location.href = '../';
                 } else if (data.code === 202) {
                     layer.close(index);
                     that.text('开始识别');
@@ -249,7 +249,7 @@
             success: function (data) {
                 layer.msg('注册成功！');
                 layer.closeAll();
-                parent.window.location.href = '/conpc/';
+                parent.window.location.href = '../';
             }, error: function (data) {
                 layer.msg('注册失败，请再次尝试!');
                 console.log("错误" + data.message);
