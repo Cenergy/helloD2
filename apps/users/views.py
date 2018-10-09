@@ -350,8 +350,7 @@ class RegImage(View):
         try:
             unknown_image = face_recognition.load_image_file(uknownimgpath)
             unknown_face_encoding = face_recognition.face_encodings(unknown_image)[0]
-            results = list(
-                face_recognition.compare_faces(known_faces, unknown_face_encoding, tolerance=0.39))
+            results = list(face_recognition.compare_faces(known_faces, unknown_face_encoding, tolerance=0.39))
             for i, j in zip(results, user_index):
                 if i == True:
                     that_sql = "SELECT * from 'users_faceuser' where id=%d" % j
@@ -362,24 +361,14 @@ class RegImage(View):
                     break
                 else:
                     face_name = "Unknown"
-            abcs = {
-                "code": 202,
-                "message": "failed",
-                "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
-            }
         except:
-            abcs = {
-                "code": 201,
-                "message": "successsed",
-                "data": {"usename": "hhh1", "facename": face_name}
-            }
             face_name, match_index = "noFace", "notMatch"
         if face_name == "Unknown":
             known_image = face_recognition.load_image_file(uknownimgpath)
             known_face_encoding = face_recognition.face_encodings(unknown_image)[0]
             ran_name = ''.join(random.sample(string.ascii_letters, 6))
             faceid = (str(uuid.uuid1())).replace("-", "")
-            newimgpath = sysfile + '/static/face/faceLibrary/'
+            newimgpath = sysfile + '/media/face/faceLibrary/'
             randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
             os.renames(uknownimgpath, randimgname)
             FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
