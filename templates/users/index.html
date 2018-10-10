@@ -976,7 +976,29 @@
 </script>
 <script>
     $("#facereg").click(function () {
-        alert("hhh")
+        let login_type = $(this).attr("login-data");
+        let face_url = '/test/?login_type=' + login_type;
+        alert(face_url)
+        if (login_type == 1) {
+            layer.open({
+                title: "资源列表",
+                type: 2,
+                content: face_url,
+                shade: [0.8, '#393d49'],
+                shadeClose: true,
+                area: ['100%', '100%'],
+                btn: ['关闭'],
+                {#父页面向子页面传值#}
+                success: function (layero, index) {
+                    let body = layer.getChildFrame('body', index);
+                },
+                closeBtn: 1,
+            });
+        } else if (login_type == 2) {
+
+        } else {
+
+        }
     })
 </script>
 
