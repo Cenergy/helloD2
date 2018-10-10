@@ -163,6 +163,7 @@
             dataType: 'json',
             data: {"username": username, "faceid": faceid},
             success: function (data) {
+                console.log(data.data)
                 if (data.code === 200) {
                     layer.close(index);
                     that.text('识别成功');
@@ -188,23 +189,6 @@
                         cancel: function () {
                             window.location.reload();
                         }
-                    });
-                    // 虚拟键盘注册
-                    $('.softkeys').softkeys({
-                        target: $('input#username'),
-                        layout: [
-                            [],
-                            [
-                                'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-                            ],
-                            [
-                                'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
-                            ],
-                            [
-                                'z', 'x', 'c', 'v', 'b', 'n', 'm',
-                                'delete',
-                            ]
-                        ]
                     });
                 } else if (data.code === 201) {
                     layer.close(index);

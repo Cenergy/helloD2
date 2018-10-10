@@ -66,6 +66,18 @@ class CustomBackend(ModelBackend):
 class IndexView(View):
     def get(self, request):
         user_name = request.session.get("user_name", " ")
+        print(user_name)
+        if user_name==" ":
+            login_type=0
+        else:
+            login_sql = "select * from users_userprofile where email='{email}'".format(email=user_name)
+            login_data = pd.read_sql(login_sql, connection)
+            login_type = login_data["knowfacecode"][0]
+            if login_type=='':
+                login_type=1
+            else:
+                login_type=2
+        print(login_type)
         # 判断apide时间有效性
         query_sql = "select * from sources_sourcelimit where id={abc}".format(abc=1)
         all_data = pd.read_sql(query_sql, connection)
@@ -334,11 +346,12 @@ class RegImage(View):
         uknownimgpath = sysfile + '/media/face/' + unknown_img_uuid + '.jpg'
         with open(uknownimgpath, 'wb') as f:
             f.write(img)
-        faceuser_sql = "SELECT * from 'users_faceuser'"
+        faceuser_sql = "SELECT * from 'users_userprofile'"
         all_face_user = pd.read_sql(faceuser_sql, connection)
         user_count = len(all_face_user)
 
         known_faces = all_face_user["knowfacecode"].values
+        known_faces = [i for i in known_faces if i != '']
         user_index = list(all_face_user["id"].values)
 
         fff = [eval(','.join(i.split())) for i in known_faces]
@@ -371,28 +384,44 @@ class RegImage(View):
             newimgpath = sysfile + '/media/face/faceLibrary/'
             randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
             os.renames(uknownimgpath, randimgname)
-            FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
+            # FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
             request.session["userfaceid"] = faceid
             request.session["username"] = ran_name
-            abcs = {
-                "code": 201,
-                "message": "successsed",
-                "data": {"usename": "hhh1", "facename": ran_name}
-            }
+            user_name=request.session.get("user_name",'')
+            if user_name=='':
+                abcs = {
+                    "code": 40201,
+                    "message": "库里没脸识别到脸未登录",
+                    "data": {"usename": "hhh1", "facename": '123'}
+                }
+            else:
+                abcs = {
+                    "code": 201,
+                    "message": "库里没脸识别到脸已登录",
+                    "data": {"usename": "hhh1", "facename": ran_name}
+                }
         elif face_name == "noFace":
             abcs = {
                 "code": 202,
-                "message": "failed",
+                "message": "未识别到脸",
                 "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
             }
         else:
             request.session["userfaceid"] = face_id
             request.session["username"] = face_name
-            abcs = {
-                "code": 201,
-                "message": "successsed",
-                "data": {"usename": "hhh1", "facename": face_name}
-            }
+            user_name = request.session.get("user_name", '')
+            if user_name=='':
+                abcs = {
+                    "code": 40202,
+                    "message": "库里有脸识别到脸未登录",
+                    "data": {"usename": "hhh1", "facename": face_name}
+                }
+            else:
+                abcs = {
+                    "code": 201,
+                    "message": "库里有脸识别到脸已登录",
+                    "data": {"usename": "hhh1", "facename": face_name}
+                }
         try:
             os.remove(uknownimgpath)
         except:

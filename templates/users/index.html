@@ -241,8 +241,23 @@
         <div class="col-sm-4 wow fadeInDown text-center">
             <img class="rotate" src="/static/img/icon/retina.svg" alt="Generic placeholder image">
             <h3>人脸识别</h3>
-            <p class="lead">Epsum factorial non deposit quid pro quo hic escorol. Olypian quarrels et gorilla
-                congolium sic ad nauseum. </p>
+            <p class="lead">本功能针对那些账号与人脸绑定的用户，第二次来可以快速登录
+            <div>
+                <button type="button" class="layui-btn layui-btn-normal" id="facereg" login-data="{{ login_type }}">
+                    {% if login_type == 1 %}
+                        <i class="layui-icon"></i>人脸关联
+                    {% elif login_type == 2 %}
+                        <i class="layui-icon"></i>人脸识别
+                    {% else %}
+                        <i class="layui-icon"></i>快速人脸登录
+                    {% endif %}
+
+                </button>
+                <span id="img2excel">
+                </span>
+
+            </div>
+            </p>
             <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
         </div><!-- /.col-lg-4 -->
 
@@ -957,6 +972,11 @@
             layer.msg("请勿重复提交", {time: 2000})
         }
 
+    })
+</script>
+<script>
+    $("#facereg").click(function () {
+        alert("hhh")
     })
 </script>
 
