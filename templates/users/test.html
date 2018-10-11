@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
     <link rel="stylesheet" type="text/css" href="/static/css/login.css">
     <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/facepage.css">
     <title>注册账号</title>
     <style>
         * {
@@ -56,6 +57,166 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+    </style>
+    <style>
+
+        .ui-keyboard-button {
+            width: 2em !important;
+        }
+
+        .ui-keyboard-preview {
+            height: 43px !important;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 11.1%;
+            opacity: 0.85;
+            background: #0160A6;
+        }
+
+        .logo .logospan span {
+            margin-left: 20px;
+            font-family: PingFangSC-Regular;
+            font-size: 32px;
+            color: #FFFFFF;
+            letter-spacing: 0.67px;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .logo .logospan {
+            display: flex;
+            align-items: center;
+            padding-left: 84px;
+        }
+
+        .logo button {
+            margin-right: 84px;
+            width: 180px;
+            height: 70px;
+            border: 3px solid #FFFFFF;
+            border-radius: 8px;
+            font-family: PingFangSC-Regular;
+            font-size: 28px;
+            color: #FFFFFF;
+            letter-spacing: 0;
+            background-color: transparent;
+        }
+
+        .logo button:hover {
+            color: #0160A6;
+            background-color: #FFFFFF;
+        }
+
+        .logo img {
+            width: 6%;
+            height: 55%;
+        }
+
+        .fishBone {
+            width: 80%;
+        }
+
+        a {
+
+            font-family: PingFangSC-Medium;
+            font-size: 17px;
+            color: #333333;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .uername a:hover {
+            color: #333333;
+        }
+
+        #key_url:hover {
+            color: #1E67D0;
+        }
+
+        .softkeys__btn:active {
+            background: #1E67D0;
+        }
+
+        .ssBtn button:active {
+            background: #0160A6;
+        }
+
+        .layui-layer-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layui-layer-btn0 {
+            position: absolute;
+            bottom: -55px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #ffffff !important;
+            letter-spacing: 0 !important;
+            line-height: 30px !important;
+            background: #1E67D0 !important;
+        }
+
+        .pd-left {
+            box-sizing: border-box;
+            padding: 0 0 8px 8px !important;
+        }
+
+        #modifyName {
+            width: 45%;
+            height: 80px;
+            border: 1px solid #bbb;
+            font-size: 28px;
+            border-radius: 6px;
+            outline: 0;
+            text-indent: 1rem;
+        }
+
+        .xltest {
+            padding: 30px;
+            font-family: MicrosoftYaHei;
+            font-size: 28px;
+            color: #999999;
+            letter-spacing: 0;
+            line-height: 50px;
+        }
+
+        #output {
+            display: flex;
+            justify-content: center;
+        }
+
+        .layui-layer-btn1 {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 6px !important;
+            width: 300px !important;
+            height: 70px !important;
+            font-family: PingFangSC-Regular !important;
+            font-size: 30px !important;
+            color: #ffffff !important;
+            letter-spacing: 0 !important;
+            line-height: 30px !important;
+            background: #1E67D0 !important;
+        }
+
+        .actived {
+            background-color: #63C0FF;
+        }
+
+        .openpc {
+            display: block !important;
         }
     </style>
 </head>
@@ -163,38 +324,53 @@
             dataType: 'json',
             data: {"username": username, "faceid": faceid},
             success: function (data) {
-                console.log(data.data)
-                if (data.code === 200) {
+                console.log(data.data);
+                if (data.code === 202020) {
                     layer.close(index);
                     that.text('识别成功');
                     layer.open({
                         type: 1,
+                        title: '人脸识别',
+                        closeBtn: 0,
+                        area: ['35.4%', '25.7%'],
+                        btn: ['确认脸庞'],
+                        content: '<p>确认过脸庞，是<span style="color:blue">' + data.data.facename +
+                        '</span>的主人</p>',
+                        btn1: function () {
+                            window.location.reload();
+                        }
+                    });
+                } else if (data.code === 204020) {
+                    {#库中没脸识别到脸已登录#}
+                    layer.close(index);
+                    layer.open({
+                        type: 1,
                         title: '',
                         closeBtn: 0,
-                        area: ['35.4%', '41.7%'],
+                        area: ['55.4%', '71.7%'],
                         content:
                         '<div class="imgreg" id="imgreg">' +
-                        '    <div class="error">' +
+                        '    <div class="error" style="background:white;">' +
                         '        <img src="../static/images/facepage/验证失败.png" alt="验证失败">' +
                         '            <p>验证失败！</p>' +
-                        '            <p>非常抱歉，暂无您的用户信息</p>' +
-                        '            <p>是否现在注册？</p>' +
+                        '            <p>非常抱歉，识别到脸，但是并无其他身份关联</p>' +
+                        '            <p>是否现在注册？还是登陆？</p>' +
                         '    </div>' +
                         '    <div class="nameregister">' +
-                        '        <input class="form-control" type="text" id="username" placeholder="请输入用户名">' +
-                        '    </div>' +
-                        '    <button class="one" onclick="imgreg()">马上注册</button>' +
-                        '    <button class="two" onclick="cancel()">暂不注册</button>' +
-                        '</div>',
+                        '        <input class="form-control" type="text" id="username" placeholder="请输入邮箱">' +
+                        '    </div><div style="margin-top:5px">' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="text" id="username" placeholder="请输入用户密码">' +
+                        '    </div><div style="margin-top:10px;padding-bottom:20px">' +
+                        '    <a href="/test/" class="layui-btn layui-btn-normal" style="margin:10px">识别错误，返回</a>' +
+                        '    <button class="layui-btn layui-btn-normal" onclick="face_login()" style="margin:10px">马上登陆</button>' +
+                        '    <button class="layui-btn layui-btn-normal" onclick="face_reg()" style="margin:10px">马上注册</button>' +
+                        '</div></div>',
                         cancel: function () {
                             window.location.reload();
                         }
                     });
-                } else if (data.code === 201) {
-                    layer.close(index);
-                    that.text('识别成功');
-                    parent.window.location.href = '/login/';
-                } else if (data.code === 202) {
+                } else if (data.code === 400) {
                     layer.close(index);
                     that.text('开始识别');
                     layer.msg(data.data.error);

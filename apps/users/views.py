@@ -1,4 +1,4 @@
-import os, json, uuid, base64, datetime,random,string
+import os, json, uuid, base64, datetime, random, string
 import platform as plat
 
 import pandas as pd
@@ -8,12 +8,12 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
-from .models import UserProfile, EmailVerifyRecord,Suggestion,FaceUser
+from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
 from django.db.models import Q
 from django.views.generic.base import View
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from django.contrib.auth.hashers import make_password
-from utils.email_send import register_send_email,common_send_email
+from utils.email_send import register_send_email, common_send_email
 from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.db import connection
@@ -41,7 +41,7 @@ def permission_denied(request):
 
 def test(request):
     from utils.word_get_pic import getIntPages
-    dataList=getIntPages("蔬菜",1)
+    dataList = getIntPages("蔬菜", 1)
     return render(request, "users/test.html", locals())
 
 
@@ -66,18 +66,16 @@ class CustomBackend(ModelBackend):
 class IndexView(View):
     def get(self, request):
         user_name = request.session.get("user_name", " ")
-        print(user_name)
-        if user_name==" ":
-            login_type=0
+        if user_name == " ":
+            login_type = 0
         else:
             login_sql = "select * from users_userprofile where email='{email}'".format(email=user_name)
             login_data = pd.read_sql(login_sql, connection)
             login_type = login_data["knowfacecode"][0]
-            if login_type=='':
-                login_type=1
+            if login_type == '':
+                login_type = 1
             else:
-                login_type=2
-        print(login_type)
+                login_type = 2
         # 判断apide时间有效性
         query_sql = "select * from sources_sourcelimit where id={abc}".format(abc=1)
         all_data = pd.read_sql(query_sql, connection)
@@ -304,11 +302,13 @@ def BANAJAX(request):
             pass
         return JsonResponse(abc, content_type='application/json')
 
+
 # 用户建议或者意见
 class UserSuggestion(View):
-    def get(self,request):
+    def get(self, request):
         pass
-    def post(self,request):
+
+    def post(self, request):
         try:
             suggest_email = request.POST.get("suggest_email", "")
             suggest_user = request.POST.get("suggest_user", " ")
@@ -319,7 +319,7 @@ class UserSuggestion(View):
             suggest_data.suggest_content = suggest_message
             suggest_data.save()
             # 发邮件回复用户已收到
-            common_send_email("673598118@qq.com",suggest_email,suggest_message)
+            common_send_email("673598118@qq.com", suggest_email, suggest_message)
             reginfs = {
                 "code": 202,
                 "message": "success",
@@ -333,25 +333,26 @@ class UserSuggestion(View):
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
-#人脸识别
+
+# 人脸识别
 
 class RegImage(View):
-    def get(self,request):
+    def get(self, request):
         pass
-    def post(self,request):
+
+    def post(self, request):
         faceid = request.POST.get("faceid")
         sysfile = os.path.abspath('.')
-        img =  base64.b64decode(faceid.split(',')[-1])
+        img = base64.b64decode(faceid.split(',')[-1])
         unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
         uknownimgpath = sysfile + '/media/face/' + unknown_img_uuid + '.jpg'
         with open(uknownimgpath, 'wb') as f:
             f.write(img)
         faceuser_sql = "SELECT * from 'users_userprofile'"
-        all_face_user = pd.read_sql(faceuser_sql, connection)
+        all_face_users = pd.read_sql(faceuser_sql, connection)
+        all_face_user = all_face_users[all_face_users["knowfacecode"] != ""]
         user_count = len(all_face_user)
-
         known_faces = all_face_user["knowfacecode"].values
-        known_faces = [i for i in known_faces if i != '']
         user_index = list(all_face_user["id"].values)
 
         fff = [eval(','.join(i.split())) for i in known_faces]
@@ -366,7 +367,7 @@ class RegImage(View):
             results = list(face_recognition.compare_faces(known_faces, unknown_face_encoding, tolerance=0.39))
             for i, j in zip(results, user_index):
                 if i == True:
-                    that_sql = "SELECT * from 'users_faceuser' where id=%d" % j
+                    that_sql = "SELECT * from 'users_userprofile' where id=%d" % j
                     user_result = pd.read_sql(that_sql, connection)
                     face_name = user_result["username"].values[0]
                     match_index = j
@@ -384,25 +385,26 @@ class RegImage(View):
             newimgpath = sysfile + '/media/face/faceLibrary/'
             randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
             os.renames(uknownimgpath, randimgname)
-            # FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
+            #FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
             request.session["userfaceid"] = faceid
             request.session["username"] = ran_name
-            user_name=request.session.get("user_name",'')
-            if user_name=='':
+            request.session["facecode"] = str(known_face_encoding)
+            user_name = request.session.get("user_name", '')
+            if user_name == '':
                 abcs = {
-                    "code": 40201,
-                    "message": "库里没脸识别到脸未登录",
-                    "data": {"usename": "hhh1", "facename": '123'}
+                    "code": 204040,
+                    "message": "库中没脸识别到脸未登录",
+                    "data": {"usename": "hhh1", "facename": ran_name}
                 }
             else:
                 abcs = {
-                    "code": 201,
-                    "message": "库里没脸识别到脸已登录",
+                    "code": 204020,
+                    "message": "库中没脸识别到脸已登录",
                     "data": {"usename": "hhh1", "facename": ran_name}
                 }
         elif face_name == "noFace":
             abcs = {
-                "code": 202,
+                "code": 400,
                 "message": "未识别到脸",
                 "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
             }
@@ -410,26 +412,30 @@ class RegImage(View):
             request.session["userfaceid"] = face_id
             request.session["username"] = face_name
             user_name = request.session.get("user_name", '')
-            if user_name=='':
+            if user_name == '':
                 abcs = {
-                    "code": 40202,
+                    "code": 202040,
                     "message": "库里有脸识别到脸未登录",
                     "data": {"usename": "hhh1", "facename": face_name}
                 }
             else:
-                abcs = {
-                    "code": 201,
-                    "message": "库里有脸识别到脸已登录",
-                    "data": {"usename": "hhh1", "facename": face_name}
-                }
+                faceuser_sql = "SELECT * from 'users_userprofile' where id ='{id}'".format(id=match_index)
+                user_result = pd.read_sql(faceuser_sql, connection)
+                face_name = user_result["username"].values[0]
+                if face_name == user_name:
+                    abcs = {
+                        "code": 202020,
+                        "message": "库里有脸识别到脸已登录是本人",
+                        "data": {"usename": "hhh1", "facename": face_name}
+                    }
+                else:
+                    abcs = {
+                        "code": 202040,
+                        "message": "库里有脸识别到脸已登录不是本人",
+                        "data": {"usename": "hhh1", "facename": face_name}
+                    }
         try:
             os.remove(uknownimgpath)
         except:
             pass
         return HttpResponse(json.dumps(abcs), content_type='application/json')
-
-
-
-
-
-
