@@ -389,21 +389,13 @@ class RegImage(View):
             #FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
             request.session["userfaceid"] = faceid
             request.session["username"] = ran_name
-
             user_name = request.session.get("user_name", '')
-            if login_type == 1:
-                request.session["face_code"] = str(known_face_encoding)
-                abcs = {
-                    "code": 4020,
-                    "message": "库中没脸已登录",
-                    "data": {"usename": "hhh1", "facename": ran_name}
-                }
-            else:
-                abcs = {
-                    "code": 4040,
-                    "message": "库中没脸未登录",
-                    "data": {"usename": "hhh1", "facename": ran_name}
-                }
+            request.session["face_code"] = str(known_face_encoding)
+            abcs = {
+                "code": 4020,
+                "message": "库中没脸已登录",
+                "data": {"usename": "hhh1", "facename": ran_name}
+            }
         elif face_name == "noFace":
             abcs = {
                 "code": 400,
@@ -470,3 +462,10 @@ class FaceLink(View):
                 "data": {"usename": "hhh1"}
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
+
+class FaceAdmin(View):
+    def get(self, request):
+        return render(request, "users/faceadmin.html", locals())
+
+    def post(self,request):
+        pass
