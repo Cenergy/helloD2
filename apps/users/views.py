@@ -366,7 +366,6 @@ class RegImage(View):
             unknown_image = face_recognition.load_image_file(uknownimgpath)
             unknown_face_encoding = face_recognition.face_encodings(unknown_image)[0]
             results = list(face_recognition.compare_faces(known_faces, unknown_face_encoding, tolerance=0.39))
-            print(results, user_index,"=============")
             for i, j in zip(results, user_index):
                 if i == True:
                     that_sql = "SELECT * from 'users_userprofile' where id=%d" % j
@@ -379,64 +378,95 @@ class RegImage(View):
                     face_name = "Unknown"
         except:
             face_name, match_index = "noFace", "notMatch"
-        if login_type==1:
-            pass
-        else:
-            if face_name == "Unknown":
-                known_image = face_recognition.load_image_file(uknownimgpath)
-                known_face_encoding = face_recognition.face_encodings(unknown_image)[0]
-                ran_name = ''.join(random.sample(string.ascii_letters, 6))
-                faceid = (str(uuid.uuid1())).replace("-", "")
-                newimgpath = sysfile + '/media/face/faceLibrary/'
-                randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
-                os.renames(uknownimgpath, randimgname)
-                #FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
-                request.session["userfaceid"] = faceid
-                request.session["username"] = ran_name
-                request.session["facecode"] = str(known_face_encoding)
-                user_name = request.session.get("user_name", '')
+        if face_name == "Unknown":
+            known_image = face_recognition.load_image_file(uknownimgpath)
+            known_face_encoding = face_recognition.face_encodings(unknown_image)[0]
+            ran_name = ''.join(random.sample(string.ascii_letters, 6))
+            faceid = (str(uuid.uuid1())).replace("-", "")
+            newimgpath = sysfile + '/media/face/faceLibrary/'
+            randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
+            os.renames(uknownimgpath, randimgname)
+            #FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
+            request.session["userfaceid"] = faceid
+            request.session["username"] = ran_name
+
+            user_name = request.session.get("user_name", '')
+            if login_type == 1:
+                request.session["face_code"] = str(known_face_encoding)
                 abcs = {
-                    "code": 4040,
-                    "message": "库中没脸识别到脸已登录",
+                    "code": 4020,
+                    "message": "库中没脸已登录",
                     "data": {"usename": "hhh1", "facename": ran_name}
                 }
-            elif face_name == "noFace":
+            else:
                 abcs = {
-                    "code": 400,
-                    "message": "未识别到脸",
-                    "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
+                    "code": 4040,
+                    "message": "库中没脸未登录",
+                    "data": {"usename": "hhh1", "facename": ran_name}
+                }
+        elif face_name == "noFace":
+            abcs = {
+                "code": 400,
+                "message": "未识别到脸",
+                "data": {"usename": "hhh", "error": "不能认别到人脸，请重新拍照"}
+            }
+        else:
+            request.session["userfaceid"] = face_id
+            request.session["username"] = face_name
+            user_name = request.session.get("user_name", '')
+            user_sql = "SELECT * from 'users_userprofile' where username='%s'" % face_name
+            user_data = pd.read_sql(user_sql, connection)
+            # face_name = user_result["username"].values[0]
+            if user_name == '':
+                abcs = {
+                    "code": 202040,
+                    "message": "库里有脸识别到脸未登录",
+                    "data": {"usename": "hhh1", "facename": face_name}
                 }
             else:
-                request.session["userfaceid"] = face_id
-                request.session["username"] = face_name
-                user_name = request.session.get("user_name", '')
-                user_sql = "SELECT * from 'users_userprofile' where username='%s'" % face_name
-                user_data = pd.read_sql(user_sql, connection)
-                # face_name = user_result["username"].values[0]
-                if user_name == '':
+                faceuser_sql = "SELECT * from 'users_userprofile' where id ='{id}'".format(id=match_index)
+                user_result = pd.read_sql(faceuser_sql, connection)
+                face_name = user_result["username"].values[0]
+                if face_name == user_name:
                     abcs = {
-                        "code": 202040,
-                        "message": "库里有脸识别到脸未登录",
+                        "code": 20202020,
+                        "message": "库里有脸识别到脸已登录是本人",
                         "data": {"usename": "hhh1", "facename": face_name}
                     }
                 else:
-                    faceuser_sql = "SELECT * from 'users_userprofile' where id ='{id}'".format(id=match_index)
-                    user_result = pd.read_sql(faceuser_sql, connection)
-                    face_name = user_result["username"].values[0]
-                    if face_name == user_name:
-                        abcs = {
-                            "code": 20202020,
-                            "message": "库里有脸识别到脸已登录是本人",
-                            "data": {"usename": "hhh1", "facename": face_name}
-                        }
-                    else:
-                        abcs = {
-                            "code": 20204040,
-                            "message": "库里有脸识别到脸已登录不是本人",
-                            "data": {"usename": "hhh1", "facename": face_name}
-                        }
+                    abcs = {
+                        "code": 20204040,
+                        "message": "库里有脸识别到脸已登录不是本人",
+                        "data": {"usename": "hhh1", "facename": face_name}
+                    }
         try:
             os.remove(uknownimgpath)
         except:
             pass
+        return HttpResponse(json.dumps(abcs), content_type='application/json')
+
+class FaceLink(View):
+    def get(self,request):
+        pass
+    def post(self,request):
+        face_code=str(request.session.get("face_code",'1024'))
+        user_name = request.session.get("user_name", '')
+        face_id=(str(uuid.uuid1())).replace("-", "")
+        ran_name = ''.join(random.sample(string.ascii_letters, 6))
+        login_type=2
+        if face_code!='1024'and user_name!='':
+            update_face_sql = "UPDATE 'users_userprofile' SET knowfacecode='{0}',faceid='{1}',user_name='{2}',login_type=2 where  username='{3}'".format(face_code,face_id,ran_name,user_name)
+            update_face_cursor = connection.cursor()
+            update_face_cursor.execute(update_face_sql)
+            abcs = {
+                "code": 200,
+                "message": "更新人脸或人脸链接成功",
+                "data": {"usename": "hhh1"}
+            }
+        else:
+            abcs = {
+                "code": 400,
+                "message": "更新人脸或人脸链接失败",
+                "data": {"usename": "hhh1"}
+            }
         return HttpResponse(json.dumps(abcs), content_type='application/json')

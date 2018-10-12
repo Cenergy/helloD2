@@ -318,8 +318,8 @@
         var index = layer.load();
         var that = $(this);
         that.text('识别中...');
-        let login_data=GetRequest();
-        login_data["faceid"]=faceid
+        let login_data = GetRequest();
+        login_data["faceid"] = faceid
         console.log(login_data)
         $.ajax({
             url: "/regface/",
@@ -343,21 +343,21 @@
                             window.location.reload();
                         }
                     });
-                } else if (data.code === 204020) {
+                } else if (data.code === 4020) {
                     {#库中没脸识别到脸已登录#}
                     layer.close(index);
                     layer.open({
                         type: 1,
                         title: '库中没脸识别到脸已登录',
                         closeBtn: 0,
-                        area: ['55.4%', '71.7%'],
+                        area: ['370px', '71.7%'],
                         content:
                         '<div class="imgreg" id="imgreg">' +
                         '    <div class="error" style="background:white;">' +
                         '        <img src="../static/images/facepage/验证失败.png" alt="验证失败">' +
                         '            <p>验证失败！</p>' +
                         '            <p>非常抱歉，识别到脸，但是并无其他身份关联</p>' +
-                        '            <p>是否现在注册？还是登陆？</p>' +
+                        '            <p>是否现在人脸关联？</p>' +
                         '    </div>' +
                         '</div> ' +
                         '<div style="margin-top:10px;padding-bottom:20px;text-align: center;">' +
@@ -512,7 +512,21 @@
         });
     }
 
+    function face_login() {
+
+        $.ajax({
+            url: "/facelink/",
+            type: "post",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+            }
+        })
+
+    }
+
     {#获取url后面的参数#}
+
     function GetRequest() {
         var url = location.search; //获取url中"?"符后的字串
         var theRequest = new Object();

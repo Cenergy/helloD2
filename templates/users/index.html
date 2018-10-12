@@ -185,6 +185,9 @@
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">安全设置</a>
                                 </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="/test/">人脸设置</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -978,9 +981,7 @@
     $("#facereg").click(function () {
         let login_type = $(this).attr("login-data");
         let face_url = '/test/?login_type='+login_type;
-        alert(face_url)
-        if (login_type == 1) {
-            layer.open({
+        layer.open({
                 title: "资源列表",
                 type: 2,
                 content: face_url,
@@ -994,11 +995,6 @@
                 },
                 closeBtn: 1,
             });
-        } else if (login_type == 2) {
-
-        } else {
-
-        }
     })
 </script>
 
