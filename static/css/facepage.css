@@ -101,6 +101,7 @@
     margin-top: 3%;
     background: #ffffff;
     width: 80%;
+    height: 33px;
     border: 1px solid #DADADA;
     border-radius: 4px;
     font-family: PingFangSC-Regular;
@@ -112,13 +113,13 @@
 }
 
 .imgreg button.one {
-    margin-top: 3%;
-    /*width: 220px;*/
-    /*height: 70px;*/
+    margin: 6%;
+    width: 100px;
+    height: 30px;
     border: 1px solid #1E67D0;
     border-radius: 4px;
     font-family: PingFangSC-Regular;
-    font-size: 26px;
+    /*font-size: 26px;*/
     color: #1E67D0;
     letter-spacing: 0;
     text-align: center;
@@ -127,14 +128,14 @@
 }
 
 .imgreg button.two {
-    margin-top: 1%;
-    width: 220px;
-    height: 70px;
+    margin: 6%;
+    width: 100px;
+    height: 30px;
     background: #1E67D0;
     border-radius: 4px;
     border: none;
-    font-family: PingFangSC-Regular;
-    font-size: 26px;
+    /*font-family: PingFangSC-Regular;*/
+    /*font-size: 26px;*/
     color: #ffffff;
     letter-spacing: 0;
     text-align: center;

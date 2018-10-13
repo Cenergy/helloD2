@@ -218,6 +218,13 @@
         .openpc {
             display: block !important;
         }
+
+        .error {
+            background: white;
+            color: #fff !important;
+            text-align: center;
+            margin: 10px 0;
+        }
     </style>
 </head>
 
@@ -372,6 +379,33 @@
                     layer.msg("将进行人脸更新")
                 } else if (data.code == 404020) {
                     layer.msg("帮忙登陆")
+                    that.text('识别成功');
+                    let user_name = data.data.facename
+                    layer.open({
+                        type: 1,
+                        title: '',
+                        closeBtn: 0,
+                        area: ['370px', '400px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/验证失败.png" alt="验证失败">' +
+                        '            <p>恭喜，验证成功！</p>' +
+                        '            <p>如果账户正确，请输入密码</p>' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="text" id="username" value="' + user_name + '" placeholder="请输入用户名">' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="password" id="password"  placeholder="请输入密码">' +
+                        '    </div>' +
+                        '    <button class="one" onclick="imgreg()">识别错误</button>' +
+                        '    <button class="two" onclick="cancel()">马上登陆</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
                 } else if (data.code == 202024) {
                     layer.msg("切换账号")
                     layer.close(index);
