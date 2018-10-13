@@ -441,11 +441,11 @@ class RegImage(View):
                     "message": "帮忙登陆?",
                     "data": {"usename": "hhh1", "facename": face_name}
                 }
-            # 2.已登陆，但人脸库中没有login_type==1,这种情况好像没有，前提就是库里有脸
+            # 2.已登陆，但人脸库中有，login_type==1,这种情况好像是别人的脸
             elif login_type==1:
                 abcs = {
-                    "code": 444444,
-                    "message": "这种情况没有？",
+                    "code": 202024,
+                    "message": "库里有脸识别到别的脸，切换到别的",
                     "data": {"usename": "hhh1", "facename": face_name}
                 }
             # 3.登陆，人脸库中也有,判断是不是同一张脸？不是的话，是否切换账号？login_type==2
