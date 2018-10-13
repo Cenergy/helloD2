@@ -342,7 +342,17 @@ class RegImage(View):
 
     def post(self, request):
         faceid = request.POST.get("faceid")
-        login_type = int(request.POST.get("login_type",0))
+        user_name = request.session.get("user_name", " ")
+        if user_name == " ":
+            login_type = 0
+        else:
+            login_sql = "select * from users_userprofile where email='{email}'".format(email=user_name)
+            login_data = pd.read_sql(login_sql, connection)
+            login_type = login_data["knowfacecode"][0]
+            if login_type == '':
+                login_type = 1
+            else:
+                login_type = 2
         sysfile = os.path.abspath('.')
         img = base64.b64decode(faceid.split(',')[-1])
         unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
@@ -391,11 +401,29 @@ class RegImage(View):
             request.session["username"] = ran_name
             user_name = request.session.get("user_name", '')
             request.session["face_code"] = str(known_face_encoding)
-            abcs = {
-                "code": 4020,
-                "message": "库中没脸已登录",
-                "data": {"usename": "hhh1", "facename": ran_name}
-            }
+            # 库里没脸，分登陆情况
+            # 1.未登录，识别到人脸 login_type==0
+            if login_type==0:
+                abcs = {
+                    "code": 404040,
+                    "message": "未登录，识别到人脸",
+                    "data": {"usename": "hhh1", "facename": ran_name}
+                }
+            # 2.登陆，但人脸库中没有login_type==1
+            elif login_type==1:
+                abcs = {
+                    "code": 204040,
+                    "message": "登陆，但人脸库中没有，将进行人脸关联",
+                    "data": {"usename": "hhh1", "facename": ran_name}
+                }
+            else:
+
+            # 3.登陆，人脸库中没有,所以这是新的人脸？login_type==2
+                abcs = {
+                    "code": 202040,
+                    "message": "更新人脸？",
+                    "data": {"usename": "hhh1", "facename": ran_name}
+                }
         elif face_name == "noFace":
             abcs = {
                 "code": 400,
@@ -405,30 +433,36 @@ class RegImage(View):
         else:
             request.session["userfaceid"] = face_id
             request.session["username"] = face_name
-            user_name = request.session.get("user_name", '')
-            user_sql = "SELECT * from 'users_userprofile' where username='%s'" % face_name
-            user_data = pd.read_sql(user_sql, connection)
-            # face_name = user_result["username"].values[0]
-            if user_name == '':
+            # 库里有脸，分登陆情况
+            # 1.未登录，识别到某个人脸，帮忙登陆 login_type==0
+            if login_type==0:
                 abcs = {
-                    "code": 202040,
-                    "message": "库里有脸识别到脸未登录",
+                    "code": 404020,
+                    "message": "帮忙登陆?",
                     "data": {"usename": "hhh1", "facename": face_name}
                 }
+            # 2.已登陆，但人脸库中没有login_type==1,这种情况好像没有，前提就是库里有脸
+            elif login_type==1:
+                abcs = {
+                    "code": 444444,
+                    "message": "这种情况没有？",
+                    "data": {"usename": "hhh1", "facename": face_name}
+                }
+            # 3.登陆，人脸库中也有,判断是不是同一张脸？不是的话，是否切换账号？login_type==2
             else:
-                faceuser_sql = "SELECT * from 'users_userprofile' where id ='{id}'".format(id=match_index)
-                user_result = pd.read_sql(faceuser_sql, connection)
-                face_name = user_result["username"].values[0]
-                if face_name == user_name:
+                user_name = request.session.get("user_name", '')
+                if face_name==user_name:
                     abcs = {
-                        "code": 20202020,
-                        "message": "库里有脸识别到脸已登录是本人",
+                        "code": 202020,
+                        "message": "库里有脸识别到脸已登录",
                         "data": {"usename": "hhh1", "facename": face_name}
                     }
                 else:
+
+                # face_name = user_result["username"].values[0]
                     abcs = {
-                        "code": 20204040,
-                        "message": "库里有脸识别到脸已登录不是本人",
+                        "code": 202024,
+                        "message": "库里有脸识别到别的脸，切换到别的",
                         "data": {"usename": "hhh1", "facename": face_name}
                     }
         try:

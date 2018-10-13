@@ -328,7 +328,7 @@
             data: login_data,
             success: function (data) {
                 console.log(data.data);
-                if (data.code === 20202020) {
+                if (data.code === 202020) {
                     layer.close(index);
                     that.text('识别成功');
                     layer.open({
@@ -343,7 +343,39 @@
                             window.location.reload();
                         }
                     });
-                } else if (data.code === 4020) {
+                } else if (data.code == 404040) {
+                    layer.close(index);
+                    layer.open({
+                        type: 1,
+                        title: '库中没脸未登录',
+                        closeBtn: 0,
+                        area: ['370px', '380px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error" style="background:white;">' +
+                        '        <img src="../static/images/facepage/验证失败.png" alt="验证失败">' +
+                        '            <p>验证失败！</p>' +
+                        '            <p>非常抱歉，识别到脸，但是没有身份关联</p>' +
+                        '            <p>是否现在<a href="/login/">登陆</a>再进行关联</p>' +
+                        '    </div>' +
+                        '<div style="margin-top:10px;padding-bottom:20px">' +
+                        '    <a href="/test/" class="layui-btn layui-btn-normal" style="margin:10px">看走眼？再识？</a>' +
+                        '    <a href="/login/" class="layui-btn layui-btn-normal" style="margin:10px">登陆</a>' +
+                        '</div></div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+                } else if (data.code == 204040) {
+                    layer.msg("将进行人脸关联")
+
+                } else if (data.code == 202040) {
+                    layer.msg("将进行人脸更新")
+                } else if (data.code == 404020) {
+                    layer.msg("帮忙登陆")
+                } else if (data.code == 202024) {
+                    layer.msg("切换账号")
+                } else if (data.code === 204040) {
                     {#库中没脸识别到脸已登录#}
                     layer.close(index);
                     layer.open({
@@ -368,7 +400,7 @@
                             window.location.reload();
                         }
                     });
-                } else if (data.code === 202040) {
+                } else if (data.code === 404020) {
                     layer.close(index);
                     let username = data.data.facename;
                     layer.open({
@@ -386,7 +418,7 @@
                         }
                     });
 
-                } else if (data.code == 4040) {
+                } else if (data.code == 404040) {
                     layer.close(index);
                     layer.open({
                         type: 1,
