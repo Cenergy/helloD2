@@ -503,3 +503,54 @@ class FaceAdmin(View):
 
     def post(self,request):
         pass
+
+class FaceLoginView(View):
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name = "users/login.html"
+
+    def get(self, request):
+        return render(request, "users/login.html", locals())
+
+    def post(self, request):
+        login_form = LoginForm(request.POST)
+        username = request.POST.get("username", "")
+        username = username.lower()
+        password = request.POST.get("password", "")
+        if login_form.is_valid():
+            # request.session["username"] = username
+            # username = request.session.get("username", " ")
+
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    request.session["user_name"] = username
+                    pre_url = request.session.get("pre_url_path", "/")
+                    abcs = {
+                        "code": 200,
+                        "message": "登陆成功",
+                        "data": {"reurl": pre_url}
+                    }
+                    # return HttpResponseRedirect('/')
+                    # return render(request, "users/index.html", locals())
+                else:
+                    abcs = {
+                        "code": 401,
+                        "message": "用户未激活",
+                        "data": {"reurl": "/login/"}
+                    }
+            else:
+                msg = "密码错误!"
+                abcs = {
+                    "code": 401,
+                    "message": "密码错误",
+                    "data": {"reurl": "/login/"}
+                }
+        else:
+            login_form = login_form
+            abcs = {
+                "code": 401,
+                "message": "登陆失败",
+                "data": {"reurl": "/login/"}
+            }
+        return HttpResponse(json.dumps(abcs), content_type='application/json')

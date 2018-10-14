@@ -536,20 +536,28 @@
         }
         return theRequest;
     }
+
     {#人脸登录#}
-    function facelogin(){
-        let username=$("#username").val();
-        let password=$("#password").val();
-        let login_data={}
+
+    function facelogin() {
+        let username = $("#username").val();
+        let password = $("#password").val();
+        let login_data = {};
         login_data["username"] = username
         login_data["password"] = password
         $.ajax({
-            url: "/login/",
+            url: "/face123/",
             type: "post",
             dataType: 'json',
             data: login_data,
             success: function (data) {
-                console.log(data)
+                if (data.code == 401) {
+                    layer.msg(data.message);
+                } else if (data.code == 200) {
+                    layer.msg(data.message);
+                    parent.window.location.href = '../';
+                }
+
             }
 
         })
