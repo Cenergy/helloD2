@@ -10,7 +10,7 @@ from users import views
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
-    url('login/$', views.LoginView.as_view(), name="login"),
+    url('login/$', csrf_exempt(views.LoginView.as_view()), name="login"),
     url('test/', views.test, name="test"),
     url('map/$', views.map),
     url('facelink/$', csrf_exempt(views.FaceLink.as_view()), name="facelink"),
