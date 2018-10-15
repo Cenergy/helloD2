@@ -398,9 +398,9 @@ class RegImage(View):
             known_face_encoding = face_recognition.face_encodings(unknown_image)[0]
             ran_name = ''.join(random.sample(string.ascii_letters, 6))
             faceid = (str(uuid.uuid1())).replace("-", "")
-            newimgpath = sysfile + '/media/face/faceLibrary/'
-            randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
-            os.renames(uknownimgpath, randimgname)
+            # newimgpath = sysfile + '/media/face/faceLibrary/'
+            # randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
+            # os.renames(uknownimgpath, randimgname)
             #FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
             request.session["userfaceid"] = faceid
             request.session["username"] = ran_name
