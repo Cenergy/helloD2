@@ -1,5 +1,5 @@
 
-Django == 1.11.10
+Django == 1.11.15
 XlsxWriter == 1.0.2
 django_crispy_forms_ng == 2.0.0
 django_formtools == 2.1
