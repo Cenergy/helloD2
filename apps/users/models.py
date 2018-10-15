@@ -19,7 +19,7 @@ class UserProfile(AbstractUser):
     )
     faceid = models.TextField(verbose_name='用户唯一值', null=True, blank=True)
     user_name = models.TextField(verbose_name='用户名', null=True, blank=True)
-    knowfacecode = models.TextField(verbose_name='用户人脸矩阵', null=True, blank=True)
+    knowfacecode = models.TextField(verbose_name='用户人脸矩阵',default='',null=True, blank=True)
     login_type = models.IntegerField(choices=LOGIN_TYPE, verbose_name="登录类型", help_text="登录类型", default=0)
     name = models.CharField(max_length=30, null=True, blank=True, verbose_name='姓名')
     birthday = models.DateField(null=True, blank=True, verbose_name='出生年月')

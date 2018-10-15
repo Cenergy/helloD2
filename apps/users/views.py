@@ -372,7 +372,6 @@ class RegImage(View):
         user_count = len(all_face_user)
         known_faces = all_face_user["knowfacecode"].values
         user_index = list(all_face_user["id"].values)
-
         fff = [eval(','.join(i.split())) for i in known_faces]
         known_faces = []
         for i in fff:
