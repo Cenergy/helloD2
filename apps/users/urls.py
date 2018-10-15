@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 urlpatterns = [
     url('login/$', views.LoginView.as_view(), name="login"),
     url('face123/$', csrf_exempt(views.FaceLoginView.as_view()), name="face123"),
+    url('deleteface/$', csrf_exempt(views.DeleteFaceView.as_view()), name="deleteface"),
     url('test/', views.test, name="test"),
     url('map/$', views.map),
     url('facelink/$', csrf_exempt(views.FaceLink.as_view()), name="facelink"),

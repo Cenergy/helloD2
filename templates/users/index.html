@@ -246,7 +246,8 @@
             <h3>人脸识别</h3>
             <p class="lead">本功能针对那些账号与人脸绑定的用户，第二次来可以快速登录
             <div>
-                <button type="button" class="layui-btn layui-btn-normal" id="facereg" login-data="{{ login_type }}">
+            <a href="/test/">
+                <button type="button" class="layui-btn layui-btn-normal"  login-data="{{ login_type }}">
                     {% if login_type == 1 %}
                         <i class="layui-icon"></i>人脸关联
                     {% elif login_type == 2 %}
@@ -255,7 +256,7 @@
                         <i class="layui-icon"></i>快速人脸登录
                     {% endif %}
 
-                </button>
+                </button></a>
                 <span id="hello123">
                 </span>
 
@@ -977,27 +978,27 @@
 
     })
 </script>
-<script>
-    $("#facereg").click(function () {
-        let login_type = $(this).attr("login-data");
-        let face_url = '/test/?login_type=' + login_type;
-        alert(face_url)
-        layer.open({
-            title: "资源列表",
-            type: 2,
-            content: face_url,
-            shade: [0.8, '#393d49'],
-            shadeClose: true,
-            area: ['100%', '100%'],
-            btn: ['关闭'],
+{#<script>#}
+{#    $("#facereg").click(function () {#}
+{#        let login_type = $(this).attr("login-data");#}
+{#        let face_url = '/test/?login_type=' + login_type;#}
+{#        alert(face_url)#}
+{#        layer.open({#}
+{#            title: "资源列表",#}
+{#            type: 2,#}
+{#            content: face_url,#}
+{#            shade: [0.8, '#393d49'],#}
+{#            shadeClose: true,#}
+{#            area: ['100%', '100%'],#}
+{#            btn: ['关闭'],#}
             {#父页面向子页面传值#}
-            success: function (layero, index) {
-                let body = layer.getChildFrame('body', index);
-            },
-            closeBtn: 1,
-        });
-    })
-</script>
+{#            success: function (layero, index) {#}
+{#                let body = layer.getChildFrame('body', index);#}
+{#            },#}
+{#            closeBtn: 1,#}
+{#        });#}
+{#    })#}
+{#</script>#}
 
 </body>
 

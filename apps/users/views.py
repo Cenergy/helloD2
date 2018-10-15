@@ -414,7 +414,7 @@ class RegImage(View):
                 abcs = {
                     "code": 204040,
                     "message": "登陆，但人脸库中没有，将进行人脸关联",
-                    "data": {"usename": "hhh1", "facename": ran_name}
+                    "data": {"usename": "hhh1", "facename": user_name}
                 }
             else:
 
@@ -422,7 +422,7 @@ class RegImage(View):
                 abcs = {
                     "code": 202040,
                     "message": "更新人脸？",
-                    "data": {"usename": "hhh1", "facename": ran_name}
+                    "data": {"usename": "hhh1", "facename": user_name}
                 }
         elif face_name == "noFace":
             abcs = {
@@ -486,13 +486,13 @@ class FaceLink(View):
             update_face_cursor.execute(update_face_sql)
             abcs = {
                 "code": 200,
-                "message": "更新人脸或人脸链接成功",
+                "message": "人脸关联成功",
                 "data": {"usename": "hhh1"}
             }
         else:
             abcs = {
                 "code": 400,
-                "message": "更新人脸或人脸链接失败",
+                "message": "人脸关联失败",
                 "data": {"usename": "hhh1"}
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
@@ -551,6 +551,42 @@ class FaceLoginView(View):
             abcs = {
                 "code": 401,
                 "message": "登陆失败",
+                "data": {"reurl": "/login/"}
+            }
+        return HttpResponse(json.dumps(abcs), content_type='application/json')
+
+# 删除人脸
+
+class DeleteFaceView(View):
+    def get(self,request):
+        pass
+    def post(self,request):
+        login_form = LoginForm(request.POST)
+        username = request.POST.get("username", "")
+        username = username.lower()
+        password = request.POST.get("password", "")
+        if login_form.is_valid():
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                delete_face_sql="UPDATE users_userprofile SET knowfacecode = '',faceid='',login_type=0 WHERE username = '{0}'".format(username)
+                delete_face_cursor = connection.cursor()
+                delete_face_cursor.execute(delete_face_sql)
+                abcs = {
+                    "code": 200,
+                    "message": "删除成功",
+                    "data": {"reurl": '../'}
+                }
+            else:
+                abcs = {
+                    "code": 401,
+                    "message": "密码错误",
+                    "data": {"reurl": "/login/"}
+                }
+        else:
+            login_form = login_form
+            abcs = {
+                "code": 401,
+                "message": "删除失败",
                 "data": {"reurl": "/login/"}
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
