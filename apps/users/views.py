@@ -497,13 +497,6 @@ class FaceLink(View):
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
-class FaceAdmin(View):
-    def get(self, request):
-        return render(request, "users/faceadmin.html", locals())
-
-    def post(self,request):
-        pass
-
 class FaceLoginView(View):
     renderer_classes = [renderers.TemplateHTMLRenderer]
     template_name = "users/login.html"

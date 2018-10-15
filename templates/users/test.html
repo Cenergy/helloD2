@@ -459,44 +459,23 @@
                     layer.close(index);
                     let aaaa = data.data.facename;
                     let bbb = "'" + aaaa + "'"
-                    layer.open({
-                        type: 1,
-                        title: '切换账号',
-                        closeBtn: 1,
-                        area: ['55.4%', '300px'],
-                        content:
-                        '<div class="imgreg" id="imgreg">' +
-                        '    <div class="error" style="background:white;">' +
-                        '            <p>本账号与人脸的账号' + aaaa + '不符！！！</p>' +
-                        '    </div>' +
-                        '</div> ' +
-                        '<div style="margin-top:10px;padding-bottom:20px;text-align: center;">' +
-                        '    <a href="/test/" class="layui-btn layui-btn-normal" style="margin:10px">识别错误，返回</a>' +
-                        '    <button class="layui-btn layui-btn-normal" onclick="user_login(' + bbb + ')" style="margin:10px">切换到该账号</button>' +
-                        '</div>',
-                        cancel: function () {
-                            window.location.reload();
-                        }
-                    });
-
-
                     that.text('识别成功');
                     let user_name = data.data.facename
                     layer.open({
                         type: 1,
-                        title: '将进行人脸关联',
+                        title: '切换账号？',
                         closeBtn: 0,
                         area: ['370px', '380px'],
                         content:
                         '<div class="imgreg" id="imgreg">' +
                         '    <div class="error">' +
                         '        <img src="../static/images/facepage/smile.png" alt="识别成功" style="width:80px;height:80px;color:red">' +
-                        '            <p>恭喜，识别成功！</p>' +
-                        '            <p>本账号与人脸的账号' + aaaa + '不符！！！</p>' +
-                        '            <p>切换到' + aaaa + '账号？</p>' +
+                        '            <p>恭喜，识别成功！' +
+                        '            但本账号与人脸的账号' + aaaa + '不符！！！是否' +
+                        '            切换到' + aaaa + '账号？</p>' +
                         '    </div>' +
                         '    <a href="/test/"><button class="one">识别错误</button></a>' +
-                        '    <button class="two" onclick="faceswitch()" style="cursor:pointer">切换账号</button>' +
+                        '    <button class="two" onclick="faceswitch(' + bbb + ')" style="cursor:pointer">切换账号</button>' +
                         '</div>',
                         cancel: function () {
                             window.location.reload();
@@ -702,12 +681,11 @@
             content:
             '<div class="imgreg" id="imgreg">' +
             '    <div class="error">' +
-            '        <img src="../static/images/facepage/smile.png" alt="验证失败" style="width:80px;height:80px;color:red">' +
-            '            <p>恭喜，验证成功！</p>' +
-            '            <p>如果账户正确，请输入密码</p>' +
+            '        <img src="../static/images/facepage/smile.png" alt="验证成功" style="width:80px;height:80px;color:red">' +
+            '            <p>核实您的账户，请输入您的密码</p>' +
             '    </div>' +
             '    <div class="nameregister">' +
-            '        <input class="form-control" type="text" disabled id="username" name="username" value="' + user_name + '" placeholder="请输入用户名">' +
+            '        <input class="form-control" type="text" disabled id="username" name="username" value="' + username + '" placeholder="请输入用户名">' +
             '    </div>' +
             '    <div class="nameregister">' +
             '        <input class="form-control" type="password"  id="password" name="password" placeholder="请输入密码">' +
