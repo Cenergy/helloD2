@@ -141,13 +141,14 @@ class RegisterView(View):
         if register_form.is_valid():
             username = request.POST.get("email", "")
             username = username.lower()
+            url_strs = HttpRequest.get_host(request)
             if UserProfile.objects.filter(email=username, is_active=True):
                 msg = "邮箱已被注册！！"
                 return render(request, "users/register.html", locals())
             elif UserProfile.objects.filter(email=username, is_active=False):
                 msg = "请激活您的邮箱"
                 send_type = "register"
-                register_send_email(username, send_type)
+                register_send_email(username,url_strs,send_type)
                 return render(request, "users/register.html", locals())
             password = request.POST.get("password", "")
             user_proflie = UserProfile()
@@ -157,7 +158,7 @@ class RegisterView(View):
             user_proflie.password = make_password(password)
             user_proflie.save()
             send_type = "register"
-            register_send_email(username, send_type)
+            register_send_email(username,url_strs,send_type)
             return render(request, "users/send_success.html", locals())
         else:
             return render(request, "users/register.html", locals())
@@ -196,7 +197,8 @@ class ForgetPwdView(View):
                     return render(request, "users/forgetpwd.html", locals())
                 else:
                     send_type = "forget"
-                    register_send_email(email, send_type)
+                    url_strs = HttpRequest.get_host(request)
+                    register_send_email(email,url_strs,send_type)
                     return render(request, "users/send_success.html", locals())
             else:
                 msg = "邮箱未被注册"

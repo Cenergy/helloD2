@@ -26,7 +26,7 @@ def random_str(randomlength=8):
     return str
 
 
-def  register_send_email(email,type_code="register"):
+def  register_send_email(email,url_strs,type_code="register"):
     code = random_str(16)
     if EmailVerifyRecord.objects.filter(email=email).exists():
         EmailVerifyRecord.objects.filter(email=email).update(code=code)
@@ -38,7 +38,7 @@ def  register_send_email(email,type_code="register"):
         email_record.save()
     if type_code == "register":
         email_body= "<h3>请点击下面的链接激活你的账号:<p>" \
-                    "<a href='https://www.aigisss.com/active/"+code+"'>https://www.aigisss.com/active/"+code+"</a></p></h3>"
+                    "<a href='"+url_strs+"/active/"+code+"'>"+url_strs+"/active/"+code+"</a></p></h3>"
         message = MIMEText(email_body, 'html', 'utf-8')
         message['From'] = Header("AIGIS网", 'utf-8')
         try:
@@ -52,7 +52,7 @@ def  register_send_email(email,type_code="register"):
             print(e)
     elif type_code == "forget":
         email_body = "<h3>大侠，密码太多容易忘记? 点击以下链接，再战江湖！----------><p>" \
-                     "<a href='https://www.aigisss.com/reset/" + code + "'>https://www.aigisss.com/reset/" + code + "</a></p></h3>"
+                     "<a href='"+url_strs+"/reset/" + code + "'>"+url_strs+"/reset/" + code + "</a></p></h3>"
         message = MIMEText(email_body, 'html', 'utf-8')
         message['From'] = Header("AIGIS网", 'utf-8')
         try:
