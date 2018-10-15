@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/facepage.css">
+    <title>注册账号</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            background: url("/static/images/bg2.jpg") no-repeat no-repeat;
+            background-size: cover;
+        }
+
+        .login {
+            width: auto;
+            height: auto;
+            margin: auto;
+            background: #ccf0f1;
+        }
+
+        .login:before {
+            display: block;
+            content: '';
+            width: 100%;
+            height: 6px;
+            background-image: -webkit-linear-gradient(left, blue 0%, blue 25%, green 25%, green 50%, yellow 50%,
+            yellow 75%, red 75%, red 100%);
+        }
+
+        .three img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .three div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btnbox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
+    <style>
+
+        .ui-keyboard-button {
+            width: 2em !important;
+        }
+
+        .ui-keyboard-preview {
+            height: 43px !important;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 11.1%;
+            opacity: 0.85;
+            background: #0160A6;
+        }
+
+        .logo .logospan span {
+            margin-left: 20px;
+            font-family: PingFangSC-Regular;
+            font-size: 32px;
+            color: #FFFFFF;
+            letter-spacing: 0.67px;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .logo .logospan {
+            display: flex;
+            align-items: center;
+            padding-left: 84px;
+        }
+
+        .logo button {
+            margin-right: 84px;
+            width: 180px;
+            height: 70px;
+            border: 3px solid #FFFFFF;
+            border-radius: 8px;
+            font-family: PingFangSC-Regular;
+            font-size: 28px;
+            color: #FFFFFF;
+            letter-spacing: 0;
+            background-color: transparent;
+        }
+
+        .logo button:hover {
+            color: #0160A6;
+            background-color: #FFFFFF;
+        }
+
+        .logo img {
+            width: 6%;
+            height: 55%;
+        }
+
+        .fishBone {
+            width: 80%;
+        }
+
+        a {
+
+            font-family: PingFangSC-Medium;
+            font-size: 17px;
+            color: #333333;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .uername a:hover {
+            color: #333333;
+        }
+
+        #key_url:hover {
+            color: #1E67D0;
+        }
+
+        .softkeys__btn:active {
+            background: #1E67D0;
+        }
+
+        .ssBtn button:active {
+            background: #0160A6;
+        }
+
+        .layui-layer-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pd-left {
+            box-sizing: border-box;
+            padding: 0 0 8px 8px !important;
+        }
+
+        #modifyName {
+            width: 45%;
+            height: 80px;
+            border: 1px solid #bbb;
+            font-size: 28px;
+            border-radius: 6px;
+            outline: 0;
+            text-indent: 1rem;
+        }
+
+        .xltest {
+            padding: 30px;
+            font-family: MicrosoftYaHei;
+            font-size: 28px;
+            color: #999999;
+            letter-spacing: 0;
+            line-height: 50px;
+        }
+
+        #output {
+            display: flex;
+            justify-content: center;
+        }
+
+        .layui-layer-btn1 {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 6px !important;
+            width: 300px !important;
+            height: 70px !important;
+            font-family: PingFangSC-Regular !important;
+            font-size: 30px !important;
+            color: #ffffff !important;
+            letter-spacing: 0 !important;
+            line-height: 30px !important;
+            background: #1E67D0 !important;
+        }
+
+        .actived {
+            background-color: #63C0FF;
+        }
+
+        .openpc {
+            display: block !important;
+        }
+
+        .error {
+            background: white;
+            color: #fff !important;
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="login">
+    <div class="c-box bg-box">
+        <div class="login-box">
+            <div class="fl form-box">
+                <div class="tab">
+                    <h1 style="text-align: center">人脸快速验证</h1>
+                </div>
+                <div class="tab-form">
+                    <div class="faceBox" style=" display: flex;flex-direction: column;justify-content: space-between;">
+                        <div class="facevideo" style="width: 280px;height: 210px;text-align: center">
+                            <div class="facevideo" style="width: 100%;height: 100%">
+                                <video style="width: 100%;height: 100%"></video>
+                                <canvas style="width: 100%;height: 100%;display: none"></canvas>
+                            </div>
+                        </div>
+                        <div class="three" style=" display: flex;justify-content: space-between;margin: 10px">
+                            <div><img src="/static/images/facepage/face0ang.png" alt="正对屏幕"><span>正对屏幕</span></div>
+                            <div><img src="/static/images/facepage/light.png" alt="光线充足"><span>光线充足</span></div>
+                            <div><img src="/static/images/facepage/noother.png" alt="周边无人"><span>周边无人</span></div>
+                        </div>
+                        <div class="btnbox">
+                            <button type="button" id="snap" class="layui-btn layui-btn-normal">开始识别
+                            </button>
+                        </div>
+                        <input type="hidden" id="face" name="face">
+                    </div>
+                </div>
+                <p class="form-p" style="margin: 10px">不想识别？<a href="{% url 'index' %}">[返回首页]</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/js/jquery.min.js" type="text/javascript"></script>
+<script src="/static/js/unslider.js" type="text/javascript"></script>
+<script src="/static/js/login.js" type="text/javascript"></script>
+<script src="/static/layui/layui.all.js"></script>
+<script>
+    function $s(elem) {
+        return document.querySelector(elem)
+    }
+
+    var canvas = $s('canvas'),
+        context = canvas.getContext('2d'),
+        video = $s('video'),
+        snap = $s('#snap'),
+        face = $s('#face'),
+        mediaStreamTrack;
+    video.muted = true;
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        }).then(function (stream) {
+            try {
+                video.srcObject = stream
+            } catch (e) {
+                mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+            }
+            console.log(stream, "1111")
+
+            video.play();
+        }).catch(function (error) {
+            console.log(error)
+        })
+    }
+    else if (navigator.getMedia) {
+        navigator.getMedia({
+            video: true
+        }), function (stream) {
+            try {
+                video.srcObject = stream
+            } catch (e) {
+                mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+            }
+            video.play();
+        }, function (error) {
+            console.log(error)
+        }
+    }
+    snap.addEventListener('click', function () {
+        //  var wh = parent.window.screen.availHeight; // 1743 1500 1699
+        var ww = parent.window.innerWidth; // 980 980 980
+
+        context.drawImage(video, 0, 0, 300, 150);
+        //   context.drawImage(video, 0, 0, 300, 300);
+        $('canvas').show();
+        $('video').hide();
+        face.value = canvas.toDataURL('image/png');
+        var username = $("#username").val() || "zheshiyigenibuhuixiangdaodemingzi";
+        var faceid = $("#face").val();
+        var index = layer.load();
+        var that = $(this);
+        that.text('识别中...');
+        let login_data = GetRequest();
+        login_data["faceid"] = faceid
+        console.log(login_data)
+        $.ajax({
+            url: "/regface/",
+            type: "post",
+            dataType: 'json',
+            data: login_data,
+            success: function (data) {
+                console.log(data.data);
+                if (data.code === 202020) {
+                    layer.close(index);
+                    that.text('识别成功');
+                    layer.open({
+                        type: 1,
+                        title: '人脸识别',
+                        closeBtn: 1,
+                        {#btn: ['确定'],#}
+                        area: ['370px', '450px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/smile.png" alt="验证成功" style="width:80px;height:80px;color:red">' +
+                        '            <p>恭喜，验证成功！</p>' +
+                        '            <p>确认过脸，是<span style="color:blue">' + data.data.facename + '</span>的主人</p>' +
+                        '            <p>如果想删除人脸，请输入密码，再按删除按钮！</p>' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="text" disabled id="username" name="username" value="' + data.data.facename + '" placeholder="请输入用户名">' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="password" id="password" name="password" placeholder="请输入密码">' +
+                        '    </div>' +
+                        '    <a href="{% url 'facereg' %}"><button class="one" style="cursor:pointer">识别错误</button></a>' +
+                        '    <button class="two" onclick="deleteface()" style="cursor:pointer">删除人脸</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+
+                } else if (data.code == 404040) {
+                    layer.close(index);
+                    layer.open({
+                        type: 1,
+                        title: '库中没脸未登录',
+                        closeBtn: 0,
+                        area: ['370px', '380px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error" style="background:white;">' +
+                        '        <img src="../static/images/facepage/验证失败.png" alt="验证失败">' +
+                        '            <p>验证失败！</p>' +
+                        '            <p>非常抱歉，这是新人面孔！！</p>' +
+                        '            <p>要登录后再来识别与关联！</p>' +
+                        '    </div>' +
+                        '<div style="margin-top:10px;padding-bottom:20px">' +
+                        '    <a href="{% url 'facereg' %}" class="layui-btn layui-btn-normal" style="margin:10px">看走眼了,再识？</a>' +
+                        '    <a href="{% url 'login' %}" class="layui-btn layui-btn-normal" target="_self" style="margin:10px;cursor:pointer">登陆</a>' +
+                        '</div></div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+                } else if (data.code == 204040) {
+                    layer.msg("将进行人脸关联");
+                    that.text('识别成功');
+                    let user_name = data.data.facename
+                    layer.open({
+                        type: 1,
+                        title: '将进行人脸关联',
+                        closeBtn: 0,
+                        area: ['370px', '380px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/smile.png" alt="验证失败" style="width:80px;height:80px;color:red">' +
+                        '            <p>恭喜，识别成功！</p>' +
+                        '            <p>如果想关联人脸。</p>' +
+                        '            <p>请按关联人脸确认，不想的话点不想关联。</p>' +
+                        '    </div>' +
+                        '    <a href="{% url 'facereg' %}"><button class="one">不想关联</button></a>' +
+                        '    <button class="two" onclick="facelink()" style="cursor:pointer">关联人脸</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+                } else if (data.code == 202040) {
+                    layer.msg("将进行人脸更新")
+                    that.text('识别成功');
+                    let user_name = data.data.facename
+                    layer.open({
+                        type: 1,
+                        title: '将进行人脸关联',
+                        closeBtn: 0,
+                        area: ['370px', '380px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/smile.png" alt="识别成功" style="width:80px;height:80px;color:red">' +
+                        '            <p>恭喜，识别成功！</p>' +
+                        '            <p>但这是一个新的人脸，如果想更新。</p>' +
+                        '            <p>请点击更新人脸确认，不想的话点关闭。</p>' +
+                        '    </div>' +
+                        '    <a href="{% url 'facereg' %}"><button class="one">识别错误</button></a>' +
+                        '    <button class="two" onclick="facelink()" style="cursor:pointer">更新人脸</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+                } else if (data.code == 404020) {
+                    layer.msg("帮忙登陆")
+                    that.text('识别成功');
+                    let user_name = data.data.facename
+                    layer.open({
+                        type: 1,
+                        title: '帮忙登陆',
+                        closeBtn: 0,
+                        area: ['370px', '404px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/smile.png" alt="验证失败" style="width:80px;height:80px;color:red">' +
+                        '            <p>恭喜，验证成功！</p>' +
+                        '            <p>如果账户正确，请输入密码</p>' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="text" disabled id="username" name="username" value="' + user_name + '" placeholder="请输入用户名">' +
+                        '    </div>' +
+                        '    <div class="nameregister">' +
+                        '        <input class="form-control" type="password"  id="password" name="password" placeholder="请输入密码">' +
+                        '    </div>' +
+                        '    <a href="{% url 'facereg' %}"><button class="one">识别错误</button></a>' +
+                        '    <button class="two" onclick="facelogin()" style="cursor:pointer">马上登陆</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+                } else if (data.code == 202024) {
+                    layer.msg("切换账号");
+                    layer.close(index);
+                    let aaaa = data.data.facename;
+                    let bbb = "'" + aaaa + "'"
+                    that.text('识别成功');
+                    let user_name = data.data.facename
+                    layer.open({
+                        type: 1,
+                        title: '切换账号？',
+                        closeBtn: 0,
+                        area: ['370px', '380px'],
+                        content:
+                        '<div class="imgreg" id="imgreg">' +
+                        '    <div class="error">' +
+                        '        <img src="../static/images/facepage/smile.png" alt="识别成功" style="width:80px;height:80px;color:red">' +
+                        '            <p>恭喜，识别成功！' +
+                        '            但本账号与人脸的账号' + aaaa + '不符！！！是否' +
+                        '            切换到' + aaaa + '账号？</p>' +
+                        '    </div>' +
+                        '    <a href="{% url 'facereg' %}"><button class="one">识别错误</button></a>' +
+                        '    <button class="two" onclick="faceswitch(' + bbb + ')" style="cursor:pointer">切换账号</button>' +
+                        '</div>',
+                        cancel: function () {
+                            window.location.reload();
+                        }
+                    });
+
+
+                } else if (data.code === 400) {
+                    layer.close(index);
+                    that.text('开始识别');
+                    layer.msg(data.data.error);
+                    $('canvas').hide();
+                    $('video').show();
+                } else {
+                    layer.msg("未知情况")
+                }
+                console.log(data);
+            }, error: function (data) {
+                layer.msg('系统繁忙，请重试');
+                parent.window.location.reload();
+                console.log("错误" + data.message);
+            }
+        });
+    }, false);
+
+    function imgreg() {
+        var username1 = $("#username").val();
+        var faceid1 = $("#face").val();
+        if (!username1 || username1 === '' || username1 === "") {
+            layer.msg('请输入您的名字！');
+            return;
+        }
+        if (username1.length >= 6) {
+            layer.msg('请填写长度为6以下的注册名');
+            return;
+        }
+        if (username1 === 'Unknown' || username1 === 'notknow') {
+            layer.msg('系统预留姓名，请您重新设定姓名！');
+            return;
+        }
+        $.ajax({
+            url: "/imgreg/",
+            type: "post",
+            dataType: 'json',
+            data: {"username": username1, "faceid": faceid1},
+            success: function (data) {
+                layer.msg('注册成功！');
+                layer.closeAll();
+                parent.window.location.href = '../';
+            }, error: function (data) {
+                layer.msg('注册失败，请再次尝试!');
+                console.log("错误" + data.message);
+            }
+        });
+
+
+    }
+
+    function cancel() {
+        window.history.back(-2);
+    }
+
+    $(document).on('click', '.backbtn button', function () {
+        var backchange = '<img class="backchange" src="../static/images/facepage/back.png" alt="返回">';
+        $(this).html(backchange);
+        window.history.back();
+    })
+
+    function user_login(text) {
+        let username = text;
+        layer.open({
+            type: 2,
+            title: '库里有脸识别到脸未登录',
+            closeBtn: 0,
+            area: ['370px', '446px'],
+            content: '{% url 'login' %}',
+            success: function (layero, index) {
+                let body = layer.getChildFrame('body', index);
+                body.find('#account_l').val(username);
+            },
+            cancel: function () {
+                window.location.reload();
+            }
+        });
+    }
+
+    function face_login() {
+
+        $.ajax({
+            url: "/facelink/",
+            type: "post",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+            }
+        })
+
+    }
+
+    {#获取url后面的参数#}
+
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+
+    {#人脸登录#}
+
+    function facelogin() {
+        let username = $("#username").val();
+        let password = $("#password").val();
+        let login_data = {};
+        login_data["username"] = username;
+        login_data["password"] = password;
+        if (!username || username === '' || username === "") {
+            layer.msg('请输入您的邮箱！');
+            return;
+        }
+        if (!password || password === '' || password === "") {
+            layer.msg('密码不能为空！！');
+            return;
+        }
+        $.ajax({
+            url: "{% url 'face123' %}",
+            type: "post",
+            dataType: 'json',
+            data: login_data,
+            success: function (data) {
+                if (data.code == 401) {
+                    layer.msg(data.message);
+                } else if (data.code == 200) {
+                    layer.msg(data.message);
+                    parent.window.location.href = '../';
+                }
+
+            }
+
+        })
+    }
+
+    function deleteface() {
+        let username = $("#username").val();
+        let password = $("#password").val();
+        let login_data = {};
+        login_data["username"] = username;
+        login_data["password"] = password;
+        if (!username || username === '' || username === "") {
+            layer.msg('请输入您的邮箱！');
+            return;
+        }
+        if (!password || password === '' || password === "") {
+            layer.msg('密码不能为空！！');
+            return;
+        }
+        $.ajax({
+            url: "/deleteface/",
+            type: "post",
+            dataType: 'json',
+            data: login_data,
+            success: function (data) {
+                if (data.code == 401) {
+                    layer.msg(data.message);
+                } else if (data.code == 200) {
+                    layer.msg(data.message);
+                    parent.window.location.href = '../';
+                }
+            }
+
+        })
+    }
+
+    function facelink() {
+        $.ajax({
+            url: "/facelink/",
+            type: "post",
+            dataType: 'json',
+            success: function (data) {
+                if (data.code == 400) {
+                    layer.msg(data.message);
+                } else if (data.code == 200) {
+                    layer.msg(data.message);
+                    parent.window.location.href = '../';
+                }
+            }
+
+        })
+    }
+
+    function faceswitch(username) {
+        layer.open({
+            type: 1,
+            title: '帮忙登陆',
+            closeBtn: 0,
+            area: ['370px', '404px'],
+            content:
+            '<div class="imgreg" id="imgreg">' +
+            '    <div class="error">' +
+            '        <img src="../static/images/facepage/smile.png" alt="验证成功" style="width:80px;height:80px;color:red">' +
+            '            <p>核实您的账户，请输入您的密码</p>' +
+            '    </div>' +
+            '    <div class="nameregister">' +
+            '        <input class="form-control" type="text" disabled id="username" name="username" value="' + username + '" placeholder="请输入用户名">' +
+            '    </div>' +
+            '    <div class="nameregister">' +
+            '        <input class="form-control" type="password"  id="password" name="password" placeholder="请输入密码">' +
+            '    </div>' +
+            '    <a href="{% url 'facereg' %}"><button class="one">识别错误</button></a>' +
+            '    <button class="two" onclick="facelogin()" style="cursor:pointer">马上登陆</button>' +
+            '</div>',
+            cancel: function () {
+                window.location.reload();
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

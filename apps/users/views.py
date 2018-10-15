@@ -334,6 +334,11 @@ class UserSuggestion(View):
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
 
+class FaceRegView(View):
+    def get(self, request):
+        return render(request, "users/facereg.html", locals())
+
+
 # 人脸识别
 
 class RegImage(View):
@@ -524,8 +529,6 @@ class FaceLoginView(View):
                         "message": "登陆成功",
                         "data": {"reurl": pre_url}
                     }
-                    # return HttpResponseRedirect('/')
-                    # return render(request, "users/index.html", locals())
                 else:
                     abcs = {
                         "code": 401,

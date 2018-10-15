@@ -246,18 +246,17 @@
             <h3>人脸识别</h3>
             <p class="lead">本功能针对那些账号与人脸绑定的用户，第二次来可以快速登录
             <div>
-            <a href="/test/">
-                <button type="button" class="layui-btn layui-btn-normal"  login-data="{{ login_type }}">
+            <a href="{% url 'facereg' %}">
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-warm"  login-data="{{ login_type }}"><b>
                     {% if login_type == 1 %}
-                        <i class="layui-icon"></i>人脸关联
+                        <i class="layui-icon layui-icon-face-surprised"></i>人脸关联
                     {% elif login_type == 2 %}
-                        <i class="layui-icon"></i>人脸识别
+                        <i class="layui-icon layui-icon-face-surprised"></i>人脸识别
                     {% else %}
-                        <i class="layui-icon"></i>快速人脸登录
+                        <i class="layui-icon layui-icon-face-surprised"></i>快速人脸登录
                     {% endif %}
 
-                </button></a>
-                <span id="hello123">
+                </b></button></a>
                 </span>
 
             </div>
