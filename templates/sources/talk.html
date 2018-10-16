@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/static/csswx/normalize.css"/>
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <style>
-        a{
+        a {
             color: blue;
         }
     </style>
@@ -151,8 +151,10 @@
     }
     $(document).keyup(function (event) {
         if (event.keyCode === 13) {
-            if ($("#msg").val() === '') {
-                    layer.msg("搜索内容不能为空")
+            var reg = /^\s+$/;
+            let msg_txt = $("#msg").val();
+            if (msg_txt === ''||reg.test(msg_txt)) {
+                layer.msg("搜索内容不能为空")
             } else {
                 $("#send_msg").trigger("click");
             }
