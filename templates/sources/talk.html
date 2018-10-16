@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="/static/csswx/style.css"/>
     <link rel="stylesheet" href="/static/csswx/meng.css"/>
     <link rel="stylesheet" href="/static/csswx/normalize.css"/>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <style>
+        a{
+            color: blue;
+        }
+    </style>
 </head>
 <body>
 <div class="pop-wrapper pop-send dis-none-imp">
@@ -69,6 +75,7 @@
 <script type="text/javascript" src="/static/jswx/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="/static/jswx/jweixin-1.0.0.js"></script>
 <script type="text/javascript" src="/static/jswx/talkb73c.js"></script>
+<script src="/static/layui/layui.all.js"></script>
 <script>
     function GetUrlParam() {
         try {
@@ -143,8 +150,13 @@
         showAsk_init(question_key)
     }
     $(document).keyup(function (event) {
-        if (event.keyCode == 13) {
-            $("#send_msg").trigger("click");
+        if (event.keyCode === 13) {
+            if ($("#msg").val() === '') {
+                    layer.msg("搜索内容不能为空")
+            } else {
+                $("#send_msg").trigger("click");
+            }
+
         }
     });
 </script>
