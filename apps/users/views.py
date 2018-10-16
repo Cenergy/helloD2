@@ -104,10 +104,10 @@ class LoginView(View):
         return render(request, "users/login.html", locals())
 
     def post(self, request):
-        login_form = LoginForm(request.POST)
         username = request.POST.get("username", "")
-        username = username.lower()
-        password = request.POST.get("password", "")
+        user_input = username = username.lower()
+        password_input = password = request.POST.get("password", "")
+        login_form = LoginForm(request.POST)
         if login_form.is_valid():
             # request.session["username"] = username
             # username = request.session.get("username", " ")
@@ -122,9 +122,13 @@ class LoginView(View):
                     # return HttpResponseRedirect('/')
                     # return render(request, "users/index.html", locals())
                 else:
-                    return render(request, "users/login.html", {"msg": "用户未激活！"})
+                    msg = "用户未激活！"
+                    return render(request, "users/login.html", locals())
             else:
-                msg = "密码错误!"
+                if UserProfile.objects.filter(username=username).exists():
+                    msg = "密码错误!"
+                else:
+                    msg = "用户不存在"
                 return render(request, "users/login.html", locals())
         else:
             login_form = login_form
@@ -137,10 +141,11 @@ class RegisterView(View):
         return render(request, "users/register.html", locals())
 
     def post(self, request):
+        username = request.POST.get("email", "")
+        user_reg_input = username = username.lower()
+        password_reg_input = password = request.POST.get("password", "")
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
-            username = request.POST.get("email", "")
-            username = username.lower()
             url_strs = HttpRequest.get_host(request)
             if UserProfile.objects.filter(email=username, is_active=True):
                 msg = "邮箱已被注册！！"
@@ -148,9 +153,8 @@ class RegisterView(View):
             elif UserProfile.objects.filter(email=username, is_active=False):
                 msg = "请激活您的邮箱"
                 send_type = "register"
-                register_send_email(username,url_strs,send_type)
+                register_send_email(username, url_strs, send_type)
                 return render(request, "users/register.html", locals())
-            password = request.POST.get("password", "")
             user_proflie = UserProfile()
             user_proflie.username = username
             user_proflie.email = username
@@ -158,7 +162,7 @@ class RegisterView(View):
             user_proflie.password = make_password(password)
             user_proflie.save()
             send_type = "register"
-            register_send_email(username,url_strs,send_type)
+            register_send_email(username, url_strs, send_type)
             return render(request, "users/send_success.html", locals())
         else:
             return render(request, "users/register.html", locals())
@@ -174,7 +178,8 @@ class ActiveUserView(View):
                 user = UserProfile.objects.get(email=email)
                 user.is_active = True
                 user.save()
-            return render(request, "users/login.html", locals())
+            return redirect("/login/")
+            # return render(request, "users/login.html", locals())
         else:
             return render(request, "users/active_fail.html", locals())
 
@@ -198,7 +203,7 @@ class ForgetPwdView(View):
                 else:
                     send_type = "forget"
                     url_strs = HttpRequest.get_host(request)
-                    register_send_email(email,url_strs,send_type)
+                    register_send_email(email, url_strs, send_type)
                     return render(request, "users/send_success.html", locals())
             else:
                 msg = "邮箱未被注册"
@@ -402,21 +407,21 @@ class RegImage(View):
             # newimgpath = sysfile + '/media/face/faceLibrary/'
             # randimgname = newimgpath + faceid + '/' + ran_name + '.jpg'
             # os.renames(uknownimgpath, randimgname)
-            #FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
+            # FaceUser.objects.create(username=ran_name, faceid=faceid, knowfacecode=known_face_encoding)
             request.session["userfaceid"] = faceid
             request.session["username"] = ran_name
             user_name = request.session.get("user_name", '')
             request.session["face_code"] = str(known_face_encoding)
             # 库里没脸，分登陆情况
             # 1.未登录，识别到人脸 login_type==0
-            if login_type==0:
+            if login_type == 0:
                 abcs = {
                     "code": 404040,
                     "message": "未登录，识别到人脸",
                     "data": {"usename": "hhh1", "facename": ran_name}
                 }
             # 2.登陆，但人脸库中没有login_type==1
-            elif login_type==1:
+            elif login_type == 1:
                 abcs = {
                     "code": 204040,
                     "message": "登陆，但人脸库中没有，将进行人脸关联",
@@ -424,7 +429,7 @@ class RegImage(View):
                 }
             else:
 
-            # 3.登陆，人脸库中没有,所以这是新的人脸？login_type==2
+                # 3.登陆，人脸库中没有,所以这是新的人脸？login_type==2
                 abcs = {
                     "code": 202040,
                     "message": "更新人脸？",
@@ -441,14 +446,14 @@ class RegImage(View):
             request.session["username"] = face_name
             # 库里有脸，分登陆情况
             # 1.未登录，识别到某个人脸，帮忙登陆 login_type==0
-            if login_type==0:
+            if login_type == 0:
                 abcs = {
                     "code": 404020,
                     "message": "帮忙登陆?",
                     "data": {"usename": "hhh1", "facename": face_name}
                 }
             # 2.已登陆，但人脸库中有，login_type==1,这种情况好像是别人的脸
-            elif login_type==1:
+            elif login_type == 1:
                 abcs = {
                     "code": 202024,
                     "message": "库里有脸识别到别的脸，切换到别的",
@@ -457,7 +462,7 @@ class RegImage(View):
             # 3.登陆，人脸库中也有,判断是不是同一张脸？不是的话，是否切换账号？login_type==2
             else:
                 user_name = request.session.get("user_name", '')
-                if face_name==user_name:
+                if face_name == user_name:
                     abcs = {
                         "code": 202020,
                         "message": "库里有脸识别到脸已登录",
@@ -465,7 +470,7 @@ class RegImage(View):
                     }
                 else:
 
-                # face_name = user_result["username"].values[0]
+                    # face_name = user_result["username"].values[0]
                     abcs = {
                         "code": 202024,
                         "message": "库里有脸识别到别的脸，切换到别的",
@@ -477,17 +482,21 @@ class RegImage(View):
             pass
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
+
+# 关联与更新人脸
 class FaceLink(View):
-    def get(self,request):
+    def get(self, request):
         pass
-    def post(self,request):
-        face_code=str(request.session.get("face_code",'1024'))
+
+    def post(self, request):
+        face_code = str(request.session.get("face_code", '1024'))
         user_name = request.session.get("user_name", '')
-        face_id=(str(uuid.uuid1())).replace("-", "")
+        face_id = (str(uuid.uuid1())).replace("-", "")
         ran_name = ''.join(random.sample(string.ascii_letters, 6))
-        login_type=2
-        if face_code!='1024'and user_name!='':
-            update_face_sql = "UPDATE 'users_userprofile' SET knowfacecode='{0}',faceid='{1}',user_name='{2}',login_type=2 where  username='{3}'".format(face_code,face_id,ran_name,user_name)
+        login_type = 2
+        if face_code != '1024' and user_name != '':
+            update_face_sql = "UPDATE 'users_userprofile' SET knowfacecode='{0}',faceid='{1}',user_name='{2}',login_type=2 where  username='{3}'".format(
+                face_code, face_id, ran_name, user_name)
             update_face_cursor = connection.cursor()
             update_face_cursor.execute(update_face_sql)
             abcs = {
@@ -502,6 +511,7 @@ class FaceLink(View):
                 "data": {"usename": "hhh1"}
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
+
 
 class FaceLoginView(View):
     renderer_classes = [renderers.TemplateHTMLRenderer]
@@ -552,12 +562,14 @@ class FaceLoginView(View):
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
+
 # 删除人脸
 
 class DeleteFaceView(View):
-    def get(self,request):
+    def get(self, request):
         pass
-    def post(self,request):
+
+    def post(self, request):
         login_form = LoginForm(request.POST)
         username = request.POST.get("username", "")
         username = username.lower()
@@ -565,7 +577,8 @@ class DeleteFaceView(View):
         if login_form.is_valid():
             user = authenticate(username=username, password=password)
             if user is not None:
-                delete_face_sql="UPDATE users_userprofile SET knowfacecode = '',faceid='',login_type=0 WHERE username = '{0}'".format(username)
+                delete_face_sql = "UPDATE users_userprofile SET knowfacecode = '',faceid='',login_type=0 WHERE username = '{0}'".format(
+                    username)
                 delete_face_cursor = connection.cursor()
                 delete_face_cursor.execute(delete_face_sql)
                 abcs = {

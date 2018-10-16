@@ -38,7 +38,7 @@
             height: 6px;
             background-image: -webkit-linear-gradient(left, blue 0%, blue 25%, green 25%, green 50%, yellow 50%,
             yellow 75%, red 75%, red 100%);
-            border-radius: 16px 16px 0 0;
+            border-radius: 4px 4px 0 0;
         }
 
         .three img {
@@ -570,6 +570,12 @@
         });
 
     }
+
+    $(document).keyup(function (event) {
+        if (event.keyCode == 13) {
+            $(".two").trigger("click");
+        }
+    });
 </script>
 </body>
 </html>
