@@ -149,7 +149,7 @@ class BlogListView(APIView):
     """
     def get(self, request):
         try:
-            contexts = Blog.objects.all()
+            contexts = Blog.objects.all().order_by('-id')
             serializer = BlogSerializers(contexts, many=True)
             context = {"code": 0, "msg": "success", "data": serializer.data}
         except:
