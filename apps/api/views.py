@@ -1,23 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 
 
-from api.serializers import SourcesCoreSerializers
+from api.serializers import SourcesCoreSerializers, BlogSerializers
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, mixins, generics, viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from  django.db import connection
+from django.db import connection
 
 from .filters import SourcesCoreFilter
-from utils.email_send import register_send_email,common_send_email
+from utils.email_send import register_send_email, common_send_email
 from sources.models import SourcesCore
 from users.models import Suggestion
-import pandas as pd
+from courses.models import Blog, BlogType
 
+import pandas as pd
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -33,7 +34,7 @@ class SnippetList(APIView):
     """
 
     def get(self, request, format=None):
-        print(request.query_params,"------------")
+        print(request.query_params, "------------")
         question_type = request.query_params.get("question_type", -1)
         page_info = request.query_params.get("page", 1)
         limit_info = request.query_params.get("limit", 10)
@@ -47,12 +48,16 @@ class SnippetList(APIView):
             query_sql0 = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'".format(key_word)
             datas = pd.read_sql(query_sql0, connection)
             count = len(datas)
-            query_sql = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'  LIMIT {1},{2} ".format(key_word,page_start-1, int(limit_info))
+            query_sql = "SELECT * FROM sources_sourcescore where sourcename like '%{0}%'  LIMIT {1},{2} ".format(
+                key_word, page_start - 1, int(limit_info))
         else:
             count_sql = "SELECT * FROM sources_sourcescore where question_type={0}".format(question_type)
             datas = pd.read_sql(count_sql, connection)
             count = len(datas)
-            query_sql = "SELECT * FROM sources_sourcescore where question_type={0} LIMIT {1},{2}" .format(question_type,page_start-1, int(limit_info))
+            query_sql = "SELECT * FROM sources_sourcescore where question_type={0} LIMIT {1},{2}".format(question_type,
+                                                                                                         page_start - 1,
+                                                                                                         int(
+                                                                                                             limit_info))
         snippets = SourcesCore.objects.raw(query_sql)
         serializer = SourcesCoreSerializers(snippets, many=True)
         data = {"code": 0, "msg": "", "count": count, "data": serializer.data}
@@ -73,7 +78,7 @@ class SourcesList(APIView):
             datas = pd.read_sql(query_sql, connection)
             count = len(datas)
         else:
-            if int(question_type)==-1:
+            if int(question_type) == -1:
                 count_sql = "SELECT * FROM sources_sourcescore"
                 datas = pd.read_sql(count_sql, connection)
                 count = len(datas)
@@ -82,7 +87,7 @@ class SourcesList(APIView):
                 count_sql = "SELECT * FROM sources_sourcescore where question_type={0}".format(question_type)
                 datas = pd.read_sql(count_sql, connection)
                 count = len(datas)
-                query_sql = "SELECT * FROM sources_sourcescore where question_type={0}" .format(question_type)
+                query_sql = "SELECT * FROM sources_sourcescore where question_type={0}".format(question_type)
         snippets = SourcesCore.objects.raw(query_sql)
         serializer = SourcesCoreSerializers(snippets, many=True)
         data = {"code": 0, "msg": "", "count": count, "data": serializer.data}
@@ -105,6 +110,7 @@ class SourcesCoreViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, views
     filter_class = SourcesCoreFilter
     search_fields = ('sourcename',)
 
+
 class SuggestionsView(APIView):
     """
     List all snippets, or create a new snippet.
@@ -121,7 +127,7 @@ class SuggestionsView(APIView):
             suggest_data.suggest_content = suggest_message
             suggest_data.save()
             # 发邮件回复用户已收到
-            common_send_email("673598118@qq.com",suggest_email,suggest_message)
+            common_send_email("673598118@qq.com", suggest_email, suggest_message)
             reginfs = {
                 "code": 202,
                 "message": "success",
@@ -134,3 +140,61 @@ class SuggestionsView(APIView):
                 "data": "失败"
             }
         return Response(reginfs)
+
+
+# 博客
+class BlogListView(APIView):
+    """
+    blog列表
+    """
+    def get(self, request):
+        try:
+            contexts = Blog.objects.all()
+            serializer = BlogSerializers(contexts, many=True)
+            context = {"code": 0, "msg": "success", "data": serializer.data}
+        except:
+            context = {
+                "code": 200,
+                "message": "failed",
+                "data": "失败"
+            }
+        return Response(context)
+
+
+class BlogDetailView(APIView):
+    """
+    blog详情
+    """
+    def get(self, requset, blog_pk):
+        try:
+            contexts = Blog.objects.filter(id=blog_pk)
+            if contexts.exists():
+                serializer = BlogSerializers(contexts, many=True)
+                context = {"code": 200, "msg": "success", "data": serializer.data}
+            else:
+                context = {"code": 200, "msg": "不存在", "data":[]}
+        except:
+            context = {
+                "code": 401,
+                "message": "failed",
+                "data": "失败"
+            }
+        return Response(context)
+
+class BlogTypeView(APIView):
+    def get(self, requset, blog_type):
+        try:
+            blog_tp = BlogType.objects.filter(id=blog_type)
+            contexts=Blog.objects.filter(blog_type=blog_tp)
+            if contexts.exists():
+                serializer = BlogSerializers(contexts, many=True)
+                context = {"code": 200, "msg": "success", "data": serializer.data}
+            else:
+                context = {"code": 200, "msg": "不存在", "data":[]}
+        except:
+            context = {
+                "code": 401,
+                "message": "failed",
+                "data": "失败"
+            }
+        return Response(context)

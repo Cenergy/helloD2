@@ -243,17 +243,19 @@
             <h3>人脸识别</h3>
             <p class="lead">本功能针对那些账号与人脸绑定的用户，再次访问本站可以快速登录
             <div>
-            <a href="{% url 'facereg' %}">
-                <button type="button" class="layui-btn layui-btn-radius layui-btn-warm"  login-data="{{ login_type }}"><b>
-                    {% if login_type == 1 %}
-                        <i class="layui-icon layui-icon-face-surprised"></i>人脸关联
-                    {% elif login_type == 2 %}
-                        <i class="layui-icon layui-icon-face-surprised"></i>人脸识别
-                    {% else %}
-                        <i class="layui-icon layui-icon-face-surprised"></i>快速人脸登录
-                    {% endif %}
+                <a href="{% url 'facereg' %}">
+                    <button type="button" class="layui-btn layui-btn-radius layui-btn-warm"
+                            login-data="{{ login_type }}"><b>
+                        {% if login_type == 1 %}
+                            <i class="layui-icon layui-icon-face-surprised"></i>人脸关联
+                        {% elif login_type == 2 %}
+                            <i class="layui-icon layui-icon-face-surprised"></i>人脸识别
+                        {% else %}
+                            <i class="layui-icon layui-icon-face-surprised"></i>快速人脸登录
+                        {% endif %}
 
-                </b></button></a>
+                    </b></button>
+                </a>
                 </span>
 
             </div>
@@ -333,8 +335,10 @@
                     patria esse cariorem. Quae qui non vident, nihilamane umquam magnum ac cognitione.
                 </p>
 
-                <p><a class="btn btn-embossed btn-primary" href="#" role="button">View Details</a>
-                    <a class="btn btn-embossed btn-info" href="#" role="button">Visit Website</a></p>
+                <p>
+                    <a class="btn btn-embossed btn-primary" href="#" role="button">查看文章</a>
+{#                    <a class="btn btn-embossed btn-info" href="#" role="button">Visit Website</a>#}
+                </p>
             </div>
         </div>
     </div>
@@ -347,21 +351,21 @@
         <div class="row">
             <div class="col-sm-6 wow fadeInLeftBig">
                 <div id="owl-demo-1" class="owl-carousel">
-                    <a href="/static/img/iphone.png" class="image-link">
-                        <div class="item">
+{#                    <a href="/static/img/iphone.png" class="image-link">#}
+                        <div>
                             <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">
                         </div>
-                    </a>
-                    <a href="/static/img/iphone.png" class="image-link">
-                        <div class="item">
-                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">
-                        </div>
-                    </a>
-                    <a href="/static/img/iphone.png" class="image-link">
-                        <div class="item">
-                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">
-                        </div>
-                    </a>
+{#                    </a>#}
+{#                    <a href="/static/img/iphone.png" class="image-link">#}
+{#                        <div class="item">#}
+{#                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">#}
+{#                        </div>#}
+{#                    </a>#}
+{#                    <a href="/static/img/iphone.png" class="image-link">#}
+{#                        <div class="item">#}
+{#                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">#}
+{#                        </div>#}
+{#                    </a>#}
                 </div>
             </div>
 
@@ -597,7 +601,7 @@
 
                 <!-- LICENSE -->
                 ©2018 爱即是诗版权所有 <a rel="license" href="http://www.miitbeian.gov.cn/">赣ICP备18013338号</a>
-{#                the <a rel="license" href="#"> MIT</a>.#}
+                {#                the <a rel="license" href="#"> MIT</a>.#}
 
 
             </div> <!-- /col-xs-7 -->
@@ -986,7 +990,7 @@
 {#            shadeClose: true,#}
 {#            area: ['100%', '100%'],#}
 {#            btn: ['关闭'],#}
-            {#父页面向子页面传值#}
+{#父页面向子页面传值#}
 {#            success: function (layero, index) {#}
 {#                let body = layer.getChildFrame('body', index);#}
 {#            },#}

@@ -13,6 +13,8 @@ from rest_framework import serializers
 from sources.models import SourcesCore
 from users.models import Suggestion
 
+from courses.models import Blog
+
 ###SourcesCore
 
 class  SourcesCoreSerializers(serializers.ModelSerializer):
@@ -23,4 +25,10 @@ class  SourcesCoreSerializers(serializers.ModelSerializer):
 class  SuggestionSerializers(serializers.ModelSerializer):
     class Meta:
         model = Suggestion
+        fields="__all__"
+
+
+class BlogSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
         fields="__all__"
