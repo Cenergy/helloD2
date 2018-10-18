@@ -243,7 +243,7 @@ def UploadFile(request):
 
     # project_url_config = USettings.gSettings.PROJECT_URL
 
-    project_url_config='http://'+HttpRequest.get_host(request)
+    project_url_config='https://'+HttpRequest.get_host(request)
     # 返回数据
     return_info = {
         # 保存后的文件名称
