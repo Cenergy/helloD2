@@ -3,6 +3,9 @@ import os
 import json
 import random
 
+from django.http import HttpRequest
+
+
 try:
     # python3
     import urllib.request as urllib
@@ -240,11 +243,12 @@ def UploadFile(request):
 
     # project_url_config = USettings.gSettings.PROJECT_URL
 
+    project_url_config='http://'+HttpRequest.get_host(request)
     # 返回数据
     return_info = {
         # 保存后的文件名称
         # 'url': urljoin(project_url_config+USettings.gSettings.MEDIA_URL, OutputPathFormat),
-        'url': urljoin(USettings.gSettings.MEDIA_URL, OutputPathFormat),
+        'url': urljoin(project_url_config+USettings.gSettings.MEDIA_URL, OutputPathFormat),
         # 原始文件名
         'original': upload_file_name,
         'type': upload_original_ext,
