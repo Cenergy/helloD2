@@ -41,6 +41,27 @@ def save_upload_file(PostFile,FilePath):
     f.close()
     return u"SUCCESS"
 
+# def save_upload_file(PostFile,FilePath,action):
+#
+#     if action == 'uploadfile':
+#         FilePathWrite = FilePath+'/'+str(PostFile)
+#     elif action == 'uploadimage':
+#         FilePathWrite = FilePath+'/'+str(PostFile)
+#     #elif action == 'uploadvideo':
+#     # FilePathWrite = videofile(FilePath,'/video/')
+#     else:
+#         FilePathWrite = FilePath
+#
+#     f = open(FilePathWrite, 'wb')
+#     try:
+#         for chunk in PostFile.chunks():
+#             f.write(chunk)
+#     except Exception as e:
+#         f.close()
+#         return u"写入文件错误:" + e
+#     f.close()
+#     return u"SUCCESS"
+
 
 @csrf_exempt
 def get_ueditor_settings(request):
@@ -216,11 +237,14 @@ def UploadFile(request):
             state = save_upload_file(file, os.path.join(OutputPath, OutputFile))
 
     # 在django项目中配置你的产品域名
-    project_url_config = USettings.gSettings.PROJECT_URL
+
+    # project_url_config = USettings.gSettings.PROJECT_URL
+
     # 返回数据
     return_info = {
         # 保存后的文件名称
-        'url': urljoin(project_url_config+USettings.gSettings.MEDIA_URL, OutputPathFormat),
+        # 'url': urljoin(project_url_config+USettings.gSettings.MEDIA_URL, OutputPathFormat),
+        'url': urljoin(USettings.gSettings.MEDIA_URL, OutputPathFormat),
         # 原始文件名
         'original': upload_file_name,
         'type': upload_original_ext,
