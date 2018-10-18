@@ -4,6 +4,8 @@ from django.db import models
 from users.models import UserProfile
 
 from DjangoUeditor.models import UEditorField
+from utils import renameImg
+
 
 
 class BlogType(models.Model):
@@ -23,6 +25,9 @@ class Blog(models.Model):
     content=UEditorField(verbose_name='文章', imagePath="blog/images/",
                                  filePath="blog/files/", default="", toolbars='full',null=True, blank=True)
     author=models.ForeignKey(UserProfile,on_delete=models.DO_NOTHING)
+    source_img = models.ImageField(null=True, blank=True, upload_to="blog/images/",
+                                   default="blog/images/default.png", storage=renameImg.ImageStorage(),
+                                   verbose_name="封面图片")
     created_time=models.DateTimeField(auto_now_add=True)
     last_update_time=models.DateTimeField(auto_now=True)
 
