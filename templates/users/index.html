@@ -162,7 +162,7 @@
             <ul class="nav navbar-nav" id="hello_django">
 
                 <li class="menuItem"><a href="#whatis">这是什么?</a></li>
-                <li class="menuItem"><a href="#useit">作品</a></li>
+                <li class="menuItem"><a href="#useit">博客</a></li>
                 {#                <li class="menuItem"><a href="#screen">Screenshot</a></li>#}
                 <li class="menuItem"><a href="#credits">资源</a></li>
                 <li class="menuItem"><a href="#contact">联系我</a></li>
@@ -313,105 +313,8 @@
 </div>
 
 <!-- Use it -->
-<div id="useit" class="content-section-a">
+<div id="useit">
 
-    <div class="container">
-
-        <div class="row">
-
-            <div class="col-sm-6 pull-right wow fadeInRightBig">
-                <img class="img-responsive " src="/static/img/ipad.png" alt="">
-            </div>
-
-            <div class="col-sm-6 wow fadeInLeftBig" data-animation-delay="200">
-                <h3 class="section-heading">文字识别</h3>
-                <div class="sub-title lead3">Lorem ipsum dolor sit atmet sit dolor greand fdanrh<br> sdfs sit atmet sit
-                    dolor greand fdanrh sdfs
-                </div>
-                <p class="lead">
-                    In his igitur partibus duabus nihil erat, quod Zeno commuta rest gestiret.
-                    Sed virtutem ipsam inchoavit, nihil ampliusuma. Scien tiam pollicentur,
-                    uam non erat mirum sapientiae lorem cupido
-                    patria esse cariorem. Quae qui non vident, nihilamane umquam magnum ac cognitione.
-                </p>
-
-                <p>
-                    <a class="btn btn-embossed btn-primary" href="#" role="button">查看文章</a>
-{#                    <a class="btn btn-embossed btn-info" href="#" role="button">Visit Website</a>#}
-                </p>
-            </div>
-        </div>
-    </div>
-    <!-- /.container -->
-</div>
-
-<div class="content-section-b">
-
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6 wow fadeInLeftBig">
-                <div id="owl-demo-1" class="owl-carousel">
-{#                    <a href="/static/img/iphone.png" class="image-link">#}
-                        <div>
-                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">
-                        </div>
-{#                    </a>#}
-{#                    <a href="/static/img/iphone.png" class="image-link">#}
-{#                        <div class="item">#}
-{#                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">#}
-{#                        </div>#}
-{#                    </a>#}
-{#                    <a href="/static/img/iphone.png" class="image-link">#}
-{#                        <div class="item">#}
-{#                            <img class="img-responsive img-rounded" src="/static/img/iphone.png" alt="">#}
-{#                        </div>#}
-{#                    </a>#}
-                </div>
-            </div>
-
-            <div class="col-sm-6 wow fadeInRightBig" data-animation-delay="200">
-                <h3 class="section-heading">邮件筛选</h3>
-                <div class="sub-title lead3">Lorem ipsum dolor sit atmet sit dolor greand fdanrh<br> sdfs sit atmet sit
-                    dolor greand fdanrh sdfs
-                </div>
-                <p class="lead">
-                    In his igitur partibus duabus nihil erat, quod Zeno commuta rest gestiret.
-                    Sed virtutem ipsam inchoavit, nihil ampliusuma. Scien tiam pollicentur,
-                    uam non erat mirum sapientiae lorem cupido
-                    patria esse cariorem. Quae qui non vident, nihilamane umquam magnum ac cognitione.
-                </p>
-
-                <p><a class="btn btn-embossed btn-primary" href="#" role="button">View Details</a>
-                    <a class="btn btn-embossed btn-info" href="#" role="button">Visit Website</a></p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="content-section-a">
-
-    <div class="container">
-
-        <div class="row">
-
-            <div class="col-sm-6 pull-right wow fadeInRightBig">
-                <img class="img-responsive " src="/static/img/doge.png" alt="">
-            </div>
-
-            <div class="col-sm-6 wow fadeInLeftBig" data-animation-delay="200">
-                <h3 class="section-heading">物体识别</h3>
-                <p class="lead">A special thanks to Death to the Stock Photo for
-                    providing the photographs that you see in this template.
-                </p>
-
-                <ul class="descp lead2">
-                    <li><i class="glyphicon glyphicon-signal"></i> Reliable and Secure Platform</li>
-                    <li><i class="glyphicon glyphicon-refresh"></i> Everything is perfectly orgainized for future</li>
-                    <li><i class="glyphicon glyphicon-headphones"></i> Attach large file easily</li>
-                </ul>
-            </div>
-        </div>
-    </div>
 
 </div>
 
@@ -998,6 +901,50 @@
 {#        });#}
 {#    })#}
 {#</script>#}
+<script>
+    $.ajax({
+        url: "/api/v1/blogs/",
+        type: "GET",
+        success: function (res) {
+            let blog_html = '';
+            let blogs_data = ((res.data).slice(0, 3));
+            blogs_data.forEach(function (value, i, blogs_data) {
+                if (i % 2 == 0) {
+                    var en_html = '<div class="content-section-a">' +
+                        '<div class="container"><div class="row"><div class="col-sm-6 pull-right wow fadeInRightBig">' +
+                        '<img class="img-responsive " src="' + blogs_data[i].source_img + '" alt=""></div>' +
+                        '<div class="col-sm-6 wow fadeInLeftBig" data-animation-delay="200">' +
+                        '<h3 class="section-heading">' + blogs_data[i].title + '</h3>' +
+                        '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
+                        '</div><p class="lead">' + (value.content).replace(/"/g, "'").substr(0, 200) + '·····' +
+                        '</p><p><a class="btn btn-embossed btn-primary" href="#" role="button" style="margin-right:10px">查看文章</a>' +
+                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a>' +
+                        '</p></div></div></div></div>';
+                } else {
+                    var en_html = '<div class="content-section-b">' +
+                        ' <div class="container">' +
+                        '<div class="row">' +
+                        '<div class="col-sm-6 wow fadeInLeftBig">' +
+                        '<div id="owl-demo-1">' +
+                        '<div align="center">' +
+                        '<img class="img-responsive img-rounded" src="' + blogs_data[i].source_img + '" alt="">' +
+                        '</div></div></div>' +
+                        '<div class="col-sm-6 wow fadeInRightBig" data-animation-delay="200">' +
+                        '<h3 class="section-heading">' + blogs_data[i].title + '</h3>' +
+                        '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
+                        '</div><p class="lead">' + (blogs_data[i].content).substr(0, 50) + '·····' +
+                        '<p><a class="btn btn-embossed btn-primary" href="#" role="button" style="margin-right:10px">查看文章</a>' +
+                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a></p>' +
+                        '</div></div></div></div>'
+                }
+                 blog_html = blog_html + en_html;
+            });
+
+            $("#useit").append(blog_html)
+        }
+
+    })
+</script>
 
 </body>
 

@@ -15,7 +15,7 @@ xadmin.site.register(BlogType,BlogTypeAdmin)
 
 
 class BlogAdmin(object):
-    list_display=['title','blog_type','content','author','created_time','last_update_time']
+    list_display=['title','blog_type','content','author','source_img','created_time','last_update_time']
     search_fields = ['title','blog_type','content','author','created_time','last_update_time']
     list_filter=['title','blog_type','content','author','created_time','last_update_time']
     style_fields = {'content': "ueditor"}
