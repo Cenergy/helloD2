@@ -40,8 +40,6 @@ def permission_denied(request):
 
 
 def test(request):
-    from utils.word_get_pic import getIntPages
-    dataList = getIntPages("蔬菜", 1)
     return render(request, "users/test.html", locals())
 
 

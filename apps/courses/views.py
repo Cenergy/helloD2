@@ -80,4 +80,5 @@ class ImagetoExcel(View):
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
 
         return response
-
+def blog(request):
+    return render(request, "courses/blog.html", locals())

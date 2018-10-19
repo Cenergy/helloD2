@@ -917,7 +917,7 @@
                         '<h3 class="section-heading">' + blogs_data[i].title + '</h3>' +
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (value.content).replace(/"/g, "'").substr(0, 200) + '·····' +
-                        '</p><p><a class="btn btn-embossed btn-primary" href="#" role="button" style="margin-right:10px">查看文章</a>' +
+                        '</p><p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" role="button" style="margin-right:10px" onclick="watchblog('+blogs_data[i].id+')">查看文章</a>' +
                         '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a>' +
                         '</p></div></div></div></div>';
                 } else {
@@ -933,17 +933,42 @@
                         '<h3 class="section-heading">' + blogs_data[i].title + '</h3>' +
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (blogs_data[i].content).substr(0, 50) + '·····' +
-                        '<p><a class="btn btn-embossed btn-primary" href="#" role="button" style="margin-right:10px">查看文章</a>' +
+                        '<p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" onclick="watchblog('+blogs_data[i].id+')" role="button" style="margin-right:10px">查看文章</a>' +
                         '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a></p>' +
                         '</div></div></div></div>'
                 }
-                 blog_html = blog_html + en_html;
+                blog_html = blog_html + en_html;
             });
 
             $("#useit").append(blog_html)
         }
 
-    })
+    });
+
+    function watchblog(id) {
+        $.ajax({
+            url: "/api/v1/blogs/" + id,
+            type: "GET",
+            success: function (res) {
+                console.log(res.data)
+                layer.open({
+                    title: "博客",
+                    type: 2,
+                    content: '/courses/blog/',
+                    area: ['100%', '100%'],
+                    btn: ['关闭'],
+                    {#父页面向子页面传值#}
+                    success: function (layero, index) {
+                        let body = layer.getChildFrame('body', index);
+                        {#body.find('#source_type').html(source_type);#}
+                        body.find('#blog_title').html(res.data[0].title);
+                        body.find('#blog_info').html(res.data[0].content);
+                    },
+                    closeBtn: 1,
+                });
+            }
+        })
+    }
 </script>
 
 </body>
