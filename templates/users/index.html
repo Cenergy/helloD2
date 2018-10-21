@@ -313,7 +313,11 @@
 </div>
 
 <!-- Use it -->
-<div id="useit">
+<div id="useit" class="useit">
+    <div class="col-md-6 col-md-offset-3 text-center wrap_title" style="background-color: #f8f8f8">
+        <h2 style="background-color: #f8f8f8">我的博客</h2>
+        <p class="lead" style="margin-top:0;background-color: #f8f8f8">一些技术文档与博客</p>
+    </div>
 
 
 </div>
@@ -917,7 +921,7 @@
                         '<h3 class="section-heading">' + blogs_data[i].title + '</h3>' +
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (value.content).replace(/"/g, "'").substr(0, 200) + '·····' +
-                        '</p><p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" role="button" style="margin-right:10px" onclick="watchblog('+blogs_data[i].id+')">查看文章</a>' +
+                        '</p><p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" role="button" style="margin-right:10px" onclick="watchblog(' + blogs_data[i].id + ')">查看文章</a>' +
                         '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a>' +
                         '</p></div></div></div></div>';
                 } else {
@@ -933,7 +937,7 @@
                         '<h3 class="section-heading">' + blogs_data[i].title + '</h3>' +
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (blogs_data[i].content).substr(0, 50) + '·····' +
-                        '<p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" onclick="watchblog('+blogs_data[i].id+')" role="button" style="margin-right:10px">查看文章</a>' +
+                        '<p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" onclick="watchblog(' + blogs_data[i].id + ')" role="button" style="margin-right:10px">查看文章</a>' +
                         '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a></p>' +
                         '</div></div></div></div>'
                 }
