@@ -925,7 +925,7 @@
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (value.content).replace(/"/g, "'").substr(0, 200) + '·····' +
                         '</p><p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" role="button" style="margin-right:10px" onclick="watchblog(' + blogs_data[i].id + ')">查看文章</a>' +
-                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看更多</a>' +
+                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a>' +
                         '</p></div></div></div></div>';
                 } else {
                     var en_html = '<div class="content-section-b" style="background-color:white">' +
@@ -941,7 +941,7 @@
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (blogs_data[i].content).substr(0, 50) + '·····' +
                         '<p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" onclick="watchblog(' + blogs_data[i].id + ')" role="button" style="margin-right:10px">查看文章</a>' +
-                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看更多</a></p>' +
+                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a></p>' +
                         '</div></div></div></div>'
                 }
                 blog_html = blog_html + en_html;

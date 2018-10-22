@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
 
-<!-- Mirrored from www.yangqq.com/blogs/889.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Oct 2018 08:40:32 GMT -->
 <head>
     <meta charset="utf-8">
     <title>哈哈哈哈</title>
@@ -9,36 +8,14 @@
     <meta name="description"
           content="hello"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://www.yangqq.com/skin/html/css/base.css" rel="stylesheet">
-    <link href="http://www.yangqq.com/skin/html/css/index.css" rel="stylesheet">
-    <link href="http://www.yangqq.com/skin/html/css/m.css" rel="stylesheet">
+    <link href="/static/css/base.css" rel="stylesheet">
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="http://www.yangqq.com/e/data/js/ajax.js"></script>
     <!--[if lt IE 9]>
-<script src="/skin/html/js/modernizr.js"></script>
+{#<script src="/skin/html/js/modernizr.js"></script>#}
 <![endif]-->
 </head>
 <body>
 <header>
-    <script>
-        window.onload = function () {
-            var oH2 = document.getElementById("mnavh");
-            var oUl = document.getElementById("starlist");
-            oH2.onclick = function () {
-                var style = oUl.style;
-                style.display = style.display == "block" ? "none" : "block";
-                oH2.className = style.display == "block" ? "open" : ""
-            }
-            var obj = null;
-            var As = document.getElementById('starlist').getElementsByTagName('a');
-            obj = As[0];
-            for (i = 1; i < As.length; i++) {
-                if (window.location.href.indexOf(As[i].href) >= 0)
-                    obj = As[i];
-            }
-            obj.id = 'selected'
-        }
-    </script>
 </header>
 <div class="line46"></div>
 <div class="blank"></div>
@@ -62,30 +39,27 @@
                 </div>
                 <div class="share">
 
-                    <p class="diggit"><a
-                            href="JavaScript:makeRequest('http://www.yangqq.com/e/public/digg/?classid=49&amp;id=889&amp;dotop=1&amp;doajax=1&amp;ajaxarea=diggnum','EchoReturnedText','GET','');">
-                        很赞哦！ </a>(<b id="diggnum">
-                        <script type="text/javascript"
-                                src="http://www.yangqq.com/e/public/ViewClick/?classid=49&amp;id=889&amp;down=5"></script>
-                    </b>)
+                    <p class="diggit">
+                        <a href="">很赞哦！ </a>
                     </p>
                     <p class="dasbox"><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang"
                                          title="打赏，支持一下">打赏本站</a></p>
                     <div class="hide_box" style="display: none;"></div>
-                    <div class="shang_box" style="display: none;"><a class="shang_close" href="javascript:void(0)"
-                                                                     onclick="dashangToggle()" title="关闭">关闭</a>
+                    <div class="shang_box" style="display: none;">
+                        <a class="shang_close" href="javascript:void(0)"
+                           onclick="dashangToggle()" title="关闭">关闭</a>
                         <div class="shang_tit">
                             <p>感谢您的支持，我会继续努力的!</p>
                         </div>
-                        <div class="shang_payimg"><img src="http://www.yangqq.com/skin/html/images/alipayimg.jpg"
+                        <div class="shang_payimg"><img src="/static/img/wxpay.png"
                                                        alt="扫码支持" title="扫一扫"></div>
                         <div class="pay_explain">扫码打赏，你说多少就多少</div>
                         <div class="shang_payselect">
                             <div class="pay_item checked" data-id="alipay"><span class="radiobox"></span> <span
-                                    class="pay_logo"><img src="http://www.yangqq.com/skin/html/images/alipay.jpg"
+                                    class="pay_logo"><img src="/static/img/ali.jpg"
                                                           alt="支付宝"></span></div>
-                            <div class="pay_item" data-id="weipay"><span class="radiobox"></span> <span
-                                    class="pay_logo"><img src="http://www.yangqq.com/skin/html/images/wechat.jpg"
+                            <div class="pay_item" data-id="wxpay"><span class="radiobox"></span> <span
+                                    class="pay_logo"><img src="/static/img/wechat.jpg"
                                                           alt="微信"></span></div>
                         </div>
                         <script type="text/javascript">
@@ -93,7 +67,7 @@
                                 $(".pay_item").click(function () {
                                     $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
                                     var dataid = $(this).attr('data-id');
-                                    $(".shang_payimg img").attr("src", "/skin/html/images/" + dataid + "img.jpg");
+                                    $(".shang_payimg img").attr("src", "/static/img/" + dataid + ".png");
                                     $("#shang_pay_txt").text(dataid == "alipay" ? "支付宝" : "微信");
                                 });
                             });
