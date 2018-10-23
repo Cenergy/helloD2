@@ -217,7 +217,7 @@
             <div class="col-sm-4 wow fadeInDown text-center">
                 <img class="rotate" src="/static/img/icon/tweet.svg" alt="Generic placeholder image">
                 <h3>语音识别</h3>
-                <p class="lead">点击开始然后点停止就好了！
+                <p class="lead">点击开始录音识别，再次点击即可停止录音！
                 <div class="voiceBox">
                     <input id="questions" name="code" type="text" placeholder="点话筒试试">
                     <button onclick="startRecord()"><img src="../static/img/voice.png"></button>
@@ -282,7 +282,7 @@
             <a href="/map/">
                 <img class="rotate" src="/static/img/icon/map.svg" alt="Generic placeholder image">
                 <h3>地图</h3>
-                <p class="lead">加载各种的地图</p>
+                <p class="lead">加载各种地图</p>
             </a>
             <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
         </div><!-- /.col-lg-4 -->
@@ -925,7 +925,7 @@
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (value.content).replace(/"/g, "'").substr(0, 200) + '·····' +
                         '</p><p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" role="button" style="margin-right:10px" onclick="watchblog(' + blogs_data[i].id + ')">查看文章</a>' +
-                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a>' +
+                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看更多</a>' +
                         '</p></div></div></div></div>';
                 } else {
                     var en_html = '<div class="content-section-b" style="background-color:white">' +
@@ -941,7 +941,7 @@
                         '<div class="sub-title lead3">发表时间:' + blogs_data[i].created_time.substr(0, 10) +
                         '</div><p class="lead">' + (blogs_data[i].content).substr(0, 50) + '·····' +
                         '<p><a class="btn btn-embossed btn-primary" href="javascript:void(0)" onclick="watchblog(' + blogs_data[i].id + ')" role="button" style="margin-right:10px">查看文章</a>' +
-                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看博客</a></p>' +
+                        '<a class="btn btn-embossed btn-info" href="#" role="button">查看更多</a></p>' +
                         '</div></div></div></div>'
                 }
                 blog_html = blog_html + en_html;
