@@ -612,7 +612,7 @@ try:
 
     # 'cron'方式循环，周一到周五，每天9:30:10执行,id为工作ID作为标记
     # ('scheduler',"interval", seconds=1)  #用interval方式循环，每一秒执行一次
-    @register_job(scheduler, 'cron', day_of_week='mon-sun', hour='05', minute='23', second='15')
+    @register_job(scheduler, 'cron', day_of_week='mon-sun', hour='05', minute='24', second='15')
     def test_job():
         try:
             # os.system('cd ..;cd letsencrypt;pa_install_webapp_letsencrypt_ssl.py www.aigisss.com')
