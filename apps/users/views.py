@@ -598,3 +598,31 @@ class DeleteFaceView(View):
                 "data": {"reurl": "/login/"}
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
+
+#定时器
+import time,random
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+# 实例化调度器
+scheduler = BackgroundScheduler()
+try:
+    # 调度器使用DjangoJobStore()
+    scheduler.add_jobstore(DjangoJobStore(), "default")
+
+
+    # 'cron'方式循环，周一到周五，每天9:30:10执行,id为工作ID作为标记
+    # ('scheduler',"interval", seconds=1)  #用interval方式循环，每一秒执行一次
+    @register_job(scheduler, 'cron', day_of_week='mon-sun', hour='13', minute='14', second='15')
+    def test_job():
+        try:
+            os.system('cd ..;cd letsencrypt;pa_install_webapp_letsencrypt_ssl.py www.aigisss.com')
+        except Exception as e:
+            print("hello")
+    # 监控任务
+    register_events(scheduler)
+    # 调度器开始
+    scheduler.start()
+except Exception as e:
+    print(e)
+    scheduler.shutdown()
+

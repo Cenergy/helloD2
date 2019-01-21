@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'rest_framework_swagger',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
