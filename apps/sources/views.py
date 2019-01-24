@@ -160,11 +160,9 @@ class ImgtoWords(View):
             if result["words_result_num"] == 0:
                 vector_word = "图中没有文字或未能识别"
             else:
-                pic_words = []
-                for i in result["words_result"]:
-                    pic_words.append(i["words"])
-                pic_words=[('<p>'+i+'</p>') for i in pic_words]
-                vector_word = ''.join(pic_words)
+                pic_words = [i["words"] for i in result["words_result"]]
+                pic_word_data=[(i+'<br>') for i in pic_words]
+                vector_word = ''.join(pic_word_data)
         except:
             vector_word = "图中没有文字或未能识别"
         imginfo={}
