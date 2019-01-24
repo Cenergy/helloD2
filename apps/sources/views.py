@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-import json,os,uuid,datetime
+import json,os,uuid,datetime,base64
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.http import StreamingHttpResponse
@@ -90,27 +90,39 @@ class SourcesUpload(View):
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
     def post(self, request):
+        print()
         # 上传图片的处理
         try:
-            f = request.FILES["file"]
+            stick_img=request.POST.get("stick_img",False)
             sysfile = os.path.abspath('.')
             unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
-            imgpath=unknown_img_uuid
-            unknownimgpath = sysfile + '/static/img2word/' + imgpath+'.jpg'
-            with open(unknownimgpath, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
+            imgpath = unknown_img_uuid
+            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
             request.session["imgpath"] = imgpath
-            reginfs = {
-                "code": 400,
-                "message": "success",
-                "data": "hello"
-            }
-        except:
+            if stick_img:
+                img_path = base64.b64decode(stick_img.split(',')[-1])
+                with open(unknownimgpath, 'wb') as f:
+                    f.write(img_path)
+                reginfs = {
+                    "code": 400,
+                    "message": "success",
+                    "data": "hello"
+                }
+            else:
+                f = request.FILES["file"]
+                with open(unknownimgpath, 'wb+') as destination:
+                    for chunk in f.chunks():
+                        destination.write(chunk)
+                reginfs = {
+                    "code": 400,
+                    "message": "success",
+                    "data": "hello"
+                }
+        except Exception as e:
             reginfs = {
                 "code": 200,
                 "message": "failed",
-                "data": "注册失败"
+                "data": str(e)
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 class ImgtoWords(View):

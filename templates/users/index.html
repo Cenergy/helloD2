@@ -113,8 +113,9 @@
             border: 1px solid #63C0FF;
             border-style: dashed;
         }
-        .useit{
-            background-color: #f8f8f8 ;
+
+        .useit {
+            background-color: #f8f8f8;
         }
     </style>
 </head>
@@ -237,6 +238,8 @@
                     <div class="layui-upload-drag" id="test10">
                         <i class="layui-icon"></i>
                 <p>点击上传图片或将图片拖到此处</p>
+                <p><b>或者直接control+v粘贴图片</b></p>
+                <div><img src="#" id="stick_img" style="display: none" width="222px" height="auto" alt=""></div>
             </div>
             </p>
             <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
@@ -977,6 +980,94 @@
             }
         })
     }
+</script>
+<script>
+    document.addEventListener('paste', function (event) {
+        var items = (event.clipboardData || window.clipboardData).items;
+        var file = null;
+        if (items && items.length) {
+            // 搜索剪切板items
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    file = items[i].getAsFile();
+                    break;
+                }
+            }
+        } else {
+            layer.msg("当前浏览器不支持粘贴图片")
+            {#$("#log").append('<span style="color:red;"></span>');#}
+            {#log.innerHTML = '<span style="color:red;">当前浏览器不支持</span>';#}
+            return;
+        }
+        if (!file) {
+            layer.msg("粘贴内容非图片");
+            {#$("#log").empty();#}
+            {#$("#log").append('<span style="color:red;">粘贴内容非图片</span>');#}
+            {#log.innerHTML = '<span style="color:red;">粘贴内容非图片</span>';#}
+            return;
+        }
+        // 此时file就是我们的剪切板中的图片对象
+        // 如果需要预览，可以执行下面代码
+        let reader = new FileReader();
+        reader.onload = function (event) {
+            $("#stick_img").attr('src', event.target.result);
+            let stick_img = $("#stick_img").attr('src');
+            $.ajax({
+                url: "/sources/upload/",
+                type: "POST",
+                data: {"stick_img": stick_img},
+                success: function (res) {
+                    if (res.code == 400) {
+                        let img_tips = layer.msg("正在解析中", {time: 20000});
+                        $.ajax({
+                            url: "/sources/img2words/",
+                            type: "POST",
+                            data: {idname: 'abc'},
+                            success: function (res) {
+                                layer.close(img_tips);
+                                let reswords = res.data.vector_words;
+                                let resurl = res.data.imgpath;
+                                layer.open({
+                                    title: "识别结果",
+                                    type: 2,
+                                    content: "/sources/img2wordRes/#resTxt",
+                                    area: ['80%', '80%'],
+                                    btn: ['关闭'],
+                                    {#父页面向子页面传值#}
+                                    success: function (layero, index) {
+                                        let body = layer.getChildFrame('body', index);
+                                        body.find('#resTxt').html(reswords);
+                                        body.find('#pic').attr('src', resurl);
+                                    },
+                                    closeBtn: 0,
+                                    end: function () {
+                                        $.ajax({
+                                            url: "/sources/img2words/",
+                                            type: "GET",
+                                            data: {idname: 'abc'},
+                                            success: function (res) {
+                                                console.log(res.data)
+                                            }
+                                        })
+                                    }
+                                });
+                            },
+                            error: function () {
+                                layer.msg("服务器内部错误", {time: 2000})
+                            }
+                        })
+                    } else {
+                        layer.msg(res.message);
+                    }
+                },
+                error: function () {
+                    layer.msg("服务器内部错误", {time: 2000})
+                }
+            })
+        };
+        reader.readAsDataURL(file);
+        // 如果不需要预览，上面这段可以忽略
+    });
 </script>
 
 </body>
