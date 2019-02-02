@@ -79,8 +79,10 @@ ROOT_URLCONF = 'helloD2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'front_apps/dist'),
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -168,10 +170,12 @@ EMAIL_USE_TLS = False
 EMAIL_FROM = "helloaigis@sina.com"
 
 # DEBUG = False
+
 if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, os.path.join('static'))
-    ]
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'front_apps/dist/static'),
+        os.path.join(BASE_DIR, 'static'),
+    )
 else:
     STATIC_ROOT = "static"
 

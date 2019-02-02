@@ -24,6 +24,7 @@ from helloD2 import settings
 from django.views import static
 from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
+from django.views.generic.base import TemplateView
 
 schema_view = get_swagger_view(title="AIGIS's API")
 
@@ -44,7 +45,8 @@ urlpatterns = [
     url(r'api/docs/', schema_view),
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
-    url(r'^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT})
+    url(r'^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT}),
+    url(r'^vue/', TemplateView.as_view(template_name='index.html')),
 
     ## 增加以下一行，以识别静态资源
     # url(r'^static/(?P<path>.*)$', static.serve,
