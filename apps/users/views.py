@@ -46,6 +46,9 @@ def test(request):
 def map(request):
     return render(request, "users/map.html")
 
+def about_me(request):
+    return render(request, 'aboutme.html')
+
 
 class CustomBackend(ModelBackend):
     """
