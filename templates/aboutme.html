@@ -18,8 +18,8 @@
     <script src="https://cdn.bootcss.com/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
     <link href="https://cdn.bootcss.com/leaflet.fullscreen/1.4.4/Control.FullScreen.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/leaflet.fullscreen/1.4.4/Control.FullScreen.js"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="/static/aboutme/css/style.css">
+    <link rel="stylesheet" href="/static/aboutme/css/responsive.css">
     <script src="/static/aboutme/js/html2canvas.js"></script>
     <script src="/static/aboutme/js/jsPdf.debug.js"></script>
     <style>
@@ -31,6 +31,7 @@
 
 <body>
     <div id="app" v-cloak>
+        {% verbatim myblock %}
         <div class="container">
             <!-- ===========================
         HEADER
@@ -99,7 +100,7 @@
                                     <div class="weixin_nr">
                                         微信扫一扫
                                         <div class="arrow"></div>
-                                        <img src="img/weixin.jpg" width="130" height="130" />
+                                        <img src="/static/aboutme/img/weixin.jpg" width="130" height="130" />
                                     </div>
                                 </li>
                                 <li>
@@ -273,6 +274,7 @@
             </div>
         </div>
         <!--container end-->
+        {% endverbatim myblock %}
         <footer class="text-center">
             <p>power by 海之能</p>
         </footer>
