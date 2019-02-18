@@ -16,7 +16,7 @@ urlpatterns = [
     url('facereg/$', views.FaceRegView.as_view(), name="facereg"),
     url('test/', views.test, name="test"),
     url('map/$', views.map),
-    url('aboutme/$', views.about_me,name="about_me"),
+    # url('aboutme/$', TemplateView.as_view(template_name='aboutme.html'),name="about_me"),
     url('facelink/$', csrf_exempt(views.FaceLink.as_view()), name="facelink"),
     url('regface/$', csrf_exempt(views.RegImage.as_view()), name="regface"),
     url('logout/$', views.LogoutView.as_view(), name="logout"),
