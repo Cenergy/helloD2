@@ -3,7 +3,7 @@ __author__ = 'Cenergy'
 __date__ = '15/9/18 上午10:37'
 
 import requests
-from helloD2.settings import TURING_API_KEY
+from helloD5.settings import TURING_API_KEY
 
 apiUrl = 'http://www.tuling123.com/openapi/api'
 

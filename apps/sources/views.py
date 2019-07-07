@@ -18,7 +18,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
 
 from aip import AipOcr
-from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
+from  helloD5.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
 
 import pandas as pd
 

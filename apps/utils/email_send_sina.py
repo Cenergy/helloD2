@@ -9,7 +9,7 @@ import string
 
 from users.models import EmailVerifyRecord
 from  django.core.mail import send_mail
-from helloD2.settings import EMAIL_FROM
+from helloD5.settings import EMAIL_FROM
 
 
 
