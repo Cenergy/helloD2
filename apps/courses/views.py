@@ -41,7 +41,7 @@ class ImagetoExcel(View):
                 pass
             endtime = datetime.datetime.now()
             if (endtime - starttime).seconds > 20:
-                picUrl = "图片中的表格未能识别或者未知错误"
+                picUrl = "图片中的表格未能识别或者未知错误！！"
                 break
         return picUrl
 
