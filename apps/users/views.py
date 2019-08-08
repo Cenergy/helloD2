@@ -179,8 +179,55 @@ class UserLoginView(APIView):
         else:
             return Response({
                 "code": 400,
-                "message": "未知错误!"
+                "message": "无效的表单!"
             }, status=status.HTTP_200_OK)
+
+
+class UserRegisterView(APIView):
+    def post(self, request):
+        """
+        参数为图片转为 base64 的字符串
+        :param request:
+        :return json:
+        """
+        username = (request.POST.get("username", "")).lower()
+        password = request.POST.get("password", "")
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            url_strs = HttpRequest.get_host(request)
+            if UserProfile.objects.filter(email=username, is_active=True):
+                result = {
+                    "code": 214,
+                    "message": "邮箱已被注册！！",
+                }
+                return Response(result)
+            elif UserProfile.objects.filter(email=username, is_active=False):
+                send_type = "register"
+                register_send_email(username, url_strs, send_type)
+                result = {
+                    "code": 224,
+                    "message": "邮箱还没有被激活",
+                }
+                return Response(result)
+            user_proflie = UserProfile()
+            user_proflie.username = username
+            user_proflie.email = username
+            user_proflie.is_active = False
+            user_proflie.password = make_password(password)
+            user_proflie.save()
+            send_type = "register"
+            register_send_email(username, url_strs, send_type)
+            result = {
+                "code": 200,
+                "message": "请前往注册邮箱激活",
+            }
+            return Response(result)
+        else:
+            result = {
+                "code": 211,
+                "message": "未知错误",
+            }
+            return Response(result)
 
 
 class RegisterView(View):
