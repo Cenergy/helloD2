@@ -1,27 +1,29 @@
 import os, json, uuid, base64, datetime, random, string
 import platform as plat
 
-import pandas as pd
+from django.views.generic.base import View
 import numpy as np
 from django.shortcuts import render, render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.backends import ModelBackend
-from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.db.models import Q
-from django.views.generic.base import View
-from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
+from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth import login, authenticate
+from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from rest_framework import status
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password
-from utils.email_send import register_send_email, common_send_email
-from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, render_to_response
 from django.db import connection
-
+import face_recognition
+import pandas as pd
 from rest_framework import permissions, renderers, viewsets
 
+from utils.email_send import register_send_email, common_send_email
+from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
+from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
-import face_recognition
 
 
 # custom_error404
@@ -134,6 +136,51 @@ class LoginView(View):
         else:
             login_form = login_form
             return render(request, "users/login.html", locals())
+
+
+class UserLoginView(APIView):
+    def get(self, request):
+        """
+        :param request:
+        :return json:
+
+        """
+
+    def post(self, request):
+        username = (request.POST.get("username", "")).lower()
+        password = request.POST.get("password", "")
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    return Response({
+                        "code": 200,
+                        "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
+                        "message": "成功登录",
+                        "username": user.username,
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "code": 400,
+                        "message": "用户未激活！"
+                    }, status=status.HTTP_200_OK)
+            else:
+                if UserProfile.objects.filter(username=username).exists():
+                    return Response({
+                        "code": 400,
+                        "message": "密码错误!"
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "code": 400,
+                        "message": "用户不存在!"
+                    }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "code": 400,
+                "message": "未知错误!"
+            }, status=status.HTTP_200_OK)
 
 
 class RegisterView(View):
