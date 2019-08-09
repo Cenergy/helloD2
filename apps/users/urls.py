@@ -12,6 +12,10 @@ from django.views.decorators.csrf import csrf_exempt
 urlpatterns = [
     url('login1/$', views.UserLoginView.as_view(), name="login1"),
     url('register1/$', views.UserRegisterView.as_view(), name="register1"),
+    url(r'^active1/(?P<active_code>.*)/$', views.UserActiveView.as_view(), name="user_active1"),
+    url(r'^forget1/$', views.UserForgetPwdView.as_view(), name="forget_pwd1"),
+    url(r'^reset1/(?P<reset_code>.*)/$', views.UserResetPwdView.as_view(), name="reset_pwd1"),
+    url(r'^modify_pwd1/$', views.UserModifyPwdView.as_view(), name="modify_pwd1"),
 
 
 

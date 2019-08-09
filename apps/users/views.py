@@ -48,6 +48,7 @@ def test(request):
 def map(request):
     return render(request, "users/map.html")
 
+
 def about_me(request):
     return render(request, 'aboutme.html')
 
@@ -277,6 +278,119 @@ class ActiveUserView(View):
             # return render(request, "users/login.html", locals())
         else:
             return render(request, "users/active_fail.html", locals())
+
+
+class UserActiveView(APIView):
+    def get(self, request, active_code):
+        all_records = EmailVerifyRecord.objects.filter(code=active_code)
+        if all_records:
+            for record in all_records:
+                email = record.email
+                email = email.lower()
+                user = UserProfile.objects.get(email=email)
+                user.is_active = True
+                user.save()
+            result = {
+                "code": 200,
+                "message": "激活成功"
+            }
+            return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "激活失败"
+            }
+            return Response(result)
+
+
+class UserForgetPwdView(APIView):
+    def post(self, request):
+        forget_form = ForgetForm(request.POST)
+        email = (request.POST.get("email", "")).lower()
+        if forget_form.is_valid():
+            if UserProfile.objects.filter(email=email):
+                email = request.POST.get("email", "")
+                if UserProfile.objects.filter(email=email)[0].is_active == 0:
+                    result = {
+                        "code": 214,
+                        "message": "邮箱未被激活"
+                    }
+                    return Response(result)
+                else:
+                    send_type = "forget"
+                    url_strs = HttpRequest.get_host(request)
+                    register_send_email(email, url_strs, send_type)
+                    result = {
+                        "code": 200,
+                        "message": "修改密码的链接已发送至您邮箱，请注意查收！"
+                    }
+                    return Response(result)
+            else:
+                result = {
+                    "code": 400,
+                    "message": "邮箱未被注册"
+                }
+                return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "未知错误！！！"
+            }
+            return Response(result)
+
+
+class UserResetPwdView(APIView):
+    def get(self, request, reset_code):
+        all_records = EmailVerifyRecord.objects.filter(code=reset_code)
+        if all_records:
+            for record in all_records:
+                email = record.email.lower()
+                email = email.lower()
+                result = {
+                    "code": 200,
+                    "message": "请修改密码",
+                    "data": email
+                }
+                return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "未知错误！！！"
+            }
+            return Response(result)
+
+
+class UserModifyPwdView(APIView):
+    def post(self, request):
+        modify_form = ModifyPwdForm(request.POST)
+        if modify_form.is_valid():
+            pwd1 = request.POST.get("password1", "")
+            pwd2 = request.POST.get("password2", "")
+            email = request.POST.get("email", "")
+            email = email.lower()
+            if pwd1 != pwd2:
+                result = {
+                    "code": 400,
+                    "message": "两次密码不一致！！！"
+                }
+                return Response(result)
+            user = UserProfile.objects.get(email=email)
+            user.password = make_password(pwd2)
+            user.save()
+            return Response({
+                "code": 200,
+                "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
+                "message": "成功登录",
+                "username": user.username,
+            }, status=status.HTTP_200_OK)
+        else:
+            email = request.POST.get("email", "")
+            result = {
+                "code": 212,
+                "message": "请修改密码",
+                "data": email
+            }
+            return Response(result)
 
 
 class ForgetPwdView(View):
@@ -658,41 +772,5 @@ class FaceLoginView(View):
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
 
-# 删除人脸
 
-class DeleteFaceView(View):
-    def get(self, request):
-        pass
-
-    def post(self, request):
-        login_form = LoginForm(request.POST)
-        username = request.POST.get("username", "")
-        username = username.lower()
-        password = request.POST.get("password", "")
-        if login_form.is_valid():
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                delete_face_sql = "UPDATE users_userprofile SET knowfacecode = '',faceid='',login_type=0 WHERE username = '{0}'".format(
-                    username)
-                delete_face_cursor = connection.cursor()
-                delete_face_cursor.execute(delete_face_sql)
-                abcs = {
-                    "code": 200,
-                    "message": "删除成功",
-                    "data": {"reurl": '../'}
-                }
-            else:
-                abcs = {
-                    "code": 401,
-                    "message": "密码错误",
-                    "data": {"reurl": "/login/"}
-                }
-        else:
-            login_form = login_form
-            abcs = {
-                "code": 401,
-                "message": "删除失败",
-                "data": {"reurl": "/login/"}
-            }
-        return HttpResponse(json.dumps(abcs), content_type='application/json')
 
