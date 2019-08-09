@@ -1,24 +1,24 @@
 
-Django == 1.11.15
-XlsxWriter == 1.0.2
-django_crispy_forms ==1.7.2
-django_formtools == 2.1
-django_import_export == 1.0.1
-django_reversion_patchman == 2.1.1
-django_simple_captcha == 0.5.5
-djangorestframework == 3.8.2
-future == 0.16.0
-httplib2 == 0.11.3
-six == 1.11.0
-xlwt == 1.2.0
-baidu-aip ==2.2.7.0
-coreapi ==2.3.3
-coreschema ==0.0.4
-diff-match-patch ==20121119
-django-cors-headers ==2.4.0
-django-crispy-forms ==1.7.2
-django-filter ==2.0.0
-django-guardian ==1.4.9
-django-import-export ==1.0.1
-django-rest-swagger ==2.2.0
-urllib3 ==1.23
+Django
+XlsxWriter
+django_crispy_forms
+django_formtools
+django_import_export
+django_reversion_patchman
+django_simple_captcha
+djangorestframework
+future
+httplib2
+six
+xlwt
+baidu-aip
+coreapi
+coreschema
+diff-match-patch
+django-cors-headers
+django-crispy-forms
+django-filter
+django-guardian
+django-import-export
+django-rest-swagger
+urllib3
