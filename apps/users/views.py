@@ -190,7 +190,7 @@ class UserRegisterView(APIView):
         :param request:
         :return json:
         """
-        username = (request.POST.get("username", "")).lower()
+        username = (request.POST.get("email", "")).lower()
         password = request.POST.get("password", "")
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
