@@ -26,19 +26,19 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
 
 
-# custom_error404
-def page_not_found(request):
-    return render(request, '404.html')
-
-
-# custom_error500
-def page_error(request):
-    return render(request, '500.html')
-
-
-# custom_error403
-def permission_denied(request):
-    return render(request, '403.html')
+# # custom_error404
+# def page_not_found(request):
+#     return render(request, '404.html')
+#
+#
+# # custom_error500
+# def page_error(request):
+#     return render(request, '500.html')
+#
+#
+# # custom_error403
+# def permission_denied(request):
+#     return render(request, '403.html')
 
 
 def test(request):
@@ -771,6 +771,38 @@ class FaceLoginView(View):
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
+class DeleteFaceView(APIView):
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        login_form = LoginForm(request.POST)
+        username = request.POST.get("username", "")
+        username = username.lower()
+        password = request.POST.get("password", "")
+        if login_form.is_valid():
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                delete_face_sql = "UPDATE users_userprofile SET knowfacecode = '',faceid='',login_type=0 WHERE username = '{0}'".format(
+                    username)
+                delete_face_cursor = connection.cursor()
+                delete_face_cursor.execute(delete_face_sql)
+                abcs = {
+                    "code": 200,
+                    "message": "删除成功"
+                }
+            else:
+                abcs = {
+                    "code": 401,
+                    "message": "密码错误"
+                }
+        else:
+            login_form = login_form
+            abcs = {
+                "code": 401,
+                "message": "删除失败"
+            }
+        return HttpResponse(json.dumps(abcs), content_type='application/json')
 
 
 

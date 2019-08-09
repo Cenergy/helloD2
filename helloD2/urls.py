@@ -29,9 +29,9 @@ from django.views.generic.base import TemplateView
 schema_view = get_swagger_view(title="AIGIS's API")
 
 # custom_error的路由!
-handler403 = users.views.permission_denied
-handler404 = users.views.page_not_found
-handler500 = users.views.page_error
+# handler403 = users.views.permission_denied
+# handler404 = users.views.page_not_found
+# handler500 = users.views.page_error
 
 urlpatterns = [
     # url(r'^users/', include('users.urls')),
