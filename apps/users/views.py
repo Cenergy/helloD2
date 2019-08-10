@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from rest_framework import status
 from django.http import HttpRequest, HttpResponse, JsonResponse
@@ -19,6 +19,7 @@ from django.db import connection
 import face_recognition
 import pandas as pd
 from rest_framework import permissions, renderers, viewsets
+from django.http import HttpResponseRedirect
 
 from utils.email_send import register_send_email, common_send_email
 from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
@@ -97,7 +98,7 @@ class IndexView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect('/#hello_django')
+        return HttpResponseRedirect('/')
 
 
 class LoginView(View):
@@ -487,7 +488,6 @@ def get_voices(request):
 def BANAJAX(request):
     if request.method == "POST":
         userid = request.session.get("userid")
-        print(userid)
         voice_path = "./media/voice/" + userid + ".wav"
         system_type = plat.system()
         try:
@@ -499,7 +499,6 @@ def BANAJAX(request):
                 voice_words = stt_windows.XF_text(voice_path, 16000)
             else:
                 voice_words = towords.main(voice_path)
-            print("voice:", voice_words)
             abc = {
                 "code": 200,
                 "message": "successs!!",
