@@ -167,7 +167,7 @@
             <ul class="nav navbar-nav" id="hello_django">
 
                 <li class="menuItem"><a href="#whatis">这是什么?</a></li>
-                <li class="menuItem"><a href="#useit">博客</a></li>
+                <li class="menuItem"><a href="#blog">博客</a></li>
                 {#                <li class="menuItem"><a href="#screen">Screenshot</a></li>#}
                 <li class="menuItem"><a href="#credits">资源</a></li>
                 <li class="menuItem"><a href="#contact">反馈</a></li>
@@ -198,7 +198,7 @@
                     <li class="menuItem"><a href="{% url 'register' %}">注册</a></li>
                     <li class="menuItem"><a href="{% url 'login' %}">登录</a></li>
                 {% endif %}
-                <li class="menuItem"><a href="{% url 'about_me' %}">关于</a></li>
+{#                <li class="menuItem"><a href="{% url 'about_me' %}">关于</a></li>#}
             </ul>
         </div>
 
@@ -321,21 +321,22 @@
 </div>
 
 <!-- Use it -->
-<div id="useit" class="useit">
-    <div class="col-md-6 col-md-offset-3 text-center wrap_title" style="background-color: #f8f8f8;">
-        <h2 style="background-color: #f8f8f8;padding-top: 80px">博客</h2>
-        <p class="lead" style="margin-top:0;background-color: #f8f8f8">一些技术文档与博客</p>
-    </div>
+{#<div id="useit" class="useit">#}
+{#    <div class="col-md-6 col-md-offset-3 text-center wrap_title" style="background-color: #f8f8f8;">#}
+{#        <h2 style="background-color: #f8f8f8;padding-top: 80px">博客</h2>#}
+{#        <p class="lead" style="margin-top:0;background-color: #f8f8f8">一些技术文档与博客</p>#}
+{#    </div>#}
+{##}
+{##}
+{#</div>#}
 
-
-</div>
-
-<div class="content-section-c">
+<div class="content-section-c" id="blog">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 text-center wrap_title white">
-                <h2>非常感谢</h2>
-                <p class="lead" style="margin-top:0">能看这么久也是不容易</p>
+                <h2>博客</h2>
+                <br>
+                <p class="lead" style="margin-top:0">源于“Web Log(网络日志)”，后来缩写为Blog</p>
             </div>
             <div class="mockup-content">
                 <div class="morph-button wow pulse morph-button-inflow morph-button-inflow-1">
@@ -343,7 +344,7 @@
                     <div class="morph-content">
                         <div>
                             <div class="content-style-form content-style-form-4 ">
-                                <h2 class="morph-clone"><a href="#credits">下面将是一些资源与个人信息</a></h2>
+                                <h2 class="morph-clone"><a href="#">点击进入我的博客</a></h2>
                             </div>
                         </div>
                     </div>
@@ -486,7 +487,7 @@
                     <h3>我的信息</h3>
                     <p class="lead"><a href="">深圳市<br>
                         南山区,蛇口水湾</a><br>
-                        Phone: 187-7091-3143<br>
+{#                        Phone: 187-7091-3143<br>#}
                         Email: 673598118@qq.com</p>
                 </address>
 
@@ -803,6 +804,10 @@
 
 </script>
 <script>
+    $('#blog').click(function () {
+        window.location="https://blog.aigisss.com"
+        console.log("hhhhhhhhhhhhhh")
+    })
     $(document).on('click', '.source_core', function () {
         var source_type = ($(this).attr("source-type"));
         let source_uri = '/sources/?question_type=' + source_type;
