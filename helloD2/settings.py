@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os, sys, datetime
+import os
+import sys
+import datetime
 from apps import utils
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -80,7 +82,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'front_apps/dist'),
+            'front_app/dist',
             os.path.join(BASE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
@@ -165,6 +167,10 @@ REST_FRAMEWORK = {
 #     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 # }
 
+
+# 前端路径
+FRONTEND_ROOT = 'front_app/dist'
+
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
@@ -186,7 +192,8 @@ EMAIL_FROM = "helloaigis@sina.com"
 
 if DEBUG:
     STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'front_apps/dist/static'),
+        os.path.join(BASE_DIR, FRONTEND_ROOT),
+        os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
         os.path.join(BASE_DIR, 'static'),
     )
 else:
