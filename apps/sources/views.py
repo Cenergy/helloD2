@@ -22,6 +22,8 @@ from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
 
 import pandas as pd
 
+sysfile = os.path.abspath('.')
+
 
 class WechatTalk(View):
     def get(self, request):
@@ -94,61 +96,109 @@ class SourcesUpload(View):
         # 上传图片的处理
         try:
             stick_img=request.POST.get("stick_img",False)
-            sysfile = os.path.abspath('.')
-            unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
-            imgpath = unknown_img_uuid
-            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
-            request.session["imgpath"] = imgpath
+            upload_img_uuid = (str(uuid.uuid1())).replace("-", "")
+            upload_img_path = sysfile + '/static/img2word/' + upload_img_uuid + '.jpg'
             if stick_img:
                 img_path = base64.b64decode(stick_img.split(',')[-1])
-                with open(unknownimgpath, 'wb') as f:
+                with open(upload_img_path, 'wb') as f:
                     f.write(img_path)
                 reginfs = {
-                    "code": 400,
+                    "code": 200,
                     "message": "success",
-                    "data": "hello"
+                    "data": {
+                        "id":upload_img_uuid
+                    }
                 }
             else:
                 f = request.FILES["file"]
-                with open(unknownimgpath, 'wb+') as destination:
+                with open(upload_img_path, 'wb+') as destination:
                     for chunk in f.chunks():
                         destination.write(chunk)
                 reginfs = {
-                    "code": 400,
+                    "code": 200,
                     "message": "success",
-                    "data": "hello"
+                    "data": {
+                        "id": upload_img_uuid
+                    }
                 }
         except Exception as e:
             reginfs = {
-                "code": 200,
+                "code": 400,
                 "message": "failed",
                 "data": str(e)
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
-class ImgtoWords(View):
+
+
+class ImgtoWords(APIView):
     def get(self, request):
-        try:
-            sysfile = os.path.abspath('.')
-            imgpath = request.session.get("imgpath")
-            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
-            os.remove(unknownimgpath)
+        img_uuid = request.query_params.get("id", None)
+        if img_uuid==None:
             reginfs = {
-                "code": 444,
-                "message": "success",
-                "data": "hello"
-            }
-        except:
-            reginfs = {
-                "code": 222,
+                "code": 400,
                 "message": "failed",
                 "data": "失败"
             }
-        return HttpResponse(json.dumps(reginfs), content_type='application/json')
+        else:
+            relative_img_path='/static/img2word/' + img_uuid + '.jpg'
+            try:
+                options = {
+                    'detect_direction': 'true',
+                    'language_type': 'CHN_ENG',
+                }
+                img_target_path = sysfile + relative_img_path
+                aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
+                result = aipOcr.webImage(self.get_file_content(img_target_path), options)
+                statusCode=200
+                if result["words_result_num"] == 0:
+                    vector_word = "图中没有文字或未能识别"
+                else:
+                    pic_words = [i["words"] for i in result["words_result"]]
+                    pic_word_data = [(i + '<br>') for i in pic_words]
+                    vector_word = ''.join(pic_word_data)
+            except:
+                statusCode = 204
+                vector_word = "不支持的该格式的文字识别！"
+            imginfo = {}
+            imginfo["vector_words"] = vector_word
+            imginfo["img_uuid"] = img_uuid
+            imginfo["img_path"]=relative_img_path
+            reginfs = {
+                "code": statusCode,
+                "message": "success",
+                "data": imginfo
+            }
+        return Response(reginfs)
+    def delete(self,request):
+        img_uuid = request.query_params.get("id", None)
+        if img_uuid==None:
+            reginfs = {
+                "code": 400,
+                "message": "failed",
+                "data": "失败"
+            }
+        else:
+            relative_img_path='/static/img2word/' + img_uuid + '.jpg'
+            delete_img_path = sysfile + relative_img_path
+            try:
+                os.remove(delete_img_path)
+                reginfs = {
+                    "code": 200,
+                    "message": "success",
+                    "data": "success"
+                }
+            except:
+                reginfs = {
+                    "code": 400,
+                    "message": "failed",
+                    "data": "失败"
+                }
+        return Response(reginfs)
     def post(self, request):
         # 图片的处理
         # h获取图片的路径
         imgpath = request.session.get("imgpath")
-        sysfile = os.path.abspath('.')
+        print(imgpath,"=======================")
         unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
         options = {
             'detect_direction': 'true',
@@ -191,7 +241,6 @@ def img2wordRes(request):
 class ImgtoExcel(View):
     def get(self, request):
         try:
-            sysfile = os.path.abspath('.')
             imgpath = request.session.get("imgpath")
             print(imgpath)
             unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
@@ -214,7 +263,6 @@ class ImgtoExcel(View):
         # 图片的处理
         # h获取图片的路径
         imgpath = request.session.get("imgpath")
-        sysfile = os.path.abspath('.')
         unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
         options = {
             'detect_direction': 'true',
@@ -292,7 +340,6 @@ def excel_download(request):
     :param request:
     :return:
     """
-    sysfile = os.path.abspath('.')
     imgpath = request.session.get("imgpath")
     the_file_name = imgpath + '.xls'
     filename = sysfile+'/static/img2word/{}'.format(the_file_name)  # 要下载的文件路径
