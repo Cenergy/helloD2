@@ -96,109 +96,61 @@ class SourcesUpload(View):
         # 上传图片的处理
         try:
             stick_img=request.POST.get("stick_img",False)
-            upload_img_uuid = (str(uuid.uuid1())).replace("-", "")
-            upload_img_path = sysfile + '/static/img2word/' + upload_img_uuid + '.jpg'
+            sysfile = os.path.abspath('.')
+            unknown_img_uuid = (str(uuid.uuid1())).replace("-", "")
+            imgpath = unknown_img_uuid
+            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
+            request.session["imgpath"] = imgpath
             if stick_img:
                 img_path = base64.b64decode(stick_img.split(',')[-1])
-                with open(upload_img_path, 'wb') as f:
+                with open(unknownimgpath, 'wb') as f:
                     f.write(img_path)
                 reginfs = {
-                    "code": 200,
+                    "code": 400,
                     "message": "success",
-                    "data": {
-                        "id":upload_img_uuid
-                    }
+                    "data": "hello"
                 }
             else:
                 f = request.FILES["file"]
-                with open(upload_img_path, 'wb+') as destination:
+                with open(unknownimgpath, 'wb+') as destination:
                     for chunk in f.chunks():
                         destination.write(chunk)
                 reginfs = {
-                    "code": 200,
+                    "code": 400,
                     "message": "success",
-                    "data": {
-                        "id": upload_img_uuid
-                    }
+                    "data": "hello"
                 }
         except Exception as e:
             reginfs = {
-                "code": 400,
+                "code": 200,
                 "message": "failed",
                 "data": str(e)
             }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
-
-
-class ImgtoWords(APIView):
+class ImgtoWords(View):
     def get(self, request):
-        img_uuid = request.query_params.get("id", None)
-        if img_uuid==None:
+        try:
+            sysfile = os.path.abspath('.')
+            imgpath = request.session.get("imgpath")
+            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
+            os.remove(unknownimgpath)
             reginfs = {
-                "code": 400,
-                "message": "failed",
-                "data": "失败"
-            }
-        else:
-            relative_img_path='/static/img2word/' + img_uuid + '.jpg'
-            try:
-                options = {
-                    'detect_direction': 'true',
-                    'language_type': 'CHN_ENG',
-                }
-                img_target_path = sysfile + relative_img_path
-                aipOcr = AipOcr(BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY)
-                result = aipOcr.webImage(self.get_file_content(img_target_path), options)
-                statusCode=200
-                if result["words_result_num"] == 0:
-                    vector_word = "图中没有文字或未能识别"
-                else:
-                    pic_words = [i["words"] for i in result["words_result"]]
-                    pic_word_data = [(i + '<br>') for i in pic_words]
-                    vector_word = ''.join(pic_word_data)
-            except:
-                statusCode = 204
-                vector_word = "不支持的该格式的文字识别！"
-            imginfo = {}
-            imginfo["vector_words"] = vector_word
-            imginfo["img_uuid"] = img_uuid
-            imginfo["img_path"]=relative_img_path
-            reginfs = {
-                "code": statusCode,
+                "code": 444,
                 "message": "success",
-                "data": imginfo
+                "data": "hello"
             }
-        return Response(reginfs)
-    def delete(self,request):
-        img_uuid = request.query_params.get("id", None)
-        if img_uuid==None:
+        except:
             reginfs = {
-                "code": 400,
+                "code": 222,
                 "message": "failed",
                 "data": "失败"
             }
-        else:
-            relative_img_path='/static/img2word/' + img_uuid + '.jpg'
-            delete_img_path = sysfile + relative_img_path
-            try:
-                os.remove(delete_img_path)
-                reginfs = {
-                    "code": 200,
-                    "message": "success",
-                    "data": "success"
-                }
-            except:
-                reginfs = {
-                    "code": 400,
-                    "message": "failed",
-                    "data": "失败"
-                }
-        return Response(reginfs)
+        return HttpResponse(json.dumps(reginfs), content_type='application/json')
     def post(self, request):
         # 图片的处理
         # h获取图片的路径
         imgpath = request.session.get("imgpath")
-        print(imgpath,"=======================")
+        sysfile = os.path.abspath('.')
         unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
         options = {
             'detect_direction': 'true',

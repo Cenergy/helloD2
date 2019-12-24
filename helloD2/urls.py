@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
-import users.views, courses.views, sources.views, api.views
+import users.views, courses.views, sources.views, api.views,ais.views
 import xadmin
 from users import views
 from wechat import views
@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^ueditor/', include('DjangoUeditor.urls')),
     url(r'^courses/', include('courses.urls')),
     url(r'^sources/', include('sources.urls')),
+    url(r'^ais/', include('ais.urls')),
     url(r'^api/', include('api.urls')),
     # url(r'docs/', include_docs_urls(title="AIGIS")),
     url(r'api/docs/', schema_view),

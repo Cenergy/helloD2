@@ -1,25 +1,12 @@
 # -*-coding:utf-8 -*-
 __author__ = 'Cenergy'
-__date__ = '6/8/18 下午2:45'
+__date__ = '14/9/18 下午5:07'
 
-from django.conf.urls import url, include
-from api import views
-
-from rest_framework.routers import DefaultRouter
-
-from api.views import SourcesCoreViewset
+from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
-
-router = DefaultRouter()
-
-router.register(r'v1/sources', SourcesCoreViewset, base_name='sources')
+from ais import views
 
 urlpatterns = [
-    url(r'v1/goods/$', views.SnippetList.as_view(), name="goods"),
-    url(r'v1/blogs/$', views.BlogListView.as_view(), name="blogs"),
-    url(r'v1/blogs/(?P<blog_pk>\d+)/$', views.BlogDetailView.as_view(), name="blogs_detail"),
-    url(r'v1/blog_types/(?P<blog_type>\d+)/$', views.BlogTypeView.as_view(), name="blogs_detail"),
-    url(r'v1/suggestions/', csrf_exempt(views.SuggestionsView.as_view()), name="suggestions"),
-    url(r'v1/resources/$', views.SourcesList.as_view(), name="resources"),
-    url(r'', include(router.urls)),
+    url(r'^upload/', csrf_exempt(views.SourcesUpload.as_view()), name="upload"),
+    url(r'^img2words/', csrf_exempt(views.ImgtoWords.as_view()), name="img2words"),
 ]
