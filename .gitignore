@@ -3,5 +3,5 @@
 *.idea
 *.log
 *.pyc
-db.sqlite3
+*.sqlite3
 
