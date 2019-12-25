@@ -171,7 +171,17 @@ REST_FRAMEWORK = {
 # 前端路径
 FRONTEND_ROOT = 'front_app/dist'
 
+# DEBUG = False
 STATIC_URL = '/static/'
+if DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, FRONTEND_ROOT),
+        os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
+        os.path.join(BASE_DIR, 'static'),
+    )
+else:
+    STATIC_ROOT = 'static'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -187,17 +197,6 @@ EMAIL_HOST_USER = "helloaigis@sina.com"
 EMAIL_HOST_PASSWORD = "Cenergy.0919"
 EMAIL_USE_TLS = False
 EMAIL_FROM = "helloaigis@sina.com"
-
-# DEBUG = False
-
-if DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, FRONTEND_ROOT),
-        os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
-        os.path.join(BASE_DIR, 'static'),
-    )
-else:
-    STATIC_ROOT = FRONTEND_ROOT + '/static/'
 
 # ----------------------手机号码正则表达式-------------------------------
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
