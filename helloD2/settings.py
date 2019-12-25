@@ -197,7 +197,7 @@ if DEBUG:
         os.path.join(BASE_DIR, 'static'),
     )
 else:
-    STATIC_ROOT = 'static'
+    STATIC_ROOT = FRONTEND_ROOT + '/static/'
 
 # ----------------------手机号码正则表达式-------------------------------
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
