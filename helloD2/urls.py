@@ -55,7 +55,7 @@ urlpatterns = [
     url(r'^vue/', TemplateView.as_view(template_name='index.html')),
 
     # 增加以下一行，以识别静态资源
-    url(r'^static/(?P<path>.*)$', static.serve,
-        {'document_root': settings.STATIC_ROOT}, name='static'),
+    # url(r'^static/(?P<path>.*)$', static.serve,
+    #     {'document_root': settings.STATIC_ROOT}, name='static'),
 
 ]
