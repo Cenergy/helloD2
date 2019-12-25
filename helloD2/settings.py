@@ -190,11 +190,14 @@ EMAIL_FROM = "helloaigis@sina.com"
 
 # DEBUG = False
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, FRONTEND_ROOT),
-    os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
-    os.path.join(BASE_DIR, 'static'),
-)
+if DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, FRONTEND_ROOT),
+        os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
+        os.path.join(BASE_DIR, 'static'),
+    )
+else:
+    STATIC_ROOT = 'static'
 
 # ----------------------手机号码正则表达式-------------------------------
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
