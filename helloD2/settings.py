@@ -190,8 +190,14 @@ EMAIL_FROM = "helloaigis@sina.com"
 
 # DEBUG = False
 
-STATICFILES_DIRS = (
+if DEBUG:
+    STATICFILES_DIRS = (
         os.path.join(BASE_DIR, FRONTEND_ROOT),
+        os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
+        os.path.join(BASE_DIR, 'static'),
+    )
+else:
+    STATIC_ROOT = (
         os.path.join(BASE_DIR, FRONTEND_ROOT + '/static/'),
         os.path.join(BASE_DIR, 'static'),
     )
