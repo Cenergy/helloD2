@@ -20,11 +20,13 @@ import face_recognition
 import pandas as pd
 from rest_framework import permissions, renderers, viewsets
 from django.http import HttpResponseRedirect
+from django.views.generic.base import TemplateView
 
 from utils.email_send import register_send_email, common_send_email
 from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
+from django.views.decorators.gzip import gzip_page
 
 
 # # custom_error404
@@ -40,6 +42,17 @@ from utils.voices import towords
 # # custom_error403
 # def permission_denied(request):
 #     return render(request, '403.html')
+
+class VuePageView(TemplateView):
+    template_name = "index.html"
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['latest_articles'] = 1
+    #     return context
+
+def vue(request):
+    return TemplateView.as_view(template_name='index.html')
 
 
 def test(request):
