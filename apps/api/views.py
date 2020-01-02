@@ -118,9 +118,16 @@ class SuggestionsView(APIView):
 
     def post(self, request, format=None):
         try:
-            suggest_email = request.POST.get("suggest_email", "")
-            suggest_user = request.POST.get("suggest_user", " ")
-            suggest_message = request.POST.get("suggest_message", "")
+            suggest_email = request.data.get("suggest_email", None)
+            suggest_user = request.data.get("suggest_user", None)
+            suggest_message = request.data.get("suggest_message", None)
+            if suggest_email==None or suggest_user==None or suggest_message==None:
+                reginfs = {
+                    "code": 400,
+                    "message": "failed",
+                    "data": "邮箱，用户名，反馈信息一个都不能为空"
+                }
+                return Response(reginfs)
             suggest_data = Suggestion()
             suggest_data.email = suggest_email
             suggest_data.suggest_name = suggest_user
