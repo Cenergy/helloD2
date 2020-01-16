@@ -144,6 +144,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
