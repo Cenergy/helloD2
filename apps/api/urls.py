@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 router = DefaultRouter()
 
-router.register(r'v1/sources', SourcesCoreViewset, base_name='sources')
+router.register(r'v1/sources', SourcesCoreViewset, basename='sources')
 
 urlpatterns = [
     url(r'v1/goods/$', views.SnippetList.as_view(), name="goods"),
