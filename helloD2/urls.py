@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
-import users.views, courses.views, sources.views, api.views,ais.views
+import users.views
+import courses.views
+import sources.views
+import api.views
+import ais.views
 import xadmin
 from users import views
 from wechat import views
@@ -46,10 +50,11 @@ urlpatterns = [
     url(r'api/docs/', schema_view),
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
-    url(r'^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'^vue/', TemplateView.as_view(template_name='index.html')),
+    url(r'^media/(?P<path>.*)$', static.serve,
+        {'document_root': settings.MEDIA_ROOT}),
 
-    ## 增加以下一行，以识别静态资源
+
+    # 增加以下一行，以识别静态资源
     # url(r'^static/(?P<path>.*)$', static.serve,
     #     {'document_root': settings.STATIC_ROOT}, name='static'),
 
