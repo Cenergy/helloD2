@@ -24,7 +24,7 @@ import ais.views
 import xadmin
 from users import views
 from wechat import views
-from helloD5 import settings
+from helloD2 import settings
 from django.views import static
 from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view

@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 from django.http import StreamingHttpResponse
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from helloD5.settings import BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY
+from helloD2.settings import BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY
 import pandas as pd
 
 from .models import Blog, BlogType

@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from aip import AipOcr
-from  helloD5.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
+from  helloD2.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
 
 from utils.get_sources import get_source
 from utils.tuling_answer import get_tuling_answer
