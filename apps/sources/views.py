@@ -22,6 +22,8 @@ from  helloD5.settings import BAIDU_APP_ID,BAIDU_API_KEY,BAIDU_SECRET_KEY
 
 import pandas as pd
 
+sysfile = os.path.abspath('.')
+
 
 class WechatTalk(View):
     def get(self, request):
@@ -191,7 +193,6 @@ def img2wordRes(request):
 class ImgtoExcel(View):
     def get(self, request):
         try:
-            sysfile = os.path.abspath('.')
             imgpath = request.session.get("imgpath")
             print(imgpath)
             unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
@@ -214,7 +215,6 @@ class ImgtoExcel(View):
         # 图片的处理
         # h获取图片的路径
         imgpath = request.session.get("imgpath")
-        sysfile = os.path.abspath('.')
         unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
         options = {
             'detect_direction': 'true',
@@ -292,7 +292,6 @@ def excel_download(request):
     :param request:
     :return:
     """
-    sysfile = os.path.abspath('.')
     imgpath = request.session.get("imgpath")
     the_file_name = imgpath + '.xls'
     filename = sysfile+'/static/img2word/{}'.format(the_file_name)  # 要下载的文件路径

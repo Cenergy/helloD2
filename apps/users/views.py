@@ -1,42 +1,58 @@
 import os, json, uuid, base64, datetime, random, string
 import platform as plat
 
-import pandas as pd
+from django.views.generic.base import View
 import numpy as np
 from django.shortcuts import render, render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.backends import ModelBackend
-from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.db.models import Q
-from django.views.generic.base import View
-from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
+from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth import login, authenticate,logout
+from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from rest_framework import status
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password
-from utils.email_send import register_send_email, common_send_email
-from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, render_to_response
 from django.db import connection
-
-from rest_framework import permissions, renderers, viewsets
-
-from utils.voices import towords
 import face_recognition
+import pandas as pd
+from rest_framework import permissions, renderers, viewsets
+from django.http import HttpResponseRedirect
+from django.views.generic.base import TemplateView
+
+from utils.email_send import register_send_email, common_send_email
+from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
+from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
+from utils.voices import towords
+from django.views.decorators.gzip import gzip_page
 
 
-# custom_error404
-def page_not_found(request):
-    return render(request, '404.html')
+# # custom_error404
+# def page_not_found(request):
+#     return render(request, '404.html')
+#
+#
+# # custom_error500
+# def page_error(request):
+#     return render(request, '500.html')
+#
+#
+# # custom_error403
+# def permission_denied(request):
+#     return render(request, '403.html')
 
+class VuePageView(TemplateView):
+    template_name = "index.html"
 
-# custom_error500
-def page_error(request):
-    return render(request, '500.html')
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['latest_articles'] = 1
+    #     return context
 
-
-# custom_error403
-def permission_denied(request):
-    return render(request, '403.html')
+def vue(request):
+    return TemplateView.as_view(template_name='index.html')
 
 
 def test(request):
@@ -45,6 +61,7 @@ def test(request):
 
 def map(request):
     return render(request, "users/map.html")
+
 
 def about_me(request):
     return render(request, 'aboutme.html')
@@ -94,7 +111,7 @@ class IndexView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect('/#hello_django')
+        return HttpResponseRedirect('/')
 
 
 class LoginView(View):
@@ -134,6 +151,98 @@ class LoginView(View):
         else:
             login_form = login_form
             return render(request, "users/login.html", locals())
+
+
+class UserLoginView(APIView):
+    def get(self, request):
+        """
+        :param request:
+        :return json:
+
+        """
+
+    def post(self, request):
+        username = (request.POST.get("username", "")).lower()
+        password = request.POST.get("password", "")
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    return Response({
+                        "code": 200,
+                        "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
+                        "message": "成功登录",
+                        "username": user.username,
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "code": 400,
+                        "message": "用户未激活！"
+                    }, status=status.HTTP_200_OK)
+            else:
+                if UserProfile.objects.filter(username=username).exists():
+                    return Response({
+                        "code": 400,
+                        "message": "密码错误!"
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "code": 400,
+                        "message": "用户不存在!"
+                    }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "code": 400,
+                "message": "无效的表单!"
+            }, status=status.HTTP_200_OK)
+
+
+class UserRegisterView(APIView):
+    def post(self, request):
+        """
+        参数为图片转为 base64 的字符串
+        :param request:
+        :return json:
+        """
+        username = (request.POST.get("email", "")).lower()
+        password = request.POST.get("password", "")
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            url_strs = HttpRequest.get_host(request)
+            if UserProfile.objects.filter(email=username, is_active=True):
+                result = {
+                    "code": 214,
+                    "message": "邮箱已被注册！！",
+                }
+                return Response(result)
+            elif UserProfile.objects.filter(email=username, is_active=False):
+                send_type = "register"
+                register_send_email(username, url_strs, send_type)
+                result = {
+                    "code": 224,
+                    "message": "邮箱还没有被激活",
+                }
+                return Response(result)
+            user_proflie = UserProfile()
+            user_proflie.username = username
+            user_proflie.email = username
+            user_proflie.is_active = False
+            user_proflie.password = make_password(password)
+            user_proflie.save()
+            send_type = "register"
+            register_send_email(username, url_strs, send_type)
+            result = {
+                "code": 200,
+                "message": "请前往注册邮箱激活",
+            }
+            return Response(result)
+        else:
+            result = {
+                "code": 211,
+                "message": "未知错误",
+            }
+            return Response(result)
 
 
 class RegisterView(View):
@@ -183,6 +292,119 @@ class ActiveUserView(View):
             # return render(request, "users/login.html", locals())
         else:
             return render(request, "users/active_fail.html", locals())
+
+
+class UserActiveView(APIView):
+    def get(self, request, active_code):
+        all_records = EmailVerifyRecord.objects.filter(code=active_code)
+        if all_records:
+            for record in all_records:
+                email = record.email
+                email = email.lower()
+                user = UserProfile.objects.get(email=email)
+                user.is_active = True
+                user.save()
+            result = {
+                "code": 200,
+                "message": "激活成功"
+            }
+            return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "激活失败"
+            }
+            return Response(result)
+
+
+class UserForgetPwdView(APIView):
+    def post(self, request):
+        forget_form = ForgetForm(request.POST)
+        email = (request.POST.get("email", "")).lower()
+        if forget_form.is_valid():
+            if UserProfile.objects.filter(email=email):
+                email = request.POST.get("email", "")
+                if UserProfile.objects.filter(email=email)[0].is_active == 0:
+                    result = {
+                        "code": 214,
+                        "message": "邮箱未被激活"
+                    }
+                    return Response(result)
+                else:
+                    send_type = "forget"
+                    url_strs = HttpRequest.get_host(request)
+                    register_send_email(email, url_strs, send_type)
+                    result = {
+                        "code": 200,
+                        "message": "修改密码的链接已发送至您邮箱，请注意查收！"
+                    }
+                    return Response(result)
+            else:
+                result = {
+                    "code": 400,
+                    "message": "邮箱未被注册"
+                }
+                return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "未知错误！！！"
+            }
+            return Response(result)
+
+
+class UserResetPwdView(APIView):
+    def get(self, request, reset_code):
+        all_records = EmailVerifyRecord.objects.filter(code=reset_code)
+        if all_records:
+            for record in all_records:
+                email = record.email.lower()
+                email = email.lower()
+                result = {
+                    "code": 200,
+                    "message": "请修改密码",
+                    "data": email
+                }
+                return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "未知错误！！！"
+            }
+            return Response(result)
+
+
+class UserModifyPwdView(APIView):
+    def post(self, request):
+        modify_form = ModifyPwdForm(request.POST)
+        if modify_form.is_valid():
+            pwd1 = request.POST.get("password1", "")
+            pwd2 = request.POST.get("password2", "")
+            email = request.POST.get("email", "")
+            email = email.lower()
+            if pwd1 != pwd2:
+                result = {
+                    "code": 400,
+                    "message": "两次密码不一致！！！"
+                }
+                return Response(result)
+            user = UserProfile.objects.get(email=email)
+            user.password = make_password(pwd2)
+            user.save()
+            return Response({
+                "code": 200,
+                "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
+                "message": "成功登录",
+                "username": user.username,
+            }, status=status.HTTP_200_OK)
+        else:
+            email = request.POST.get("email", "")
+            result = {
+                "code": 212,
+                "message": "请修改密码",
+                "data": email
+            }
+            return Response(result)
 
 
 class ForgetPwdView(View):
@@ -279,7 +501,6 @@ def get_voices(request):
 def BANAJAX(request):
     if request.method == "POST":
         userid = request.session.get("userid")
-        print(userid)
         voice_path = "./media/voice/" + userid + ".wav"
         system_type = plat.system()
         try:
@@ -291,7 +512,6 @@ def BANAJAX(request):
                 voice_words = stt_windows.XF_text(voice_path, 16000)
             else:
                 voice_words = towords.main(voice_path)
-            print("voice:", voice_words)
             abc = {
                 "code": 200,
                 "message": "successs!!",
@@ -563,10 +783,7 @@ class FaceLoginView(View):
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
-
-# 删除人脸
-
-class DeleteFaceView(View):
+class DeleteFaceView(APIView):
     def get(self, request):
         pass
 
@@ -584,21 +801,20 @@ class DeleteFaceView(View):
                 delete_face_cursor.execute(delete_face_sql)
                 abcs = {
                     "code": 200,
-                    "message": "删除成功",
-                    "data": {"reurl": '../'}
+                    "message": "删除成功"
                 }
             else:
                 abcs = {
                     "code": 401,
-                    "message": "密码错误",
-                    "data": {"reurl": "/login/"}
+                    "message": "密码错误"
                 }
         else:
             login_form = login_form
             abcs = {
                 "code": 401,
-                "message": "删除失败",
-                "data": {"reurl": "/login/"}
+                "message": "删除失败"
             }
         return HttpResponse(json.dumps(abcs), content_type='application/json')
+
+
 
