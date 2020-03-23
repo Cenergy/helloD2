@@ -246,6 +246,6 @@ class BlogTypeView(APIView):
             context = {
                 "code": 401,
                 "message": "failed",
-                "data": "失败"
+                "data": "失败!!"
             }
         return Response(context)
