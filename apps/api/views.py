@@ -241,7 +241,7 @@ class BlogTypeView(APIView):
                 context = {"code": 200, "msg": "success",
                            "data": serializer.data}
             else:
-                context = {"code": 200, "msg": "请求数据不存在!!!", "data": []}
+                context = {"code": 200, "msg": "请求数据不存在哦!!!", "data": []}
         except:
             context = {
                 "code": 401,
