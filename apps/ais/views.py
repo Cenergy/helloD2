@@ -76,6 +76,54 @@ class SourcesUpload(APIView):
         return Response(reginfs)
 
 
+class ImageUpload(APIView):
+    def get(self, request):
+        try:
+            reginfs = {
+                "code": 200,
+                "message": "success",
+                "data": "hello"
+            }
+        except:
+            reginfs = {
+                "code": 400,
+                "message": "failed",
+                "data": "注册失败"
+            }
+        return Response(reginfs)
+
+    def post(self, request):
+        # 上传图片的处理
+        try:
+            stick_img = request.data.get("stick_img", None)
+            if stick_img:
+                upload_img_uuid = (str(uuid.uuid1())).replace("-", "")
+                upload_img_path = sysfile + '/static/img2word/' + upload_img_uuid + '.jpg'
+                img_path = base64.b64decode(stick_img.split(',')[-1])
+                with open(upload_img_path, 'wb') as f:
+                    f.write(img_path)
+                reginfs = {
+                    "code": 200,
+                    "message": "success",
+                    "data": {
+                        "id": upload_img_uuid
+                    }
+                }
+            else:
+                reginfs = {
+                    "code": 400,
+                    "message": "failed",
+                    "data": '上传失败!!'
+                }
+        except Exception as e:
+            reginfs = {
+                "code": 400,
+                "message": "failed",
+                "data": str(e)
+            }
+        return Response(reginfs)
+
+
 class ImgtoWords(APIView):
     def get(self, request):
         img_uuid = request.query_params.get("id", None)
@@ -222,14 +270,14 @@ class ImgtoExcel(APIView):
                 else:
                     excel_json = {}
                     excel_source = pd.read_excel(picUrl)
-                    relative_excel_path="/static/img2word/" + img_uuid + ".xls"
+                    relative_excel_path = "/static/img2word/" + img_uuid + ".xls"
                     excel_name = sysfile+"/static/img2word/" + img_uuid + ".xls"
                     excel_source.to_excel(excel_name)
                     excel_html = excel_source.to_html(classes='layui-table')
                     excel_json["excel_html"] = excel_html
                     excel_json["img_uuid"] = img_uuid
                     excel_json["imgpath"] = relative_img_path
-                    excel_json["excelpath"]=relative_excel_path
+                    excel_json["excelpath"] = relative_excel_path
                     row, col = excel_source.shape
                     if row == 0 or col == 0:
                         os.remove(unknownimgpath)

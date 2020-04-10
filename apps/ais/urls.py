@@ -8,6 +8,7 @@ from ais import views
 
 urlpatterns = [
     url(r'^upload/', csrf_exempt(views.SourcesUpload.as_view()), name="upload"),
+    url(r'^img/upload/', csrf_exempt(views.ImageUpload.as_view()), name="upload"),
     url(r'^img2words/', csrf_exempt(views.ImgtoWords.as_view()), name="img2words"),
     url(r'^img2excel/', csrf_exempt(views.ImgtoExcel.as_view()), name="img2excel"),
 ]
