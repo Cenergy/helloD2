@@ -159,8 +159,8 @@ REST_FRAMEWORK = {
     #      'rest_framework.authentication.TokenAuthentication',
     # ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
+        'anon': '1000/day',
+        'user': '10000/day'
     }
 }
 # JWT_AUTH = {
