@@ -198,24 +198,30 @@ class ImgtoWords(APIView):
 
 class ImgtoExcel(APIView):
     def delete(self, request):
-        try:
-            imgpath = request.session.get("imgpath")
-            print(imgpath)
-            unknownimgpath = sysfile + '/static/img2word/' + imgpath + '.jpg'
-            excel_name = sysfile + "/static/img2word/" + imgpath + ".xls"
-            os.remove(unknownimgpath)
-            os.remove(excel_name)
+        img_uuid = request.query_params.get("id", None)
+        if img_uuid == None:
             reginfs = {
-                "code": 444,
-                "message": "success",
-                "data": "hello"
-            }
-        except:
-            reginfs = {
-                "code": 222,
+                "code": 400,
                 "message": "failed",
                 "data": "失败"
             }
+        else:
+            try:
+                imgpath = sysfile + '/static/img2word/' + img_uuid + '.jpg'
+                excel_name = sysfile + "/static/img2word/" + img_uuid + ".xls"
+                os.remove(imgpath)
+                os.remove(excel_name)
+                reginfs = {
+                    "code": 444,
+                    "message": "success",
+                    "data": "hello"
+                }
+            except:
+                reginfs = {
+                    "code": 222,
+                    "message": "failed",
+                    "data": "失败"
+                }
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
     def get(self, request):
@@ -283,13 +289,13 @@ class ImgtoExcel(APIView):
                         os.remove(unknownimgpath)
                         os.remove(excel_name)
                         reginfs = {
-                            "code": 200,
-                            "message": "fail2",
-                            "data": "fail"
+                            "code": 400,
+                            "message": "failure",
+                            "data": "没有识别到表格！"
                         }
                     else:
                         reginfs = {
-                            "code": 400,
+                            "code": 200,
                             "message": "success",
                             "data": excel_json
                         }
@@ -297,7 +303,7 @@ class ImgtoExcel(APIView):
                 picUrl = "error"
                 os.remove(unknownimgpath)
                 reginfs = {
-                    "code": 200,
+                    "code": 400,
                     "message": "fail3",
                     "data": "fail"
                 }
