@@ -108,6 +108,28 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# 连接MySQL数据库
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'geo_users',
+#         'USER': 'root',
+#         'PASSWORD':'Cenergy',
+#         'HOST':'localhost',
+#         'PORT':'3306',
+#     }
+# }
+#### 连接postgreSQL数据库
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'geo_users',
+#         'USER': 'postgres',
+#         'PASSWORD':'Cenergy',
+#         'HOST':'localhost',
+#         'PORT':'5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
