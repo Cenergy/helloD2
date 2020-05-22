@@ -6,3 +6,4 @@
 *.pyc
 
 db.sqlite3
+helloD2/settings.py

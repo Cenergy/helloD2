@@ -123,11 +123,11 @@ WSGI_APPLICATION = 'helloD2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'NAME': 'geo_users',
         'USER': 'postgres',
-        'PASSWORD':'postgres',
-        'HOST':'47.114.59.109',
-        'PORT':'9555',
+        'PASSWORD':'Cenergy',
+        'HOST':'localhost',
+        'PORT':'5432',
     }
 }
 
@@ -215,10 +215,10 @@ LOGOUT_URL = '/api-auth/logout/'
 # 邮箱设置
 EMAIL_HOST = "smtp.sina.com"
 EMAIL_PORT = 25
-EMAIL_HOST_USER = "helloaigis@sina.com"
-EMAIL_HOST_PASSWORD = "Cenergy.0919"
+EMAIL_HOST_USER = "hello@world.com"
+EMAIL_HOST_PASSWORD = "password"
 EMAIL_USE_TLS = False
-EMAIL_FROM = "helloaigis@sina.com"
+EMAIL_FROM = "where@from.com"
 
 # ----------------------手机号码正则表达式-------------------------------
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
@@ -226,12 +226,12 @@ REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 API_KEY = "09d6805265afbd0a779cfd9e16a0f4c5"
 
 # 百度识别# 定义常量
-BAIDU_APP_ID = '11800206'
-BAIDU_API_KEY = 'sAy8l7GrgGMBfesVoPkYtr0m'
-BAIDU_SECRET_KEY = 'Ex4Yitab1ZTq8y3FykTpa3kbGvpfUvjV'
+BAIDU_APP_ID = '12345678'
+BAIDU_API_KEY = 'abcedfghijklmn'
+BAIDU_SECRET_KEY = 'abcedfghijklmnDDDD'
 
 # 图灵api
-TURING_API_KEY = 'bf61c090a1bc4cfabc43e20e2d5b307b'
+TURING_API_KEY = 'tulingken'
 
 # 自定义日志输出信息
 # LOGGING = {
