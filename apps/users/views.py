@@ -101,7 +101,7 @@ class IndexView(View):
         if str(all_data["limit_time"][0]) == str(today):
             pass
         else:
-            sub_one_sql = "UPDATE 'sources_sourcelimit' SET num_count=50,limit_time='%s'" % today
+            sub_one_sql = "UPDATE sources_sourcelimit SET num_count=50,limit_time='%s'" % today
             sub_one_cursor = connection.cursor()
             sub_one_cursor.execute(sub_one_sql)
         num_count = all_data["num_count"][0]
