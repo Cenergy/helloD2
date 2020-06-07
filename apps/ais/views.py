@@ -1,3 +1,8 @@
+import time  # 设置时间
+import requests  # 导入requests库，
+import sys  # 导入系统库
+import numpy as np
+import socket
 from django.shortcuts import render
 
 # Create your views here.
@@ -17,9 +22,12 @@ from django.db import connection
 
 
 from aip import AipOcr
-from helloD2.settings import BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY
+from helloD2.settings import BAIDU_APP_ID, BAIDU_API_KEY, BAIDU_SECRET_KEY, BAIDU_MAP_KEY
 
 sysfile = os.path.abspath('.')
+
+ty = sys.getfilesystemencoding()  # 这个可以获取文件系统的编码形式
+timeout = 20
 
 
 class SourcesUpload(APIView):
@@ -312,3 +320,84 @@ class ImgtoExcel(APIView):
     def get_file_content(self, filePath):
         with open(filePath, 'rb') as fp:
             return fp.read()
+
+
+def getdata(url):
+    try:
+        socket.setdefaulttimeout(timeout)
+        html = requests.get(url)
+        data = html.json()
+        if data['results'] != None:
+            return data['results']
+        return  []
+        # time.sleep(1)
+    except:
+        getdata(url)
+
+
+class POIbyName(APIView):
+
+    def get(self, request):
+        name = '电影院'
+        city = '南京市'
+        name = request.query_params.get("name", None)
+        city = request.query_params.get("city", None)
+        print(name,city,"====")
+        urls = []  # 声明一个数组列表
+        for i in range(0, 20):
+            page_num = str(i)
+            url = 'http://api.map.baidu.com/place/v2/search?query='+name+'&region=' + \
+                city+'&page_size=20&page_num='+str(page_num)+'&output=json&ak='+BAIDU_MAP_KEY
+            urls.append(url)
+        print('url列表读取完成')
+
+        results=[]
+        for url in urls:
+            res=getdata(url)
+            if res!=[]:
+                results+=res
+        df = pd.DataFrame(results)
+        excel_uuid = (str(uuid.uuid1())).replace("-", "")
+        relative_excel_path = "/static/img2word/" + excel_uuid + ".xls"
+        excel_path = sysfile+"/static/img2word/" + excel_uuid + ".xls"
+        # df['coord'] = ["[{},{}]".format(res["location"]["lng"],res["location"]["lat"]) for res in results]
+        df.to_excel(excel_path)
+
+        excel_json={}
+        excel_json["excelpath"] = relative_excel_path
+        excel_json["id"] = excel_uuid
+        excel_json["data"] = results
+
+        reginfs = {
+            "code": 200,
+            "message": "success",
+            "data": excel_json
+        }
+        return Response(reginfs)
+
+    def post(self, request):
+        reginfs = {
+            "code": 400,
+            "message": "failed",
+            "data": str(e)
+        }
+        return Response(reginfs)
+
+
+class POIbyRegion(APIView):
+    def get(self, request):
+
+        reginfs = {
+            "code": 400,
+            "message": "failed",
+            "data": "注册失败"
+        }
+        return Response(reginfs)
+
+    def post(self, request):
+        reginfs = {
+            "code": 400,
+            "message": "failed",
+            "data": str(e)
+        }
+        return Response(reginfs)

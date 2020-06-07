@@ -230,6 +230,9 @@ BAIDU_APP_ID = '12345678'
 BAIDU_API_KEY = 'abcedfghijklmn'
 BAIDU_SECRET_KEY = 'abcedfghijklmnDDDD'
 
+# 百度地图
+BAIDU_MAP_KEY = 'abdcedefe1234567daasd'
+
 # 图灵api
 TURING_API_KEY = 'tulingken'
 
