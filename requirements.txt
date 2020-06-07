@@ -26,3 +26,4 @@ diff-match-patch
 django-cors-headers
 django-guardian
 urllib3 == 1.25.8
+psycopg2
