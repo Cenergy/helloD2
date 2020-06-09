@@ -384,6 +384,7 @@ class POIbyName(APIView):
 
 class POIbyRegion(APIView):
     def get(self, request):
+        name = request.query_params.get("name", None)
         minLng = request.query_params.get("minLng", None)
         minLat = request.query_params.get("minLat", None)
         maxLng = request.query_params.get("maxLng", None)
