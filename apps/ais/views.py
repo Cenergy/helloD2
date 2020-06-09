@@ -338,8 +338,6 @@ def getdata(url):
 class POIbyName(APIView):
 
     def get(self, request):
-        name = '电影院'
-        city = '南京市'
         name = request.query_params.get("name", None)
         city = request.query_params.get("city", None)
         print(name,city,"====")
@@ -386,11 +384,54 @@ class POIbyName(APIView):
 
 class POIbyRegion(APIView):
     def get(self, request):
+        minLng = request.query_params.get("minLng", None)
+        minLat = request.query_params.get("minLat", None)
+        maxLng = request.query_params.get("maxLng", None)
+        maxLat = request.query_params.get("maxLat", None)
+
+        lng_c=maxLng-minLng
+        lat_c=maxLat-minLat
+
+        lng_num=int(lng_c/0.1)+1
+        lat_num=int(lat_c/0.1)+1
+        # minLng, minLat, maxLng, maxLat
+        arr=np.zeros((lat_num+1,lng_num+1,2))
+        for lat in range(0,lat_num+1):
+            for lng in range(0,lng_num+1):
+                arr[lat][lng]=[minLng+lng*0.1,minLat+lat*0.1]
+
+        urls=[]
+
+        print('开始')
+        for lat in range(0,lat_num):
+            for lng in range(0,lng_num):    
+                for b in range(0,20):
+                    page_num=str(b)
+                    url='http://api.map.baidu.com/place/v2/search?query='+name+'&bounds='+str((arr[lat][lng][0]))+','+str((arr[lat][lng][1]))+','+str((arr[lat+1][lng+1][0]))+','+str((arr[lat+1][lng+1][1]))+'&page_size=20&page_num='+str(page_num)+'&output=json&ak='+BAIDU_MAP_KEY
+                    urls.append(url)
+        print ('url列表读取完成')
+
+        results=[]
+        for url in urls:
+            res=getdata(url)
+            if res!=[]:
+                results+=res
+        df = pd.DataFrame(results)
+        excel_uuid = (str(uuid.uuid1())).replace("-", "")
+        relative_excel_path = "/static/img2word/" + excel_uuid + ".xls"
+        excel_path = sysfile+"/static/img2word/" + excel_uuid + ".xls"
+        # df['coord'] = ["[{},{}]".format(res["location"]["lng"],res["location"]["lat"]) for res in results]
+        df.to_excel(excel_path)
+
+        excel_json={}
+        excel_json["excelpath"] = relative_excel_path
+        excel_json["id"] = excel_uuid
+        excel_json["data"] = results
 
         reginfs = {
-            "code": 400,
-            "message": "failed",
-            "data": "注册失败"
+            "code": 200,
+            "message": "success",
+            "data": excel_json
         }
         return Response(reginfs)
 
