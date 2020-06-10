@@ -390,8 +390,8 @@ class POIbyRegion(APIView):
         maxLng = request.query_params.get("maxLng", None)
         maxLat = request.query_params.get("maxLat", None)
 
-        lng_c=maxLng-minLng
-        lat_c=maxLat-minLat
+        lng_c=float(maxLng)-float(minLng)
+        lat_c=float(maxLat)-float(minLat)
 
         lng_num=int(lng_c/0.1)+1
         lat_num=int(lat_c/0.1)+1
@@ -399,7 +399,7 @@ class POIbyRegion(APIView):
         arr=np.zeros((lat_num+1,lng_num+1,2))
         for lat in range(0,lat_num+1):
             for lng in range(0,lng_num+1):
-                arr[lat][lng]=[minLng+lng*0.1,minLat+lat*0.1]
+                arr[lat][lng]=[float(minLng)+lng*0.1,float(minLat)+lat*0.1]
 
         urls=[]
 
