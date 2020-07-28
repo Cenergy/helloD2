@@ -10,6 +10,7 @@ from users import views
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
+    url('jwt/login/$', csrf_exempt(views.JwtLoginView.as_view()), name="jwt"),
     url('login1/$', views.UserLoginView.as_view(), name="login1"),
     url('register1/$', views.UserRegisterView.as_view(), name="register1"),
     url(r'^active1/(?P<active_code>.*)/$',

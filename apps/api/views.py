@@ -249,3 +249,14 @@ class BlogTypeView(APIView):
                 "data": "失败!!"
             }
         return Response(context)
+
+class  JwtLoginView(APIView):
+    def post(self, request):
+        username = request.POST.get("username", "")
+        username = username.lower()
+        password = request.POST.get("password", "")
+        res = {
+            "code": 401,
+            "message": "删除失败"
+        }
+        return  Response(res)

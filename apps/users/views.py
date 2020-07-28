@@ -817,4 +817,54 @@ class DeleteFaceView(APIView):
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
 
+class  JwtLoginView(APIView):
+    def post(self, request):
+        origin_username = request.data.get("username", "")
+        username = origin_username.lower()
+        password = request.data.get("password", "")
 
+        import jwt
+        import datetime
+        from jwt import exceptions
+        SALT = 'iv%x6xo7l7_u9bf_u!9#g#m*)*=ej@bek5)(@u3kh*72+unjv='
+
+        headers = {
+            'typ': 'jwt',
+            'alg': 'HS256'
+        }
+
+
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = authenticate(username=username, password=password)
+            print(user,"-----------------------")
+            if user is not None:
+                print(user,"=================")
+                if user.is_active:
+                    # 构造payload
+                    payload = {
+                        'user_id': 1,  # 自定义用户ID
+                        'username': 'wupeiqi',  # 自定义用户名
+                        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)  # 超时时间
+                    }
+                    return Response({
+                        "code": 200,
+                        "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
+                        "message": "成功登录",
+                        "username": user.username,
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "code": 400,
+                        "message": "用户未激活！"
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "code": 400,
+                    "message": "用户名或者密码错误!"
+                }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "code": 400,
+                "message": "无效的表单!"
+            }, status=status.HTTP_200_OK)

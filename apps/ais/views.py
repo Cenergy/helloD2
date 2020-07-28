@@ -403,14 +403,14 @@ class POIbyRegion(APIView):
 
         urls=[]
 
-        print('开始')
+
+        bounds='{},{},{},{}'.format(minLat,minLng,maxLat, maxLng)
         for lat in range(0,lat_num):
             for lng in range(0,lng_num):    
                 for b in range(0,20):
                     page_num=str(b)
-                    url='http://api.map.baidu.com/place/v2/search?query='+name+'&bounds='+str((arr[lat][lng][0]))+','+str((arr[lat][lng][1]))+','+str((arr[lat+1][lng+1][0]))+','+str((arr[lat+1][lng+1][1]))+'&page_size=20&page_num='+str(page_num)+'&output=json&ak='+BAIDU_MAP_KEY
+                    url='http://api.map.baidu.com/place/v2/search?query='+name+'&bounds='+bounds+'&page_size=20&page_num='+str(page_num)+'&coord_type=2&output=json&ak='+BAIDU_MAP_KEY
                     urls.append(url)
-        print ('url列表读取完成')
 
         results=[]
         for url in urls:
