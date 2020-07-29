@@ -29,6 +29,9 @@ from utils.voices import towords
 from django.views.decorators.gzip import gzip_page
 
 
+from utils.jwt_auth import create_token
+from extensions.auth import JwtQueryParamAuthentication, JwtAuthorizationAuthentication
+
 # # custom_error404
 # def page_not_found(request):
 #     return render(request, '404.html')
@@ -818,21 +821,11 @@ class DeleteFaceView(APIView):
 
 
 class  JwtLoginView(APIView):
+    authentication_classes = [ ]
     def post(self, request):
         origin_username = request.data.get("username", "")
         username = origin_username.lower()
         password = request.data.get("password", "")
-
-        import jwt
-        import datetime
-        from jwt import exceptions
-        SALT = 'iv%x6xo7l7_u9bf_u!9#g#m*)*=ej@bek5)(@u3kh*72+unjv='
-
-        headers = {
-            'typ': 'jwt',
-            'alg': 'HS256'
-        }
-
 
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -841,15 +834,10 @@ class  JwtLoginView(APIView):
             if user is not None:
                 print(user,"=================")
                 if user.is_active:
-                    # 构造payload
-                    payload = {
-                        'user_id': 1,  # 自定义用户ID
-                        'username': 'wupeiqi',  # 自定义用户名
-                        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)  # 超时时间
-                    }
+ 
                     return Response({
                         "code": 200,
-                        "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
+                        "Authorization": "JWT %s" % create_token({'username': username}),
                         "message": "成功登录",
                         "username": user.username,
                     }, status=status.HTTP_200_OK)
@@ -868,3 +856,8 @@ class  JwtLoginView(APIView):
                 "code": 400,
                 "message": "无效的表单!"
             }, status=status.HTTP_200_OK)
+
+class  JwtOrderView(APIView):
+    def get(self, request):
+
+       return Response({"a":1})

@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     url('jwt/login/$', csrf_exempt(views.JwtLoginView.as_view()), name="jwt"),
+    url('jwt/order/$', csrf_exempt(views.JwtOrderView.as_view()), name="order"),
     url('login1/$', views.UserLoginView.as_view(), name="login1"),
     url('register1/$', views.UserRegisterView.as_view(), name="register1"),
     url(r'^active1/(?P<active_code>.*)/$',
