@@ -27,6 +27,8 @@ from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
 from django.views.decorators.gzip import gzip_page
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+# from rest_framework.permissions import AllowAny
 
 
 from utils.jwt_auth import create_token
@@ -820,8 +822,13 @@ class DeleteFaceView(APIView):
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
 
+
+
 class  JwtLoginView(APIView):
-    authentication_classes = [ ]
+    authentication_classes = []
+    throttle_classes = []
+    # permission_classes = (AllowAny,)
+    
     def post(self, request):
         origin_username = request.data.get("username", "")
         username = origin_username.lower()
@@ -830,14 +837,12 @@ class  JwtLoginView(APIView):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             user = authenticate(username=username, password=password)
-            print(user,"-----------------------")
             if user is not None:
-                print(user,"=================")
                 if user.is_active:
  
                     return Response({
                         "code": 200,
-                        "Authorization": "JWT %s" % create_token({'username': username}),
+                        "token": "%s" % TokenObtainPairSerializer.get_token(user),
                         "message": "成功登录",
                         "username": user.username,
                     }, status=status.HTTP_200_OK)

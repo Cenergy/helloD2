@@ -3,13 +3,20 @@ __author__ = 'Cenergy'
 __date__ = '6/8/18 下午2:45'
 
 from django.conf.urls import url, include
+from django.urls import path
 from django.views.generic import TemplateView
 import users.views
 import xadmin
 from users import views
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     url('jwt/login/$', csrf_exempt(views.JwtLoginView.as_view()), name="jwt"),
     url('jwt/order/$', csrf_exempt(views.JwtOrderView.as_view()), name="order"),
     url('login1/$', views.UserLoginView.as_view(), name="login1"),
