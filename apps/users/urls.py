@@ -19,6 +19,8 @@ urlpatterns = [
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     url('jwt/login/$', csrf_exempt(views.JwtLoginView.as_view()), name="jwt"),
     url('jwt/order/$', csrf_exempt(views.JwtOrderView.as_view()), name="order"),
+    url('jwt/register/$', csrf_exempt(views.JwtRegisterView.as_view()), name="register"),
+    url('jwt/forget/$', csrf_exempt(views.JwtForgetPwdView.as_view()), name="forget"),
     url('login1/$', views.UserLoginView.as_view(), name="login1"),
     url('register1/$', views.UserRegisterView.as_view(), name="register1"),
     url(r'^active1/(?P<active_code>.*)/$',

@@ -11,7 +11,7 @@ django_rest_swagger == 2.2.0
 django_reversion_patchman == 2.1.1
 django_simple_captcha == 0.5.12
 djangorestframework == 3.10.2
-djangorestframework_jwt == 1.11.0
+djangorestframework-simplejwt == 4.4.0
 face_recognition == 1.2.3
 future == 0.17.1
 httplib2 == 0.13.1

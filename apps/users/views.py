@@ -828,13 +828,13 @@ class  JwtLoginView(APIView):
     authentication_classes = []
     throttle_classes = []
     # permission_classes = (AllowAny,)
-    
+
     def post(self, request):
         origin_username = request.data.get("username", "")
         username = origin_username.lower()
         password = request.data.get("password", "")
-
-        login_form = LoginForm(request.POST)
+        print(request.data,request.POST,"----------------")
+        login_form = LoginForm(request.data)
         if login_form.is_valid():
             user = authenticate(username=username, password=password)
             if user is not None:
@@ -861,6 +861,90 @@ class  JwtLoginView(APIView):
                 "code": 400,
                 "message": "无效的表单!"
             }, status=status.HTTP_200_OK)
+
+
+class JwtRegisterView(APIView):
+    def post(self, request):
+        """
+        参数为图片转为 base64 的字符串
+        :param request:
+        :return json:
+        """
+        email = (request.data.get("email", "")).lower()
+        username = (request.data.get("username", "")).lower()
+        password = request.data.get("password", "")
+        register_form = RegisterForm(request.data)
+
+        if register_form.is_valid():
+            url_strs = HttpRequest.get_host(request)
+            if UserProfile.objects.filter(email=email, is_active=True):
+                result = {
+                    "code": 214,
+                    "message": "邮箱已被注册！！",
+                }
+                return Response(result)
+            elif UserProfile.objects.filter(email=email, is_active=False):
+                send_type = "register"
+                register_send_email(email, url_strs, send_type)
+                result = {
+                    "code": 224,
+                    "message": "邮箱还没有被激活",
+                }
+                return Response(result)
+            user_proflie = UserProfile()
+            user_proflie.username = username
+            user_proflie.email = email
+            user_proflie.is_active = False
+            user_proflie.password = make_password(password)
+            user_proflie.save()
+            send_type = "register"
+            register_send_email(email, url_strs, send_type)
+            result = {
+                "code": 200,
+                "message": "请前往注册邮箱激活",
+            }
+            return Response(result)
+        else:
+            result = {
+                "code": 211,
+                "message": "未知错误",
+            }
+            return Response(result)
+
+class JwtForgetPwdView(APIView):
+    def post(self, request):
+        forget_form = ForgetForm(request.data)
+        email = (request.data.get("email", "")).lower()
+        if forget_form.is_valid():
+            users_object=UserProfile.objects.filter(email=email)
+            if users_object:
+                if users_object.filter(is_active=False):
+                    result = {
+                        "code": 214,
+                        "message": "邮箱未被激活"
+                    }
+                    return Response(result)
+                else:
+                    send_type = "forget"
+                    url_strs = HttpRequest.get_host(request)
+                    register_send_email(email, url_strs, send_type)
+                    result = {
+                        "code": 200,
+                        "message": "修改密码的链接已发送至您邮箱，请注意查收！"
+                    }
+                    return Response(result)
+            else:
+                result = {
+                    "code": 400,
+                    "message": "邮箱未被注册"
+                }
+                return Response(result)
+        else:
+            result = {
+                "code": 400,
+                "message": "无效的表单 ！！！"
+            }
+            return Response(result)
 
 class  JwtOrderView(APIView):
     def get(self, request):
