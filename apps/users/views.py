@@ -920,7 +920,7 @@ class JwtForgetPwdView(APIView):
             if users_object:
                 if users_object.filter(is_active=False):
                     result = {
-                        "code": 214,
+                        "code": 400,
                         "message": "邮箱未被激活"
                     }
                     return Response(result)
@@ -950,3 +950,18 @@ class  JwtOrderView(APIView):
     def get(self, request):
 
        return Response({"a":1})
+
+
+class  JwtResetPwdView(APIView):
+    def post(self, request):
+        email = (request.data.get("email", "")).lower()
+        code = request.data.get("code", "")
+        all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
+        if all_records.exists():
+            print(all_records.first(),"==============")
+        else:
+            result = {
+                "code": 400,
+                "message": "无效的表单！"
+            }
+            return Response(result)
