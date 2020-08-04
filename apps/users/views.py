@@ -958,7 +958,11 @@ class  JwtResetPwdView(APIView):
         code = request.data.get("code", "")
         all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
         if all_records.exists():
-            print(all_records.first(),"==============")
+            result = {
+                "code": 400,
+                "message": "无效的表单！"
+            }
+            return Response(result)
         else:
             result = {
                 "code": 400,
