@@ -956,11 +956,26 @@ class  JwtResetPwdView(APIView):
     def post(self, request):
         email = (request.data.get("email", "")).lower()
         code = request.data.get("code", "")
-        all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
-        if all_records.exists():
+        pwd1 = request.data.get("password1", "")
+        pwd2 = request.data.get("password2", "")
+
+        if pwd1 != pwd2:
             result = {
                 "code": 400,
-                "message": "无效的表单！"
+                "message": "两次密码不一致!"
+            }
+            return Response(result)
+        all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
+        if all_records.exists():
+            email = email.lower()
+            user = UserProfile.objects.get(email=email)
+            if not user.is_active:
+                user.is_active = True
+            user.password = make_password(pwd2)
+            user.save()
+            result = {
+                "code": 200,
+                "message": "修改密码成功"
             }
             return Response(result)
         else:

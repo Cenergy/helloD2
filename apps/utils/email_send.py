@@ -53,6 +53,8 @@ def  register_send_email(email,url_strs,type_code="register"):
     elif type_code == "forget":
         email_body = "<h3>大侠，密码太多容易忘记? 点击以下链接，再战江湖！----------><p>" \
                      "<a href='https://"+url_strs+"/reset/" + code + "'>https://"+url_strs+"/reset/" + code + "</a></p></h3>"
+                     # email_body = "<h3>大侠，密码太多容易忘记? 点击以下链接，再战江湖！----------><p>" \
+        #              "<a href='https://"+url_strs+"/#/reset-password/" + code + "?email="+email+"'>https://"+url_strs+"/#/reset-password/" + code + "?email="+email+"</a></p></h3>"
         message = MIMEText(email_body, 'html', 'utf-8')
         message['From'] = Header("AIGIS网", 'utf-8')
         try:
