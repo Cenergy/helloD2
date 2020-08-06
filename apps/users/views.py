@@ -22,7 +22,7 @@ from rest_framework import permissions, renderers, viewsets
 from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 
-from utils.email_send import register_send_email, common_send_email
+from utils.email_send import register_send_email, common_send_email,identity_send_email
 from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
@@ -47,6 +47,8 @@ from extensions.auth import JwtQueryParamAuthentication, JwtAuthorizationAuthent
 # # custom_error403
 # def permission_denied(request):
 #     return render(request, '403.html')
+
+defaultURL='http://127.0.0.1:8080/'
 
 class VuePageView(TemplateView):
     template_name = "index.html"
@@ -873,24 +875,30 @@ class JwtRegisterView(APIView):
         email = (request.data.get("email", "")).lower()
         username = (request.data.get("username", "")).lower()
         password = request.data.get("password", "")
+        origin = request.data.get("origin", "")
         register_form = RegisterForm(request.data)
-
         if register_form.is_valid():
-            url_strs = HttpRequest.get_host(request)
+            if UserProfile.objects.filter(username=username):
+                result = {
+                    "code": 400,
+                    "message": "用户名已被注册！！",
+                }
+                return Response(result)
             if UserProfile.objects.filter(email=email, is_active=True):
                 result = {
-                    "code": 214,
-                    "message": "邮箱已被注册！！",
+                    "code": 400,
+                    "message": "邮箱已被激活！！",
                 }
                 return Response(result)
             elif UserProfile.objects.filter(email=email, is_active=False):
                 send_type = "register"
-                register_send_email(email, url_strs, send_type)
+                identity_send_email(email, origin, send_type)
                 result = {
-                    "code": 224,
-                    "message": "邮箱还没有被激活",
+                    "code": 200,
+                    "message": "邮箱已被注册但未被激活",
                 }
                 return Response(result)
+
             user_proflie = UserProfile()
             user_proflie.username = username
             user_proflie.email = email
@@ -898,7 +906,7 @@ class JwtRegisterView(APIView):
             user_proflie.password = make_password(password)
             user_proflie.save()
             send_type = "register"
-            register_send_email(email, url_strs, send_type)
+            identity_send_email(email, origin, send_type)
             result = {
                 "code": 200,
                 "message": "请前往注册邮箱激活",
@@ -906,8 +914,8 @@ class JwtRegisterView(APIView):
             return Response(result)
         else:
             result = {
-                "code": 211,
-                "message": "未知错误",
+                "code": 400,
+                "message": "表单错误",
             }
             return Response(result)
 
@@ -915,6 +923,7 @@ class JwtForgetPwdView(APIView):
     def post(self, request):
         forget_form = ForgetForm(request.data)
         email = (request.data.get("email", "")).lower()
+        origin = request.data.get("origin", "")
         if forget_form.is_valid():
             users_object=UserProfile.objects.filter(email=email)
             if users_object:
@@ -926,8 +935,7 @@ class JwtForgetPwdView(APIView):
                     return Response(result)
                 else:
                     send_type = "forget"
-                    url_strs = HttpRequest.get_host(request)
-                    register_send_email(email, url_strs, send_type)
+                    identity_send_email(email, origin, send_type)
                     result = {
                         "code": 200,
                         "message": "修改密码的链接已发送至您邮箱，请注意查收！"
@@ -945,6 +953,38 @@ class JwtForgetPwdView(APIView):
                 "message": "无效的表单 ！！！"
             }
             return Response(result)
+
+
+class JwtActivatePwdView(APIView):
+    def post(self, request):
+        email = (request.data.get("email", "")).lower()
+        code = request.data.get("code", "")
+        all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
+        if all_records:
+            record = all_records.first()
+            email = record.email.lower()
+            user = UserProfile.objects.get(email=email)
+            user.is_active = True
+            user.save()
+            result = {
+                "code": 200,
+                "message": "激活成功"
+            }
+            return Response(result)
+        else:
+            exist_user = UserProfile.objects.filter(email=email)
+            if exist_user:
+                result = {
+                    "code": 400,
+                    "message": "核验码错误"
+                }
+            else:
+                result = {
+                    "code": 400,
+                    "message": "邮箱未被注册"
+                }
+            return Response(result)
+
 
 class  JwtOrderView(APIView):
     def get(self, request):

@@ -21,6 +21,7 @@ urlpatterns = [
     url('jwt/order/$', csrf_exempt(views.JwtOrderView.as_view()), name="order"),
     url('jwt/register/$', csrf_exempt(views.JwtRegisterView.as_view()), name="register"),
     url('jwt/forget/$', csrf_exempt(views.JwtForgetPwdView.as_view()), name="forget"),
+    url('jwt/activate/$', csrf_exempt(views.JwtActivatePwdView.as_view()), name="activate"),
     url('jwt/reset/$', csrf_exempt(views.JwtResetPwdView.as_view()), name="reset"),
     url('login1/$', views.UserLoginView.as_view(), name="login1"),
     url('register1/$', views.UserRegisterView.as_view(), name="register1"),
