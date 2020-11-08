@@ -21,6 +21,7 @@ import courses.views
 import sources.views
 import api.views
 import ais.views
+import oauth.views
 import xadmin
 from users import views
 from wechat import views
@@ -46,6 +47,7 @@ urlpatterns = [
     url(r'^sources/', include('sources.urls')),
     url(r'^ais/', include('ais.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^oauth/', include('oauth.urls')),
     # url(r'docs/', include_docs_urls(title="AIGIS")),
     url(r'api/docs/', schema_view),
     url(r'^wechat', include('wechat.urls')),

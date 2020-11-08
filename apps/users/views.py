@@ -102,7 +102,7 @@ class IndexView(View):
             else:
                 login_type = 2
         # 判断apide时间有效性
-        query_sql = "select * from sources_sourcelimit where id={abc}".format(abc=1)
+        query_sql = "select * from sources_sourcelimit where id={source_id}".format(source_id=1)
         all_data = pd.read_sql(query_sql, connection)
         today = datetime.date.today().strftime('%Y-%m-%d')
         if str(all_data["limit_time"][0]) == str(today):
