@@ -26,7 +26,7 @@ def github_token(client_id, client_secret, code):
         'accept': 'application/json'
     }
     res = requests.post(token_url, headers = header)
-    if res.status_code == 200:
+    if res.status_code == 200:  
         res_dict = res.json()
         print(res_dict)
         return res_dict['access_token']
