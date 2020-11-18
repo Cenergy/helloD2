@@ -103,9 +103,15 @@ def do_complete(backend, login, user=None, redirect_name='next',
     # return backend.strategy.redirect(url)
     response = backend.strategy.redirect(url)
     payload = jwt_payload_handler(user)
+    username = user.name if user.name else user.username
+    email = user.email
+
+    user_info = {'username':username,'email':email,'displayName':username}
+    import json
     response.set_cookie(
-        "name", user.name if user.name else user.username, max_age=24*3600)
-    response.set_cookie("token", jwt_encode_handler(payload), max_age=24*3600)
+        "userInfo", json.dumps(user_info), max_age=7*24*3600)
+    response.set_cookie("token", jwt_encode_handler(
+        payload), max_age=7*24*3600)
     return response
 
 

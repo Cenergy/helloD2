@@ -52,7 +52,7 @@ urlpatterns = [
     url(r'api/docs/', schema_view),
     url(r'^wechat', include('wechat.urls')),
     url(r'^', include('users.urls')),
-    url('^account/', include('social_django.urls', namespace='social')),
+    url('^accounts/', include('social_django.urls', namespace='social')),
     url(r'^media/(?P<path>.*)$', static.serve,
         {'document_root': settings.MEDIA_ROOT}),
 
