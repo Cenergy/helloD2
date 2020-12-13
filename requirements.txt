@@ -26,4 +26,5 @@ diff-match-patch
 django-cors-headers
 django-guardian
 urllib3 == 1.25.8
-psycopg2
+psycopg2 == 2.8.5
+social-auth-app-django==4.0.0
