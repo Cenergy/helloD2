@@ -1,7 +1,7 @@
-"""helloD URL Configuration
+"""helloD2 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
+    https://docs.djangoproject.com/en/3.1/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -14,51 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.conf.urls import url, include
-from django.views.generic import TemplateView
-import users.views
-import courses.views
-import sources.views
-import api.views
-import ais.views
-import oauth.views
-import xadmin
-from users import views
-from wechat import views
-from helloD2 import settings
-from django.views import static
-from rest_framework.documentation import include_docs_urls
-from rest_framework_swagger.views import get_swagger_view
-from django.views.generic.base import TemplateView
-
-schema_view = get_swagger_view(title="AIGIS's API")
-
-# custom_error的路由!
-# handler403 = users.views.permission_denied
-# handler404 = users.views.page_not_found
-# handler500 = users.views.page_error
+from django.urls import path
 
 urlpatterns = [
-    # url(r'^users/', include('users.urls')),
-    url('admin/', xadmin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls', namespace="rest_framework")),
-    url(r'^ueditor/', include('DjangoUeditor.urls')),
-    url(r'^courses/', include('courses.urls')),
-    url(r'^sources/', include('sources.urls')),
-    url(r'^ais/', include('ais.urls')),
-    url(r'^api/', include('api.urls')),
-    url(r'^oauth/', include('oauth.urls')),
-    # url(r'docs/', include_docs_urls(title="AIGIS")),
-    url(r'api/docs/', schema_view),
-    url(r'^wechat', include('wechat.urls')),
-    url(r'^', include('users.urls')),
-    url('^accounts/', include('social_django.urls', namespace='social')),
-    url(r'^media/(?P<path>.*)$', static.serve,
-        {'document_root': settings.MEDIA_ROOT}),
-
-
-    # 增加以下一行，以识别静态资源
-    # url(r'^static/(?P<path>.*)$', static.serve,
-    #     {'document_root': settings.STATIC_ROOT}, name='static'),
-
+    path('admin/', admin.site.urls),
 ]
