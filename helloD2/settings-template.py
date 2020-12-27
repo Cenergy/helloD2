@@ -54,10 +54,10 @@ SOCIAL_AUTH_QQ_SECRET = '2658f0d5c6d64d7cdd38a1b39cc4c0b4'
 SOCIAL_AUTH_QQ_USE_OPENID_AS_USERNAME = True
 
 # 登陆成功后的回调路由
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8080'  # 登陆成功之后的路由
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/view/'  # 登陆成功之后的路由
-SOCIAL_AUTH_SANITIZE_REDIRECTS = True
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000'  # 登陆成功之后的路由
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/view/'  # 登陆成功之后的路由
+# SOCIAL_AUTH_SANITIZE_REDIRECTS = True
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Application definition
 
@@ -70,7 +70,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 以上是默认的apps
     'users.apps.UsersConfig',
-    'ais.apps.ApiConfig',
+    'api.apps.ApiConfig',
+    'ais.apps.AisConfig',
+    'courses.apps.CoursesConfig',
+    'sources.apps.SourcesConfig',
+    'wechat.apps.WechatConfig',
+    # 以下是第三方apps
+    'django_filters',
     'social_django',
     'captcha',
     'rest_framework',
