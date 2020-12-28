@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from users.models import UserProfile
 
-from DjangoUeditor.models import UEditorField
+# from DjangoUeditor.models import UEditorField
 from utils import renameImg
 
 
@@ -22,8 +22,7 @@ class BlogType(models.Model):
 class Blog(models.Model):
     title=models.CharField(max_length=50)
     blog_type=models.ForeignKey(BlogType,on_delete=models.DO_NOTHING)
-    content=UEditorField(verbose_name='文章', imagePath="blog/images/",
-                                 filePath="blog/files/", default="", toolbars='full',null=True, blank=True)
+    content=models.TextField(verbose_name='文章', default="", null=True, blank=True)
     author=models.ForeignKey(UserProfile,on_delete=models.DO_NOTHING)
     source_img = models.ImageField(null=True, blank=True, upload_to="blog/images/",
                                    default="blog/images/default.png", storage=renameImg.ImageStorage(),

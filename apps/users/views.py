@@ -3,7 +3,7 @@ import platform as plat
 
 from django.views.generic.base import View
 import numpy as np
-from django.shortcuts import render, render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from rest_framework.views import APIView
@@ -11,7 +11,6 @@ from rest_framework.response import Response
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import login, authenticate,logout
-from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from rest_framework import status
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password
@@ -26,29 +25,9 @@ from utils.email_send import register_send_email, common_send_email,identity_sen
 from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
-from django.views.decorators.gzip import gzip_page
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-# from rest_framework.permissions import AllowAny
 
 
-from utils.jwt_auth import create_token
-from extensions.auth import JwtQueryParamAuthentication, JwtAuthorizationAuthentication
-
-# # custom_error404
-# def page_not_found(request):
-#     return render(request, '404.html')
-#
-#
-# # custom_error500
-# def page_error(request):
-#     return render(request, '500.html')
-#
-#
-# # custom_error403
-# def permission_denied(request):
-#     return render(request, '403.html')
-
-defaultURL='http://127.0.0.1:8080/'
 
 class VuePageView(TemplateView):
     template_name = "index.html"
@@ -57,21 +36,6 @@ class VuePageView(TemplateView):
     #     context = super().get_context_data(**kwargs)
     #     context['latest_articles'] = 1
     #     return context
-
-def vue(request):
-    return TemplateView.as_view(template_name='index.html')
-
-
-def test(request):
-    return render(request, "users/test.html", locals())
-
-
-def map(request):
-    return render(request, "users/map.html")
-
-
-def about_me(request):
-    return render(request, 'aboutme.html')
 
 
 class CustomBackend(ModelBackend):
@@ -88,121 +52,11 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class IndexView(View):
-    def get(self, request):
-        user_name = request.session.get("user_name", " ")
-        if user_name == " ":
-            login_type = 0
-        else:
-            login_sql = "select * from users_userprofile where email='{email}'".format(email=user_name)
-            login_data = pd.read_sql(login_sql, connection)
-            login_type = login_data["knowfacecode"][0]
-            if login_type == '':
-                login_type = 1
-            else:
-                login_type = 2
-        # 判断apide时间有效性
-        query_sql = "select * from sources_sourcelimit where id={source_id}".format(source_id=1)
-        all_data = pd.read_sql(query_sql, connection)
-        today = datetime.date.today().strftime('%Y-%m-%d')
-        if str(all_data["limit_time"][0]) == str(today):
-            pass
-        else:
-            sub_one_sql = "UPDATE sources_sourcelimit SET num_count=50,limit_time='%s'" % today
-            sub_one_cursor = connection.cursor()
-            sub_one_cursor.execute(sub_one_sql)
-        num_count = all_data["num_count"][0]
-        return render(request, "users/index.html", locals())
-
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return HttpResponseRedirect('/')
-
-
-class LoginView(View):
-    renderer_classes = [renderers.TemplateHTMLRenderer]
-    template_name = "users/login.html"
-
-    def get(self, request):
-        return render(request, "users/login.html", locals())
-
-    def post(self, request):
-        username = request.POST.get("username", "")
-        user_input = username = username.lower()
-        password_input = password = request.POST.get("password", "")
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            # request.session["username"] = username
-            # username = request.session.get("username", " ")
-
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    request.session["user_name"] = username
-                    pre_url = request.session.get("pre_url_path", "/")
-                    return redirect(pre_url)
-                    # return HttpResponseRedirect('/')
-                    # return render(request, "users/index.html", locals())
-                else:
-                    msg = "用户未激活！"
-                    return render(request, "users/login.html", locals())
-            else:
-                if UserProfile.objects.filter(username=username).exists():
-                    msg = "密码错误!"
-                else:
-                    msg = "用户不存在"
-                return render(request, "users/login.html", locals())
-        else:
-            login_form = login_form
-            return render(request, "users/login.html", locals())
-
-
-class UserLoginView(APIView):
-    def get(self, request):
-        """
-        :param request:
-        :return json:
-
-        """
-
-    def post(self, request):
-        username = (request.POST.get("username", "")).lower()
-        password = request.POST.get("password", "")
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    return Response({
-                        "code": 200,
-                        "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
-                        "message": "成功登录",
-                        "username": user.username,
-                    }, status=status.HTTP_200_OK)
-                else:
-                    return Response({
-                        "code": 400,
-                        "message": "用户未激活！"
-                    }, status=status.HTTP_200_OK)
-            else:
-                if UserProfile.objects.filter(username=username).exists():
-                    return Response({
-                        "code": 400,
-                        "message": "密码错误!"
-                    }, status=status.HTTP_200_OK)
-                else:
-                    return Response({
-                        "code": 400,
-                        "message": "用户不存在!"
-                    }, status=status.HTTP_200_OK)
-        else:
-            return Response({
-                "code": 400,
-                "message": "无效的表单!"
-            }, status=status.HTTP_200_OK)
 
 
 class UserRegisterView(APIView):
@@ -250,233 +104,6 @@ class UserRegisterView(APIView):
                 "message": "未知错误",
             }
             return Response(result)
-
-
-class RegisterView(View):
-    def get(self, request):
-        register_form = RegisterForm()
-        return render(request, "users/register.html", locals())
-
-    def post(self, request):
-        username = request.POST.get("email", "")
-        user_reg_input = username = username.lower()
-        password_reg_input = password = request.POST.get("password", "")
-        register_form = RegisterForm(request.POST)
-        if register_form.is_valid():
-            url_strs = HttpRequest.get_host(request)
-            if UserProfile.objects.filter(email=username, is_active=True):
-                msg = "邮箱已被注册！！"
-                return render(request, "users/register.html", locals())
-            elif UserProfile.objects.filter(email=username, is_active=False):
-                msg = "请激活您的邮箱"
-                send_type = "register"
-                register_send_email(username, url_strs, send_type)
-                return render(request, "users/register.html", locals())
-            user_proflie = UserProfile()
-            user_proflie.username = username
-            user_proflie.email = username
-            user_proflie.is_active = False
-            user_proflie.password = make_password(password)
-            user_proflie.save()
-            send_type = "register"
-            register_send_email(username, url_strs, send_type)
-            return render(request, "users/send_success.html", locals())
-        else:
-            return render(request, "users/register.html", locals())
-
-
-class ActiveUserView(View):
-    def get(self, request, active_code):
-        all_records = EmailVerifyRecord.objects.filter(code=active_code)
-        if all_records:
-            for record in all_records:
-                email = record.email
-                email = email.lower()
-                user = UserProfile.objects.get(email=email)
-                user.is_active = True
-                user.save()
-            return redirect("/login/")
-            # return render(request, "users/login.html", locals())
-        else:
-            return render(request, "users/active_fail.html", locals())
-
-
-class UserActiveView(APIView):
-    def get(self, request, active_code):
-        all_records = EmailVerifyRecord.objects.filter(code=active_code)
-        if all_records:
-            for record in all_records:
-                email = record.email
-                email = email.lower()
-                user = UserProfile.objects.get(email=email)
-                user.is_active = True
-                user.save()
-            result = {
-                "code": 200,
-                "message": "激活成功"
-            }
-            return Response(result)
-        else:
-            result = {
-                "code": 400,
-                "message": "激活失败"
-            }
-            return Response(result)
-
-
-class UserForgetPwdView(APIView):
-    def post(self, request):
-        forget_form = ForgetForm(request.POST)
-        email = (request.POST.get("email", "")).lower()
-        if forget_form.is_valid():
-            if UserProfile.objects.filter(email=email):
-                email = request.POST.get("email", "")
-                if UserProfile.objects.filter(email=email)[0].is_active == 0:
-                    result = {
-                        "code": 214,
-                        "message": "邮箱未被激活"
-                    }
-                    return Response(result)
-                else:
-                    send_type = "forget"
-                    url_strs = HttpRequest.get_host(request)
-                    register_send_email(email, url_strs, send_type)
-                    result = {
-                        "code": 200,
-                        "message": "修改密码的链接已发送至您邮箱，请注意查收！"
-                    }
-                    return Response(result)
-            else:
-                result = {
-                    "code": 400,
-                    "message": "邮箱未被注册"
-                }
-                return Response(result)
-        else:
-            result = {
-                "code": 400,
-                "message": "未知错误！！！"
-            }
-            return Response(result)
-
-
-class UserResetPwdView(APIView):
-    def get(self, request, reset_code):
-        all_records = EmailVerifyRecord.objects.filter(code=reset_code)
-        if all_records:
-            for record in all_records:
-                email = record.email.lower()
-                email = email.lower()
-                result = {
-                    "code": 200,
-                    "message": "请修改密码",
-                    "data": email
-                }
-                return Response(result)
-        else:
-            result = {
-                "code": 400,
-                "message": "未知错误！！！"
-            }
-            return Response(result)
-
-
-class UserModifyPwdView(APIView):
-    def post(self, request):
-        modify_form = ModifyPwdForm(request.POST)
-        if modify_form.is_valid():
-            pwd1 = request.POST.get("password1", "")
-            pwd2 = request.POST.get("password2", "")
-            email = request.POST.get("email", "")
-            email = email.lower()
-            if pwd1 != pwd2:
-                result = {
-                    "code": 400,
-                    "message": "两次密码不一致！！！"
-                }
-                return Response(result)
-            user = UserProfile.objects.get(email=email)
-            user.password = make_password(pwd2)
-            user.save()
-            return Response({
-                "code": 200,
-                "Authorization": "JWT %s" % jwt_encode_handler(jwt_payload_handler(user)),
-                "message": "成功登录",
-                "username": user.username,
-            }, status=status.HTTP_200_OK)
-        else:
-            email = request.POST.get("email", "")
-            result = {
-                "code": 212,
-                "message": "请修改密码",
-                "data": email
-            }
-            return Response(result)
-
-
-class ForgetPwdView(View):
-    def get(self, request):
-        username = ""
-        forget_form = ForgetForm()
-        return render(request, "users/forgetpwd.html", locals())
-
-    def post(self, request):
-        forget_form = ForgetForm(request.POST)
-        username = request.POST.get("email", "")
-        username = username.lower()
-        if forget_form.is_valid():
-            if UserProfile.objects.filter(email=username):
-                email = request.POST.get("email", "")
-                if UserProfile.objects.filter(email=username)[0].is_active == 0:
-                    msg = "邮箱未被激活"
-                    return render(request, "users/forgetpwd.html", locals())
-                else:
-                    send_type = "forget"
-                    url_strs = HttpRequest.get_host(request)
-                    register_send_email(email, url_strs, send_type)
-                    return render(request, "users/send_success.html", locals())
-            else:
-                msg = "邮箱未被注册"
-                return render(request, "users/forgetpwd.html", locals())
-        else:
-            return render(request, "users/forgetpwd.html", locals())
-
-
-class ResetPwdView(View):
-    def get(self, request, reset_code):
-        all_records = EmailVerifyRecord.objects.filter(code=reset_code)
-        if all_records:
-            for record in all_records:
-                email = record.email
-                email = email.lower()
-                return render(request, "users/password_reset.html", locals())
-        else:
-            return render(request, "users/active_fail.html", locals())
-
-
-class ModifyPwdView(View):
-    def post(self, request):
-        modify_form = ModifyPwdForm(request.POST)
-        if modify_form.is_valid():
-            pwd1 = request.POST.get("password1", "")
-            pwd2 = request.POST.get("password2", "")
-            email = request.POST.get("email", "")
-            email = email.lower()
-            if pwd1 != pwd2:
-                msg = "两次密码不一致"
-                return render(request, "users/password_reset.html", locals())
-            user = UserProfile.objects.get(email=email)
-            user.password = make_password(pwd2)
-            user.save()
-            return HttpResponseRedirect("/login/")
-        else:
-            email = request.POST.get("email", "")
-            return render(request, "users/password_reset.html", locals())
-
-
-class UserinfoView(View):
-    def get(self, request):
-        return render(request, "users/usercenter-info.html")
 
 
 @csrf_exempt
@@ -569,9 +196,6 @@ class UserSuggestion(View):
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
 
-class FaceRegView(View):
-    def get(self, request):
-        return render(request, "users/facereg.html", locals())
 
 
 # 人脸识别
@@ -741,55 +365,6 @@ class FaceLink(View):
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
 
-class FaceLoginView(View):
-    renderer_classes = [renderers.TemplateHTMLRenderer]
-    template_name = "users/login.html"
-
-    def get(self, request):
-        return render(request, "users/login.html", locals())
-
-    def post(self, request):
-        login_form = LoginForm(request.POST)
-        username = request.POST.get("username", "")
-        username = username.lower()
-        password = request.POST.get("password", "")
-        if login_form.is_valid():
-            # request.session["username"] = username
-            # username = request.session.get("username", " ")
-
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    request.session["user_name"] = username
-                    pre_url = request.session.get("pre_url_path", "/")
-                    abcs = {
-                        "code": 200,
-                        "message": "登陆成功",
-                        "data": {"reurl": pre_url}
-                    }
-                else:
-                    abcs = {
-                        "code": 401,
-                        "message": "用户未激活",
-                        "data": {"reurl": "/login/"}
-                    }
-            else:
-                msg = "密码错误!"
-                abcs = {
-                    "code": 401,
-                    "message": "密码错误",
-                    "data": {"reurl": "/login/"}
-                }
-        else:
-            login_form = login_form
-            abcs = {
-                "code": 401,
-                "message": "登陆失败",
-                "data": {"reurl": "/login/"}
-            }
-        return HttpResponse(json.dumps(abcs), content_type='application/json')
-
 class DeleteFaceView(APIView):
     def get(self, request):
         pass
@@ -835,7 +410,6 @@ class  JwtLoginView(APIView):
         origin_username = request.data.get("username", "")
         username = origin_username.lower()
         password = request.data.get("password", "")
-        print(request.data,request.POST,"----------------")
         login_form = LoginForm(request.data)
         if login_form.is_valid():
             user = authenticate(username=username, password=password)

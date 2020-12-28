@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from DjangoUeditor.models import UEditorField
+# from DjangoUeditor.models import UEditorField
 
 from utils.replay_email import common_reply_email
 
@@ -46,16 +46,16 @@ class EmailVerifyRecord(models.Model):
         verbose_name_plural = verbose_name
 
 
-class Banner(models.Model):
-    title = models.CharField(max_length=100, verbose_name="title")
-    image = models.ImageField(upload_to="banner/%Y/%m", verbose_name="lunbo", max_length=100)
-    url = models.URLField(max_length=200, verbose_name="url")
-    index = models.IntegerField(default=100, verbose_name="index")
-    add_time = models.DateField(default=datetime.datetime.now, verbose_name="time")
+# class Banner(models.Model):
+#     title = models.CharField(max_length=100, verbose_name="title")
+#     image = models.ImageField(upload_to="banner/%Y/%m", verbose_name="lunbo", max_length=100)
+#     url = models.URLField(max_length=200, verbose_name="url")
+#     index = models.IntegerField(default=100, verbose_name="index")
+#     add_time = models.DateField(default=datetime.datetime.now, verbose_name="time")
 
-    class Meta:
-        verbose_name = "banner"
-        verbose_name_plural = verbose_name
+#     class Meta:
+#         verbose_name = "banner"
+#         verbose_name_plural = verbose_name
 
 
 class Suggestion(models.Model):
@@ -67,8 +67,7 @@ class Suggestion(models.Model):
     suggest_content = models.TextField(verbose_name="建议内容", null=False, blank=False)
     email = models.EmailField(max_length=50, verbose_name="邮件地址", null=False, blank=False)
     suggest_type = models.IntegerField(choices=SUGGEST_TYPE, verbose_name="回复类型", help_text="回复类型", default=0)
-    reply_content = UEditorField(verbose_name='回复内容', imagePath="suggests/images/",
-                                 filePath="suggests/files/", default="", null=True, blank=True)
+    reply_content = models.TextField(verbose_name='回复内容', default="", null=True, blank=True)
     add_time = models.DateField(default=datetime.datetime.now, verbose_name="添加时间")
 
     class Meta:
