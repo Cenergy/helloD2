@@ -11,7 +11,6 @@ from rest_framework.response import Response
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import login, authenticate,logout
-from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from rest_framework import status
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password
