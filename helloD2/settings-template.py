@@ -54,10 +54,10 @@ SOCIAL_AUTH_QQ_SECRET = '2658f0d5c6d64d7cdd38a1b39cc4c0b4'
 SOCIAL_AUTH_QQ_USE_OPENID_AS_USERNAME = True
 
 # 登陆成功后的回调路由
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000'  # 登陆成功之后的路由
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/view/'  # 登陆成功之后的路由
-# SOCIAL_AUTH_SANITIZE_REDIRECTS = True
-# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000'  # 登陆成功之后的路由
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/view/'  # 登陆成功之后的路由
+SOCIAL_AUTH_SANITIZE_REDIRECTS = True
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Application definition
 
@@ -126,12 +126,12 @@ WSGI_APPLICATION = 'helloD2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # 连接MySQL数据库
 # DATABASES = {
 #     'default': {
@@ -144,16 +144,16 @@ DATABASES = {
 #     }
 # }
 # 连接postgreSQL数据库
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'aigisss',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': '47.114.59.109',
-#         'PORT': '9555',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'aigisss',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '47.114.59.109',
+        'PORT': '9555',
+    }
+}
 
 
 # Password validation
