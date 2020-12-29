@@ -2,7 +2,7 @@ from six.moves.urllib_parse import quote
 
 from .utils import sanitize_redirect, user_is_authenticated, \
     user_is_active, partial_pipeline_data, setting_url
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainSerializer
 
 
 def do_auth(backend, redirect_name='next'):
@@ -102,16 +102,14 @@ def do_complete(backend, login, user=None, redirect_name='next',
             backend.setting('LOGIN_REDIRECT_URL')
     # return backend.strategy.redirect(url)
     response = backend.strategy.redirect(url)
-    payload = jwt_payload_handler(user)
     username = user.name if user.name else user.username
     email = user.email
 
-    user_info = {'username': username, 'email': email, 'displayName': username}
+    user_info = {'username':username,'email':email,'displayName':username}
     import json
     response.set_cookie(
         "userInfo", json.dumps(user_info), max_age=7*24*3600)
-    response.set_cookie("accessToken", TokenObtainPairSerializer.get_token(
-        payload), max_age=7*24*3600)
+    response.set_cookie("accessToken", TokenObtainSerializer.get_token(user), max_age=7*24*3600)
     return response
 
 
