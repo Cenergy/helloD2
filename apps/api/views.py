@@ -89,8 +89,10 @@ class SourcesListView(APIView):
             count_sql = "SELECT * FROM sources_sourcescore "
             datas = pd.read_sql(count_sql, connection)
             count = len(datas)
-            query_sql = "SELECT * FROM sources_sourcescore LIMIT {0},{1}".format(
-                objStart, objEnd)
+            # SELECT * FROM sources_sourcescore LIMIT  10 offset 1
+            query_sql = "SELECT * FROM sources_sourcescore LIMIT  {1} offset {0}".format(
+                objStart, num)
+            print(query_sql,"==============")
         snippets = SourcesCore.objects.raw(query_sql)
         serializer = SourcesCoreSerializers(snippets, many=True)
         pages = math.ceil(int(count)/int(num))
