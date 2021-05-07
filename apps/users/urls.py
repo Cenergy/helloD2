@@ -31,5 +31,5 @@ urlpatterns = [
         name="user_suggest"),
     url(r'^get_voices/$', views.get_voices),
     url(r'^BANAJAX/$', views.BANAJAX),
-    url(r'^', views.VuePageView.as_view(), name="vue"),
+    url(r'', views.VuePageView.as_view(), name="vue"),
 ]
