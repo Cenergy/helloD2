@@ -1,4 +1,10 @@
-import os, json, uuid, base64, datetime, random, string
+import os
+import json
+import uuid
+import base64
+import datetime
+import random
+import string
 import platform as plat
 
 from django.views.generic.base import View
@@ -10,7 +16,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth import login, authenticate,logout
+from django.contrib.auth import login, authenticate, logout
 from rest_framework import status
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password
@@ -21,12 +27,23 @@ from rest_framework import permissions, renderers, viewsets
 from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 
-from utils.email_send import register_send_email, common_send_email,identity_send_email
+from utils.email_send import register_send_email, common_send_email, identity_send_email
 from .models import UserProfile, EmailVerifyRecord, Suggestion, FaceUser
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from utils.voices import towords
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
+def page_not_found_view(request,exception,template_name='404.html'):
+    return render(request,template_name,status=404)
+
+
+def server_error_view(request, template_name='500.html'):
+    return render(request, template_name,status=500)
+
+
+def permission_denied_view(request,exception,template_name='403.html'):
+    return render(request, template_name, status=403)
 
 
 class VuePageView(TemplateView):
@@ -45,12 +62,12 @@ class CustomBackend(ModelBackend):
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            user = UserProfile.objects.get(Q(username=username) | Q(email=username))
+            user = UserProfile.objects.get(
+                Q(username=username) | Q(email=username))
             if user.check_password(password):
                 return user
         except Exception as e:
             return None
-
 
 
 class LogoutView(View):
@@ -181,7 +198,8 @@ class UserSuggestion(View):
             suggest_data.suggest_content = suggest_message
             suggest_data.save()
             # 发邮件回复用户已收到
-            common_send_email("673598118@qq.com", suggest_email, suggest_message)
+            common_send_email("673598118@qq.com",
+                              suggest_email, suggest_message)
             reginfs = {
                 "code": 202,
                 "message": "success",
@@ -196,8 +214,6 @@ class UserSuggestion(View):
         return HttpResponse(json.dumps(reginfs), content_type='application/json')
 
 
-
-
 # 人脸识别
 
 class RegImage(View):
@@ -210,7 +226,8 @@ class RegImage(View):
         if user_name == " ":
             login_type = 0
         else:
-            login_sql = "select * from users_userprofile where email='{email}'".format(email=user_name)
+            login_sql = "select * from users_userprofile where email='{email}'".format(
+                email=user_name)
             login_data = pd.read_sql(login_sql, connection)
             login_type = login_data["knowfacecode"][0]
             if login_type == '':
@@ -237,8 +254,10 @@ class RegImage(View):
         face_id = ""
         try:
             unknown_image = face_recognition.load_image_file(uknownimgpath)
-            unknown_face_encoding = face_recognition.face_encodings(unknown_image)[0]
-            results = list(face_recognition.compare_faces(known_faces, unknown_face_encoding, tolerance=0.39))
+            unknown_face_encoding = face_recognition.face_encodings(unknown_image)[
+                0]
+            results = list(face_recognition.compare_faces(
+                known_faces, unknown_face_encoding, tolerance=0.39))
             for i, j in zip(results, user_index):
                 if i == True:
                     that_sql = "SELECT * from 'users_userprofile' where id=%d" % j
@@ -253,7 +272,8 @@ class RegImage(View):
             face_name, match_index = "noFace", "notMatch"
         if face_name == "Unknown":
             known_image = face_recognition.load_image_file(uknownimgpath)
-            known_face_encoding = face_recognition.face_encodings(unknown_image)[0]
+            known_face_encoding = face_recognition.face_encodings(unknown_image)[
+                0]
             ran_name = ''.join(random.sample(string.ascii_letters, 6))
             faceid = (str(uuid.uuid1())).replace("-", "")
             # newimgpath = sysfile + '/media/face/faceLibrary/'
@@ -399,9 +419,7 @@ class DeleteFaceView(APIView):
         return HttpResponse(json.dumps(abcs), content_type='application/json')
 
 
-
-
-class  JwtLoginView(APIView):
+class JwtLoginView(APIView):
     authentication_classes = []
     throttle_classes = []
     # permission_classes = (AllowAny,)
@@ -415,7 +433,7 @@ class  JwtLoginView(APIView):
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
- 
+
                     return Response({
                         "code": 200,
                         "token": "%s" % TokenObtainPairSerializer.get_token(user),
@@ -493,13 +511,14 @@ class JwtRegisterView(APIView):
             }
             return Response(result)
 
+
 class JwtForgetPwdView(APIView):
     def post(self, request):
         forget_form = ForgetForm(request.data)
         email = (request.data.get("email", "")).lower()
         origin = request.data.get("origin", "")
         if forget_form.is_valid():
-            users_object=UserProfile.objects.filter(email=email)
+            users_object = UserProfile.objects.filter(email=email)
             if users_object:
                 if users_object.filter(is_active=False):
                     result = {
@@ -533,7 +552,7 @@ class JwtActivatePwdView(APIView):
     def post(self, request):
         email = (request.data.get("email", "")).lower()
         code = request.data.get("code", "")
-        all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
+        all_records = EmailVerifyRecord.objects.filter(code=code, email=email)
         if all_records:
             record = all_records.first()
             email = record.email.lower()
@@ -560,13 +579,13 @@ class JwtActivatePwdView(APIView):
             return Response(result)
 
 
-class  JwtOrderView(APIView):
+class JwtOrderView(APIView):
     def get(self, request):
 
-       return Response({"a":1})
+        return Response({"a": 1})
 
 
-class  JwtResetPwdView(APIView):
+class JwtResetPwdView(APIView):
     def post(self, request):
         email = (request.data.get("email", "")).lower()
         code = request.data.get("code", "")
@@ -579,7 +598,7 @@ class  JwtResetPwdView(APIView):
                 "message": "两次密码不一致!"
             }
             return Response(result)
-        all_records = EmailVerifyRecord.objects.filter(code=code,email=email)
+        all_records = EmailVerifyRecord.objects.filter(code=code, email=email)
         if all_records.exists():
             email = email.lower()
             user = UserProfile.objects.get(email=email)

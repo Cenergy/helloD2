@@ -20,6 +20,9 @@ from django.conf.urls import url, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework.authtoken import views
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -34,6 +37,10 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
+handler404 = 'users.views.page_not_found_view'
+handler500 = 'users.views.server_error_view'
+handle403 = 'users.views.permission_denied_view'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^ais/', include('ais.urls')),
@@ -41,9 +48,15 @@ urlpatterns = [
     url(r'^courses/', include('courses.urls')),
     url(r'^sources/', include('sources.urls')),
     url(r'^wechat', include('wechat.urls')),
+    #drf自带的token认证模式
+    url(r'^api-token-auth/', views.obtain_auth_token),
     url('^accounts/', include('social_django.urls', namespace='social')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     url(r'^', include('users.urls')),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
