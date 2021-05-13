@@ -25,6 +25,7 @@ urlpatterns = [
         name="suggestions"),
     url(r'v1/resources/$', views.SourcesList.as_view(), name="resources"),
     url(r'v1/sources/$', views.SourcesListView.as_view(), name="sources"),
+    url(r'v1/notes/$', views.BlogSources.as_view(), name="notes"),
     url(r'jwt/login/$', csrf_exempt(views.JwtLoginView.as_view())),
     url(r'', include(router.urls)),
 ]

@@ -5,7 +5,7 @@ import json,os,uuid,datetime,base64
 from django.views import View
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.http import StreamingHttpResponse
-from django.db import connection
+from django.db import connection,connections
 
 from utils.get_sources import get_source, get_source_by_id
 from utils.tuling_answer import get_tuling_answer
@@ -28,6 +28,7 @@ sysfile = os.path.abspath('.')
 class WechatTalk(View):
     def get(self, request):
         return render(request, "sources/talk.html", {})
+
 
 
 class QueryWechat(View):

@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework import status, mixins, generics, viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db import connection
+from django.db import connection, connections
 
 from .filters import SourcesCoreFilter
 from utils.email_send import register_send_email, common_send_email
@@ -92,7 +92,7 @@ class SourcesListView(APIView):
             # SELECT * FROM sources_sourcescore LIMIT  10 offset 1
             query_sql = "SELECT * FROM sources_sourcescore LIMIT  {1} offset {0}".format(
                 objStart, num)
-            print(query_sql,"==============")
+            print(query_sql, "==============")
         snippets = SourcesCore.objects.raw(query_sql)
         serializer = SourcesCoreSerializers(snippets, many=True)
         pages = math.ceil(int(count)/int(num))
@@ -252,7 +252,8 @@ class BlogTypeView(APIView):
             }
         return Response(context)
 
-class  JwtLoginView(APIView):
+
+class JwtLoginView(APIView):
     def post(self, request):
         username = request.POST.get("username", "")
         username = username.lower()
@@ -261,4 +262,25 @@ class  JwtLoginView(APIView):
             "code": 401,
             "message": "删除失败"
         }
-        return  Response(res)
+        return Response(res)
+
+
+class BlogSources(APIView):
+    def get(self, request):
+        try:
+            blogConnect = connections['blog']
+            count_sql = "SELECT * FROM typecho_blogcontents"
+            all_data = pd.read_sql(count_sql, blogConnect)
+            data_dict = all_data.to_dict(orient='index')
+            context = {
+                "code": 200,
+                "message": "success",
+                "data": data_dict
+            }
+        except:
+            context = {
+                "code": 400,
+                "message": "failed",
+                "data": "失败"
+            }
+        return Response(context)
