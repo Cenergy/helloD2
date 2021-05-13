@@ -257,16 +257,17 @@ class ImgtoExcel(APIView):
                     self.get_file_content(unknownimgpath), options)
                 starttime = datetime.datetime.now()
                 # api-1
-                sub_one_sql = "UPDATE 'sources_sourcelimit' SET num_count=num_count-1"
-                sub_one_cursor = connection.cursor()
-                sub_one_cursor.execute(sub_one_sql)
+                # sub_one_sql = "UPDATE 'sources_sourcelimit' SET num_count=num_count-1"
+                # sub_one_cursor = connection.cursor()
+                # sub_one_cursor.execute(sub_one_sql)
                 while True:
                     try:
                         requestId = result["result"][0]["request_id"]
                         aaa = aipOcr.getTableRecognitionResult(
                             requestId, options)
-                        picUrl = aaa["result"]["result_data"]
-                        if picUrl != '':
+                        picUrl = aaa["result"]
+                        percent=picUrl["percent"]
+                        if picUrl != '' and percent==100:
                             break
                     except:
                         picUrl = "error"
@@ -282,30 +283,11 @@ class ImgtoExcel(APIView):
                         "data": "fail"
                     }
                 else:
-                    excel_json = {}
-                    excel_source = pd.read_excel(picUrl)
-                    relative_excel_path = "/static/img2word/" + img_uuid + ".xls"
-                    excel_name = sysfile+"/static/img2word/" + img_uuid + ".xls"
-                    excel_source.to_excel(excel_name)
-                    excel_html = excel_source.to_html(classes='layui-table')
-                    excel_json["excel_html"] = excel_html
-                    excel_json["img_uuid"] = img_uuid
-                    excel_json["imgpath"] = relative_img_path
-                    excel_json["excelpath"] = relative_excel_path
-                    row, col = excel_source.shape
-                    if row == 0 or col == 0:
-                        os.remove(unknownimgpath)
-                        os.remove(excel_name)
-                        reginfs = {
-                            "code": 400,
-                            "message": "failure",
-                            "data": "没有识别到表格！"
-                        }
-                    else:
-                        reginfs = {
+                    picUrl["imgPath"]= unknownimgpath
+                    reginfs = {
                             "code": 200,
                             "message": "success",
-                            "data": excel_json
+                            "data": picUrl
                         }
             except:
                 picUrl = "error"
